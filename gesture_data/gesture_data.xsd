@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/NewXMLSchema" xmlns:tns="http://www.example.org/NewXMLSchema" elementFormDefault="qualified">
+  <xs:annotation>
+	<xs:documentation>
+		This XML schema will be used with gesture data XML files.
+	</xs:documentation>
+  </xs:annotation>
+  <xs:element name="gestures" />
+  <xs:element name="gesture" />
+  <xs:element name="hand" />
+  <xs:element name="thumb" />
+  <xs:element name="index" />
+  <xs:element name="middle" />
+  <xs:element name="ring" />
+  <xs:element name="pinky" />
+  <xs:element name="contact" type="xs:boolean" />
+  <xs:element name="flex" />
+    <xs:simpleType>
+	  <xs:restriction base="xs:decimal">
+		<xs:minValue value="0.0" />
+		<xs:maxValue value="100.0" />
+	  </xs:restriction>
+	</xs:simpleType>
+</schema>

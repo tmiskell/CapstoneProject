@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE gestures SYSTEM "gesture_data.dtd">
+<gestures>
+	<gesture>
+		<hand side="left">
+			<thumb>
+				<flex>30</flex>
+				<contact>true</contact>
+			</thumb>
+			<index>
+				<flex>27</flex>
+				<contact>false</contact>
+			</index>
+			<middle>
+				<flex>42</flex>
+				<contact>true</contact>
+			</middle>
+			<ring>
+				<flex>33</flex>
+				<contact>true</contact>
+			</ring>
+			<pinky>
+				<flex>42</flex>
+				<contact>true</contact>
+			</pinky>
+		</hand>
+		<hand side="right">
+			<thumb>
+				<flex>17</flex>
+				<contact>false</contact>
+			</thumb>
+			<index>
+				<flex>10</flex>
+				<contact>false</contact>
+			</index>
+			<middle>
+				<flex>28</flex>
+				<contact>false</contact>
+			</middle>
+			<ring>
+				<flex>34</flex>
+				<contact>false</contact>
+			</ring>
+			<pinky>
+				<flex>10</flex>
+				<contact>false</contact>
+			</pinky>
+		</hand>
+	</gesture>
+</gestures>

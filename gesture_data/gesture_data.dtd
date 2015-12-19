@@ -1,0 +1,19 @@
+<!ELEMENT gestures (gesture+) >
+<!ELEMENT gesture (hand, hand)>
+<!ELEMENT hand (thumb, index, middle, ring, pinky, thumb-index, index-middle, middle-ring, ring-pinky, accel)>
+<!ATTLIST hand side (left | right) #REQUIRED>
+<!ELEMENT thumb (flex, contact)>
+<!ELEMENT index (flex, contact)>
+<!ELEMENT middle (flex, contact)>
+<!ELEMENT ring (flex, contact)>
+<!ELEMENT pinky (flex, contact)>
+<!ELEMENT thumb-index (contact)>
+<!ELEMENT index-middle (contact)>
+<!ELEMENT middle-ring (contact)>
+<!ELEMENT ring-pinky (contact)>
+<!ELEMENT accel (x, y, z)>
+<!ELEMENT flex (#PCDATA)>
+<!ELEMENT contact (#PCDATA)>
+<!ELEMENT x (#PCDATA)>
+<!ELEMENT y (#PCDATA)>
+<!ELEMENT z (#PCDATA)>

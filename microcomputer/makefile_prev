@@ -1,0 +1,15 @@
+# Make file for sign language to speech conversion software
+# Variables
+CXX=g++
+OPTMETHOD=               # Add -O for optimization
+INCLUDE=/usr/include/cppconn
+LIBRARY=/usr/lib
+MYSQLLIB=mysqlcppconn
+CPPFLAGS=-g $(OPTMETHOD) -I $(INCLUDE) # Add -g for debugging
+OUTPUT=sign2speech
+SRCS=Finger.cpp Fold.cpp Hand.cpp Gesture.cpp Main.cpp
+#
+all: 
+	$(CXX) $(SRCS) $(CPPFLAGS) -o $(OUTPUT) -L $(LIBRARY) -l $(MYSQLLIB)
+clean: 
+	rm $(OUTPUT)
