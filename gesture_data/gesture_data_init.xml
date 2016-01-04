@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="gesture_data.xsl"?>
 <!DOCTYPE gestures SYSTEM "gesture_data.dtd">
 <gestures>
 	<gesture>
 		<hand side="left">
 			<thumb>
-				<flex>0.0</flex>
+				<flex>0</flex>
 				<contact>False</contact>
 			</thumb>
 			<index>
-				<flex>0.0</flex>
+				<flex>0</flex>
 				<contact>False</contact>
 			</index>
 			<middle>
-				<flex>0.0</flex>
+				<flex>0</flex>
 				<contact>False</contact>
 			</middle>
 			<ring>
-				<flex>0.0</flex>
+				<flex>0</flex>
 				<contact>False</contact>
 			</ring>
 			<pinky>
-				<flex>0.0</flex>
+				<flex>0</flex>
 				<contact>False</contact>
 			</pinky>
 			<thumb-index>
@@ -43,23 +44,23 @@
 		</hand>
 		<hand side="right">
 			<thumb>
-				<flex>0.0</flex>
+				<flex>0</flex>
 				<contact>False</contact>
 			</thumb>
 			<index>
-				<flex>0.0</flex>
+				<flex>0</flex>
 				<contact>False</contact>
 			</index>
 			<middle>
-				<flex>0.0</flex>
+				<flex>0</flex>
 				<contact>False</contact>
 			</middle>
 			<ring>
-				<flex>0.0</flex>
+				<flex>0</flex>
 				<contact>False</contact>
 			</ring>
 			<pinky>
-				<flex>0.0</flex>
+				<flex>0</flex>
 				<contact>False</contact>
 			</pinky>
 			<thumb-index>
@@ -81,4 +82,8 @@
 			</accel>
 		</hand>
 	</gesture>
+	<converted-text></converted-text>
+	<status>disconnected</status>
+	<convert>false</convert>
+	<version>1.0</version>
 </gestures>

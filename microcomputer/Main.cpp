@@ -24,6 +24,7 @@
 #include <string.h>
 #include <signal.h>
 #include <ncurses.h>
+#include <time.h>
 /* XML parsing includes. */
 #include "includes/rapidxml.hpp"
 #include "includes/rapidxml_utils.hpp"
@@ -46,7 +47,9 @@ using namespace sql ;
 bool init( const char* script, ScreenText &scrText ) ;
 bool load_gesture_database( Driver* driver, Connection* &db, const char* dbURL, const char* un, const char* pw, const char* dbName, 
                             ScreenText &scrText ) ;
-bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText ) ;
+bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText, rapidxml::xml_document<> &doc,
+                  string &sensorStatus, string &xmlVersion, string &convert ) ;
+bool output_xml( const char* outfName, string &text, Gesture &nextGesture, string &sensorStatus, string &xmlVersion ) ;
 bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText ) ;
 bool text_to_speech( string text, string ttsScript, const char* tfName ) ;
 void output_to_display( ScreenText scrText, bool eraseScr ) ;
@@ -72,23 +75,30 @@ volatile sig_atomic_t kbFlag = 0 ; // Keyboard interrupt flag.
 
 int main( int argc, char* argv[] ) {
 
-    Gesture nextGesture ;                            // The next gesture to be read in.
-    const char* script   = "gpio.py" ;               // Script to collect data from GPIO pins and write gester data XML files.
-    const char* fName   = "gesture_data.xml" ;       // The XML file containing sensor data.
-    const char* newfName = "gesture_data.complete" ; // The XML file that was just read.
-    const char* dbName   = "gesture" ;               // The database name to use.
-    string text ;                                    // The current gesture converted to a text string.
-    int result = EXIT_SUCCESS ;                      // Indicates whether program terminated successfully. 
-    int socket ;                                     // The socket connection to the microcontroller.
-    int speech ;                                     // The text converted into speech.
-    Driver* driver ;                                 // The SQL driver
-    Connection* db ;                                 // The connection to the database.
-    const char* dbURL = "tcp://127.0.0.1:3306" ;     // The database location.
-    const char* un = "sign2speech" ;                 // The database username.
-    const char* pw = "sign2speech" ;                 // The database password.
-    string ttsScript = "festival" ;                  // Location of the text to speech script.
-    const char* tfName = "speech.txt" ;              // Name of the file to write to.
-    ScreenText scrText ;                             // The collection of text to display on the screen.
+    Gesture nextGesture ;                                            // The next gesture to be read in.
+    const char* script   = "gpio.py" ;                               // Script to collect data from GPIO pins and write gester data XML files.
+    const char* fName   = "../gesture_data/gesture_data_init.xml" ;  // The XML file containing sensor data.
+    const char* newfName = "../gesture_data/gesture_data.complete" ; // The parsed XML file containing sensor data.
+    const char* outfName = "../gesture_data/gesture_data.xml" ;      // The XML file that was just read.
+    const char* dbName   = "gesture" ;                               // The database name to use.
+    string text ;                                                    // The current gesture converted to a text string.
+    int result = EXIT_SUCCESS ;                                      // Indicates whether program terminated successfully. 
+    int socket ;                                                     // The socket connection to the microcontroller.
+    int speech ;                                                     // The text converted into speech.
+    Driver* driver ;                                                 // The SQL driver
+    Connection* db ;                                                 // The connection to the database.
+    const char* dbURL = "tcp://127.0.0.1:3306" ;                     // The database location.
+    const char* un = "sign2speech" ;                                 // The database username.
+    const char* pw = "sign2speech" ;                                 // The database password.
+    string ttsScript = "festival" ;                                  // Location of the text to speech script.
+    string xmlVersion ;                                              // The XML version.
+    string sensorStatus ;                                            // An indicator of the sensor status.
+    const char* tfName = "speech.txt" ;                              // Name of the file to write to.
+    ScreenText scrText ;                                             // The collection of text to display on the screen.
+    rapidxml::xml_document<> doc ;                                   // The contents of the most recent XML document.
+    string convert = "false" ;                                       // Used to track whether gesture conversion should be performed.
+    struct timespec t1 ;                                             // The amount of time to sleep in nanoseconds.
+    struct timespec t2 ;                                             // The time residual.
 
     /* Perform initialization. */
     if( !init( script, scrText ) ){
@@ -97,6 +107,8 @@ int main( int argc, char* argv[] ) {
         result = EXIT_FAILURE ;
         exit( result ) ;
     }
+    t1.tv_sec = 0 ;
+    t1.tv_nsec = 500000000L ;
     scrText.SetStatus( "Initialized\n" ) ;
     output_to_display( scrText, true ) ;
     /* Connect to the gesture database. */
@@ -116,24 +128,23 @@ int main( int argc, char* argv[] ) {
   	    scrText.SetStatus( "Reading:\t" + string(fName) + "\n" ) ;
    	    output_to_display( scrText, true ) ;
             /* Add delay to make sure file has finished being written to before attempting to read. */
-  	    sleep( 1 ) ;
-            if( get_gesture( nextGesture, fName, scrText ) ){
+  	    nanosleep( &t1, &t2 ) ;
+            if( get_gesture( nextGesture, fName, scrText, doc, sensorStatus, xmlVersion, convert ) ){
                 /* Update display for the next set of sensor values. */
   	        scrText.SetGestureData( nextGesture.AsString() ) ;
-  	        /* Rename file to indicate reading completed. */
-                if( rename(fName, newfName) == 0 ){
-		    scrText.SetStatus( "Successfully read:\t" + string(fName) + "\n" ) ;
-                }
-                else{
-  	  	    scrText.SetStatus( "*** Error renaming file. Attempting to continue ***\n" ) ;
-   	        }
+                /* Indicate file was successfully read. */
+		scrText.SetStatus( "Successfully read:\t" + string(fName) + "\n" ) ;
+                /* Rename the file so as not to re-read it. */
+                if( rename(fName, newfName) != 0 ){
+  	   	    scrText.SetStatus( "Unable to rename file:\t" + string(fName) + "\n" ) ;
+		}
 	    }
 	    else{
   	        scrText.SetStatus( "*** Error reading file. Attempting to continue ***\n" ) ;
 	    }
  	    output_to_display( scrText, true ) ;
             /* Convert the gesture to text. */
-            if( gesture_to_text( nextGesture, db, text, scrText ) ){
+            if( gesture_to_text(nextGesture, db, text, scrText) ){
                 /* Output the text to display */
   	        scrText.SetGestureConv( text + "\n" ) ;
 	    }
@@ -142,9 +153,15 @@ int main( int argc, char* argv[] ) {
 	        scrText.SetStatus( "*** Unable to convert gesture to text. Attempting to continue ***\n" ) ;
 	    }
             output_to_display( scrText, true ) ;
+  	    scrText.SetStatus( "Wrote:\t" + string(outfName) + "\n" ) ;
+            /* Update XML file. */
+            if( !output_xml(outfName, text, nextGesture, sensorStatus, xmlVersion) ){
+  	        scrText.SetStatus( "Error while writing:\t" + string(outfName) + "\n" ) ;
+	    }
+   	    output_to_display( scrText, true ) ;
 	}
         /* Check if user wants to output the gesture. */
-        if( key_press() ){
+        if( convert.compare("true") == 0 ){
             /* User signaled end of conversion. Convert the text to speech */ 
             if( !text_to_speech( text, ttsScript, tfName ) ){
   	        /* Text to speech error. */
@@ -153,6 +170,15 @@ int main( int argc, char* argv[] ) {
 	    output_to_display( scrText, true) ;
             /* Reset text string for next gesture input. */
 	    text = "" ;
+            /* Indicate that the gesture has been converted. */
+            convert = "false" ;
+            /* Update XML file. */
+            if( !output_xml(outfName, text, nextGesture, sensorStatus, xmlVersion) ){
+  	        scrText.SetStatus( "Error while writing:\t" + string(outfName) + "\n" ) ;
+	    }
+            /* Indicate gesture was successfully converted. */
+            scrText.SetStatus( "Successfully converted gesture\n" ) ;
+            scrText.SetGestureData( "\n" ) ;
 	}
         if( kbFlag ){
   	    /* Keyboard interrupt pressed. Perform clean up. */
@@ -165,12 +191,12 @@ int main( int argc, char* argv[] ) {
     }
     scrText.SetStatus( "\nExiting\n" ) ;
     output_to_display( scrText, true ) ;
-	
+
     return result ;
   			
 }
 
-/*----------key_press00--------------------------------------------------------------
+/*----------key_press----------------------------------------------------------------
 
   PURPOSE:  Function to check whether the current key pressed matches the one
             to signal the end of a gesture conversion.
@@ -235,7 +261,7 @@ void print_error( SQLException e, ScreenText &scrText ){
 
 bool init( const char* script, ScreenText &scrText ){
 
-    string instrDataVal = "CTRL-C to quit. c to signal end of current gesture conversion.\n" ; // The instructions to display
+    string instrDataVal = "CTRL-C to quit.\n" ; // The instructions to display
 
     try{
         /* Start the data collection script. */
@@ -568,17 +594,21 @@ bool file_exists( const char* fName ){
 
   PURPOSE:  Function to collect sensor data from an XML file.
 
-  INPUT PARAMETERS: nextGesture -- The next set of gesture data to read in.
-                                   An instance of class Gesture.
-                    fName       -- The name of the file to read gesture data from.
-                    scrText     -- The collection of text to display on the screen.
+  INPUT PARAMETERS: nextGesture  -- The next set of gesture data to read in.
+                                    An instance of class Gesture.
+                    fName        -- The name of the file to read gesture data from.
+                    scrText      -- The collection of text to display on the screen.
+                    sensorStatus -- An indicator of the sensor status.
+                    xmlVersion   -- The XML version.
+                    convert      -- Used to track whether gesture conversion should be performed.
 
   RETURN VALUE:  true if the file was read successfully
                  false otherwise.
     
 -----------------------------------------------------------------------------------*/
 
-bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText ){
+bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText, rapidxml::xml_document<> &doc,
+                  string &sensorStatus, string &xmlVersion, string &convert ){
 
     int i ;                                                                                     // Index variable.
     int j ;                                                                                     // Index variable.
@@ -594,7 +624,6 @@ bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText )
 
     /* Parse the XML file. */
     rapidxml::file<> xmlFile( fName ) ;
-    rapidxml::xml_document<> doc ;
     doc.parse<0>( xmlFile.data() ) ;
     /* Collect sensor values. Start with the gestures node. */   
     rapidxml::xml_node<>* gestures = doc.first_node("gestures") ;      
@@ -606,13 +635,13 @@ bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText )
         return false ;
     rapidxml::xml_node<>* hand = gesture->first_node("hand") ;
     for( i = 0 ; i < NumHands ; i++ ){
+        if( hand == NULL )
+            return false ;
         Finger nextFinger[NumFingers] ;                                                    // The next set of fingers to be read in
         Fold nextFold[NumFolds] ;                                                          // The next set of interdigital folds to be read in
         /* Read the next hand node. */
         scrText.SetStatus( "Reading %s hand\n" + string(hand->first_attribute("side")->value()) ) ;
 	output_to_display( scrText, true ) ;
-        if( hand == NULL )
-            return false ;
         for( j = 0 ; j < NumFingers ; j++ ){
 	    /* Get the finger node. */ 
             rapidxml::xml_node<>* nextNode = hand->first_node( fingerName[j].c_str() ) ;  
@@ -666,7 +695,186 @@ bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText )
     }
     /* Store the next gesture set of data. */
     nextGesture = Gesture( nextHand[0], nextHand[1] ) ;     
+    /* Get the sensor status. */
+    rapidxml::xml_node<>* status = gestures->first_node( "status" ) ;
+    if( status == NULL )
+        return false ;
+    sensorStatus = string( status->value() ) ;
+    /* Get the conversion status. */
+    rapidxml::xml_node<>* convertStatus = gestures->first_node( "convert" ) ;
+    if( convertStatus == NULL )
+        return false ;
+    convert = string( convertStatus->value() ) ;
+    /* Get the XML version. */
+    rapidxml::xml_node<>* version = gestures->first_node("version") ;
+    if( version == NULL )
+        return false ;
+    xmlVersion = string( version->value() ) ;     
     /* File read successfully. */ 
+    return true ;
+
+}
+
+/*----------output_xml---------------------------------------------------------------
+
+  PURPOSE:  Function to output updated XML file contents.
+
+  INPUT PARAMETERS: outfName     -- The new name of the XML file.
+                    text         -- The gesture converted to text.
+                    nextGesture  -- The current set of gesture data.
+                    sensorStatus -- An indicator of the sensor status.
+                    xmlVersion   -- The XML version.
+
+  RETURN VALUE:  true if the file was written successfully
+                 false otherwise.
+    
+-----------------------------------------------------------------------------------*/
+
+bool output_xml( const char* outfName, string &text, Gesture &nextGesture, string &sensorStatus, string &xmlVersion ){
+
+    int i ;                          // Index variable.
+    int j ;                          // Index variable
+    const int NumHands   = 2 ;       // The number of hands.
+    const int NumFingers = 5 ;       // The number of fingers on a hand.
+    const int NumFolds   = 4 ;       // The number of interdigital folds on a hand.
+    const unsigned int NumAxes = 3 ; // The number of axes.
+    ofstream outputFile ;            // File to write to.
+    string handName[NumHands] = {"left", "right"} ;                                            // Hand names.
+    string fingerName[NumFingers] = {"thumb", "index", "middle", "ring", "pinky"} ;            // Finger names.
+    string foldName[NumFolds] = {"thumb-index", "index-middle", "middle-ring", "ring-pinky"} ; // Interdigital fold names.
+    string axesNames[NumAxes] = {"x", "y", "z"} ;                                              // Axes names.
+
+    /* Open the file and output the header information. */
+    outputFile.open( outfName ) ;
+    outputFile << "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n" ;
+    outputFile << "<?xml-stylesheet type=\"text/xsl\" href=\"gesture_data.xsl\"?>\n" ;
+    outputFile << "<!DOCTYPE gestures SYSTEM \"gesture_data.dtd\">\n" ;
+    /* Start with the gestures node. */   
+    outputFile << "<gestures>\n" ;
+    /* Proceed to the gesture node. */
+    outputFile << "\t<gesture>\n" ;
+    if( !nextGesture.Defined() ){
+        outputFile << "\t</gesture>\n" ;
+        outputFile << "</gestures>\n" ;
+	return true ;
+    }
+    for( i = 0 ; i < NumHands ; i++ ){
+        /* Get the next hand .*/
+        Hand nextHand ;
+        if( handName[i].compare("left") == 0 ){
+            nextHand = nextGesture.Left() ;
+        }
+        else if( handName[i].compare("right") == 0 ){
+            nextHand = nextGesture.Right() ;
+        }
+	else{
+  	    return false ;
+	}
+        outputFile << "\t\t<hand side=\"" << handName[i] << "\">\n" ;
+        if( !nextHand.Defined() ){
+            outputFile << "\t\t</hand>\n" ;
+            continue ;
+        }
+        for( j = 0 ; j < NumFingers ; j++ ){
+            /* Get the next finger.*/
+            Finger nextFinger ;
+            if( fingerName[j].compare("thumb") == 0 ){
+      	        nextFinger = nextHand.Thumb() ;
+	    }
+	    else if( fingerName[j].compare("index") == 0 ){
+  	        nextFinger = nextHand.Index() ;
+	    }
+	    else if( fingerName[j].compare("middle") == 0 ){
+  	        nextFinger = nextHand.Middle() ;
+	    }
+	    else if( fingerName[j].compare("ring") == 0 ){
+  	        nextFinger = nextHand.Ring() ;
+	    }
+	    else if( fingerName[j].compare("pinky") == 0 ){
+  	        nextFinger = nextHand.Pinky() ;
+	    }
+	    else{
+	        return false ;
+	    }
+            outputFile << "\t\t\t<" << fingerName[j] << ">\n" ;
+            if( !nextFinger.Defined() ){
+                outputFile << "\t\t\t</" << fingerName[j] << ">\n" ;
+		continue ;
+	    }
+	    /* Get the flex sensor node. */ 
+            outputFile << "\t\t\t\t<flex>"  ;
+      	    outputFile << nextFinger.Flex() ;
+            outputFile << "</flex>\n" ;
+	    /* Get the contact sensor node. */ 
+            outputFile << "\t\t\t\t<contact>" ;
+	    outputFile << nextFinger.Contact() ;
+            outputFile << "</contact>\n" ;
+            outputFile << "\t\t\t</" << fingerName[j] << ">\n" ;
+        }
+        for( j = 0 ; j < NumFolds ; j++ ){
+	    /* Get the next interdigital fold node. */
+            Fold nextFold ;
+            if( foldName[j].compare("thumb-index") == 0 ){
+      	        nextFold = nextHand.TiFold() ;
+	    }
+            else if( foldName[j].compare("index-middle") == 0 ){
+      	        nextFold = nextHand.ImFold() ;
+	    }
+            else if( foldName[j].compare("middle-ring") == 0 ){
+      	        nextFold = nextHand.MrFold() ;
+	    }
+            else if( foldName[j].compare("ring-pinky") == 0 ){
+      	        nextFold = nextHand.RpFold() ;
+	    }
+            else {
+  	        return false ;
+	    }
+            outputFile << "\t\t\t<" << foldName[j] << ">\n" ;
+            if( !nextFold.Defined() ){
+                outputFile << "\t\t\t</" << foldName[j] << ">\n" ;
+  	        continue ;
+	    }
+            /* Get the next contact sensor node. */
+            outputFile << "\t\t\t\t<contact>" ;
+	    outputFile << nextFold.Contact() ;
+            outputFile << "</contact>\n" ;
+            outputFile << "\t\t\t</" << foldName[j] << ">\n" ;
+	}        
+	/* Get the accelerometer values. */
+        outputFile << "\t\t\t<accel>\n" ;
+        if( nextHand.AccelVals().Defined() ){
+            for( j = 0 ; j < NumAxes ; j++ ){
+  	        outputFile << "\t\t\t\t<" << axesNames[j] << ">" ;
+                if( axesNames[j].compare("x") == 0 ){
+  		    outputFile << nextHand.AccelVals().X() ; 
+		}
+		else if( axesNames[j].compare("y") == 0 ){
+		    outputFile << nextHand.AccelVals().Y() ; 
+		}
+		else if( axesNames[j].compare("z") == 0 ){
+		    outputFile << nextHand.AccelVals().Z() ; 
+		} 
+		else{
+		    return false ;
+		}
+       	        outputFile << "</" << axesNames[j] << ">\n" ;
+ 	    }
+	}
+        outputFile << "\t\t\t</accel>\n" ;
+        outputFile << "\t\t</hand>\n" ;
+    }
+    outputFile << "\t</gesture>\n" ;
+    /* Output the converted text. */
+    outputFile << "\t\t<converted-text>" << text << "</converted-text>\n" ;
+    /* Get the sensor status. */
+    outputFile << "\t<status>" << sensorStatus << "</status>\n" ;
+    /* After each read, the conversion status should always be set to false. */
+    outputFile << "\t<convert>false</convert>\n" ;
+    /* Get the XML version. */
+    outputFile << "\t<version>" << xmlVersion << "</version>\n" ;
+    outputFile << "</gestures>\n" ;
+    outputFile.close() ;
+
     return true ;
 
 }

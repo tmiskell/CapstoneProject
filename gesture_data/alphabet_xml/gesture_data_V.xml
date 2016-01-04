@@ -81,4 +81,8 @@
                         </accel>
 		</hand>
 	</gesture>
+        <converted-text></converted-text>
+	<status>disconnected</status>
+	<convert>false</convert>
+	<version>1.0</version>
 </gestures>

@@ -5,7 +5,7 @@
         <html>
             <head>
                 <title>Gesture Data</title>
-                <meta http-equiv="refresh" content="30" />
+                <meta http-equiv="refresh" content="2" />
             </head>  
             <body>
                 <xsl:for-each select="gestures/gesture">
@@ -20,7 +20,7 @@
                         </div>
                         <div style="width: 99%;">
                           <div style="float: left; width: 33%;">
-                            <p style="text-align: center; font-size: 18px; font-weight: bold;">Fingers<br /></p>
+                            <p style="text-align: center; font-size: 18px; font-weight: bold;">Fingers</p>
                             <table style="border-collapse: collapse; border: 1px solid black; margin-left: auto; margin-right: auto; width: 90%;">
                                 <tr style="background-color: blue; color: white; width: 50px; text-align: left; font-size: 16px;">
                                     <th>Location</th>
@@ -55,7 +55,7 @@
                             </table>
                           </div>
                           <div style="float: left; width: 33%;">
-                            <p style="text-align: center; font-size: 18px; font-weight: bold;">Folds<br /></p>
+                            <p style="text-align: center; font-size: 18px; font-weight: bold;">Folds</p>
                             <table style="border-collapse: collapse; border: 1px solid black; margin-left: auto; margin-right: auto; width: 90%;">
                                 <tr style="background-color: blue; color: white; text-align: left; font-size: 16px;">
                                     <th>Location</th>
@@ -80,7 +80,7 @@
                             </table>
                           </div>
                           <div style="float: left; width: 33%;">
-                            <p style="text-align: center; font-size: 18px; font-weight: bold;">Accelerometer<br /></p>
+                            <p style="text-align: center; font-size: 18px; font-weight: bold;">Accelerometer</p>
                             <table style="border-collapse: collapse; border: 1px solid black; margin-left: auto; margin-right: auto; width: 90%;">
                                 <tr style="background-color: blue; color: white; text-align: left; font-size: 16px;">
                                     <th>Location</th>
@@ -105,7 +105,39 @@
                     </xsl:for-each>
                 </xsl:for-each>
                 <div>
-                    <p style="text-align: center; font-size: 12px;">XML Version: <xsl:value-of select="system-property('xsl:version')" /><br /></p>
+                    <p style="text-align: center; font-size: 14px; font-weight: bold;">
+                        Converted Text:  <xsl:value-of select="gestures/converted-text" /><br />
+                        <form style="text-align: center;" action="" method="post">
+                            Convert to Speech?
+                            <input type="checkbox" name="setting" value="convert"></input>
+                            <br />
+                            <input type="submit" value="Submit"></input>
+                            <input type="reset" value="Reset"></input>
+                        </form>
+                    </p>
+                    <xsl:if test="gestures/convert = 'true'">
+                    <p style="text-align: center; font-size: 12px;">
+                        Conversion Status: In Progress<br />
+                    </p>
+                    </xsl:if>
+                    <xsl:if test="gestures/convert = 'false'">
+                    <p style="text-align: center; font-size: 12px;">
+                        Conversion Status: Collecting Gesture Data<br />
+                    </p>
+                    </xsl:if>
+                    <xsl:if test="gestures/status = 'disconnected'">
+                    <p style="text-align: center; font-size: 12px; color: red">
+                        Sensor Status: Disconnected<br />
+                    </p>
+                    </xsl:if>
+                    <xsl:if test="gestures/status = 'connected'">
+                    <p style="text-align: center; font-size: 12px; color: green">
+                        Sensor Status: Connected<br />
+                    </p>
+                    </xsl:if>
+                    <p style="text-align: center; font-size: 12px;">                 
+                        Version: <xsl:value-of select="gestures/version" /><br />
+                    </p>
                 </div>
             </body>
         </html>

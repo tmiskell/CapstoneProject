@@ -1,50 +1,89 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="gesture_data.xsl"?>
 <!DOCTYPE gestures SYSTEM "gesture_data.dtd">
 <gestures>
 	<gesture>
 		<hand side="left">
 			<thumb>
-				<flex>30</flex>
-				<contact>true</contact>
+				<flex>100</flex>
+				<contact>0</contact>
 			</thumb>
 			<index>
-				<flex>27</flex>
-				<contact>false</contact>
+				<flex>0</flex>
+				<contact>0</contact>
 			</index>
 			<middle>
-				<flex>42</flex>
-				<contact>true</contact>
+				<flex>0</flex>
+				<contact>0</contact>
 			</middle>
 			<ring>
-				<flex>33</flex>
-				<contact>true</contact>
+				<flex>0</flex>
+				<contact>0</contact>
 			</ring>
 			<pinky>
-				<flex>42</flex>
-				<contact>true</contact>
+				<flex>100</flex>
+				<contact>0</contact>
 			</pinky>
+			<thumb-index>
+				<contact>0</contact>
+			</thumb-index>
+			<index-middle>
+				<contact>0</contact>
+			</index-middle>
+			<middle-ring>
+				<contact>0</contact>
+			</middle-ring>
+			<ring-pinky>
+				<contact>0</contact>
+			</ring-pinky>
+			<accel>
+				<x>0</x>
+				<y>0</y>
+				<z>0</z>
+			</accel>
 		</hand>
 		<hand side="right">
 			<thumb>
-				<flex>17</flex>
-				<contact>false</contact>
+				<flex>100</flex>
+				<contact>0</contact>
 			</thumb>
 			<index>
-				<flex>10</flex>
-				<contact>false</contact>
+				<flex>0</flex>
+				<contact>0</contact>
 			</index>
 			<middle>
-				<flex>28</flex>
-				<contact>false</contact>
+				<flex>0</flex>
+				<contact>0</contact>
 			</middle>
 			<ring>
-				<flex>34</flex>
-				<contact>false</contact>
+				<flex>0</flex>
+				<contact>0</contact>
 			</ring>
 			<pinky>
-				<flex>10</flex>
-				<contact>false</contact>
+				<flex>100</flex>
+				<contact>0</contact>
 			</pinky>
+			<thumb-index>
+				<contact>0</contact>
+			</thumb-index>
+			<index-middle>
+				<contact>0</contact>
+			</index-middle>
+			<middle-ring>
+				<contact>0</contact>
+			</middle-ring>
+			<ring-pinky>
+				<contact>0</contact>
+			</ring-pinky>
+			<accel>
+				<x>0</x>
+				<y>0</y>
+				<z>0</z>
+			</accel>
 		</hand>
 	</gesture>
+		<converted-text></converted-text>
+	<status>disconnected</status>
+	<convert>false</convert>
+	<version>1.0</version>
 </gestures>

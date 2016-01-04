@@ -14,6 +14,7 @@ class Data( object ):
         self.finger = finger
         self.fold = fold
         self.accel = accel
+    # Class constants.
     num_hands = 2
     num_fingers = 5
     num_folds = 4
@@ -107,7 +108,7 @@ def add_header( lines ):
 
     return lines
 
-def add_body( data, lines ):
+def add_body( data, status, lines ):
     """ Adds the body of content to the output file. """
 
     i = 0                       # An iterator.
@@ -157,19 +158,27 @@ def add_body( data, lines ):
         lines.append( "\t\t</hand>\n" )
     # Close out the gesture data.
     lines.append( "\t</gesture>\n" )
+    # Write the converted text.
+    lines.append( "\t<converted-text></converted-text>\n" )
+    # Write the status.
+    lines.append( "\t<status>" + status + "</status>\n" )
+    # Write the conversion status.
+    lines.append( "\t<convert>false</convert>\n" )
+    # Write the version.
+    lines.append( "\t<version>1.0</version>\n" )
     # Close out the set of gestures.
     lines.append( "</gestures>\n" )
 
     return lines
 
-def output_data( fName, data ):
+def output_data( fName, data, status ):
     """ Generates the output file. """
 
     lines = []  # The lines to write to the output file.
 
     # Generate the output file.
     lines = add_header( lines )
-    lines = add_body( data, lines )
+    lines = add_body( data, status, lines )
     # Write the output file.
     with open( fName, 'w' ) as outputFile:
         outputFile.writelines( lines )
@@ -179,15 +188,16 @@ def output_data( fName, data ):
 def main( args ):
     """ Main program. """
 
-    prefix = "gesture_data"                                             # Prefix of the output file.
+    prefix = "gesture_data_init"                                        # Prefix of the output file.
     suffix = ".xml"                                                     # Suffix of the output file. 
-    outputDir = os.path.expanduser( "~/CapstoneProject/microcomputer" ) # Directory of the output file.
-    fName = os.path.join( outputDir, prefix + suffix )                  # Absolute path of output file.
+    output_dir = os.path.expanduser( "~/CapstoneProject/gesture_data" ) # Directory of the output file.
+    fName = os.path.join( output_dir, prefix + suffix )                 # Absolute path of output file.
     i2c_addr = 0x22                                                     # I2C address of microcontroller slave.
     ret_val = os.EX_OK                                                  # Return status code
     num_bytes = 20                                                      # The total number of bytes to read from the slave device.
     sleepTime = 5                                                       # The amount of time to sleep between transfers.
     bus = None                                                          # I2C connection.
+    status = "disconnected"                                             # Status of the I2C connection.
 
     # Initialize the gesture data.
     sys.stdout.write( "Initializing gesture data\n" )
@@ -199,6 +209,7 @@ def main( args ):
                 sys.stdout.write( "Opening I2C connection\n" )
                 try:
                     bus = smbus.SMBus( 0 )
+                    status = "connected"
                 except IOError as io_error:
                     sys.stderr.write( "*** Error while attempting I2C communication. ***\n" )
                     sys.stderr.write( "***" + str(io_error) + "***\n" )
@@ -208,7 +219,7 @@ def main( args ):
             data = i2c_read( bus, data, i2c_addr, num_bytes )
             # Update the output file.
             sys.stdout.write( "Writing:\t" + os.path.basename(fName) + "\n" )
-            output_data( fName, data )
+            output_data( fName, data, status )
             # Wait for a brief period of time and then perform the next transfer.
             time.sleep( sleepTime )
     except KeyboardInterrupt:

@@ -1,7 +1,7 @@
-ALPHADIR=$HOME/Capstone_Project/gesture_data/alphabet_xml
-NUMBRDIR=$HOME/Capstone_Project/gesture_data/numbers_xml
-DESTDIR=$HOME/Capstone_Project/microcomputer
-for i in G E T space M E space A space C O F F E E space R I G H T space N O W ; 
-  do cp -v $ALPHADIR/gesture_data_$i.xml $DESTDIR/gesture_data.xml ; 
+ALPHADIR=$HOME/CapstoneProject/gesture_data/alphabet_xml
+NUMBRDIR=$HOME/CapstoneProject/gesture_data/numbers_xml
+DESTDIR=$HOME/CapstoneProject/gesture_data
+for i in D O space Y O U space W A N T space M E space T O space S T A Y ; 
+  do cp -v $ALPHADIR/gesture_data_$i.xml $DESTDIR/gesture_data_init.xml ; 
   sleep 1 ; 
 done
