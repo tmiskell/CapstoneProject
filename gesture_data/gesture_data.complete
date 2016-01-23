@@ -5,8 +5,8 @@
 	<gesture>
 		<hand side="left">
 			<thumb>
-				<flex>100</flex>
-				<contact>0</contact>
+				<flex>0</flex>
+				<contact>1</contact>
 			</thumb>
 			<index>
 				<flex>0</flex>
@@ -21,20 +21,20 @@
 				<contact>1</contact>
 			</ring>
 			<pinky>
-				<flex>100</flex>
-				<contact>0</contact>
+				<flex>0</flex>
+				<contact>1</contact>
 			</pinky>
 			<thumb-index>
-				<contact>0</contact>
+				<contact>1</contact>
 			</thumb-index>
 			<index-middle>
 				<contact>1</contact>
 			</index-middle>
 			<middle-ring>
-				<contact>1</contact>
+				<contact>0</contact>
 			</middle-ring>
 			<ring-pinky>
-				<contact>0</contact>
+				<contact>1</contact>
 			</ring-pinky>
 			<accel>
 				<x>0</x>
@@ -44,8 +44,8 @@
 		</hand>
 		<hand side="right">
 			<thumb>
-				<flex>100</flex>
-				<contact>0</contact>
+				<flex>0</flex>
+				<contact>1</contact>
 			</thumb>
 			<index>
 				<flex>0</flex>
@@ -60,20 +60,20 @@
 				<contact>1</contact>
 			</ring>
 			<pinky>
-				<flex>100</flex>
-				<contact>0</contact>
+				<flex>0</flex>
+				<contact>1</contact>
 			</pinky>
 			<thumb-index>
-				<contact>0</contact>
+				<contact>1</contact>
 			</thumb-index>
 			<index-middle>
 				<contact>1</contact>
 			</index-middle>
 			<middle-ring>
-				<contact>1</contact>
+				<contact>0</contact>
 			</middle-ring>
 			<ring-pinky>
-				<contact>0</contact>
+				<contact>1</contact>
 			</ring-pinky>
 			<accel>
 				<x>0</x>
@@ -82,7 +82,7 @@
 			</accel>
 		</hand>
 	</gesture>
-		<converted-text>DO YOU WANT ME TO STAY</converted-text>
+		<converted-text>IS DUNKINS STILL OPEN</converted-text>
 	<status>disconnected</status>
 	<convert>true</convert>
 	<version>1.0</version>

@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS gesture_tbl (
    in_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY ( id )
    );
-/* Add entries to the table. Omit J and Z for now as they continue movement. */
+/* Add entries to the table. Omit J and Z for now as they contain movement. */
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
                          th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
        VALUES("right", 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, " ");

@@ -5,7 +5,7 @@
 	<gesture>
 		<hand side="left">
 			<thumb>
-				<flex>100</flex>
+				<flex>0</flex>
 				<contact>0</contact>
 			</thumb>
 			<index>
@@ -21,7 +21,7 @@
 				<contact>0</contact>
 			</ring>
 			<pinky>
-				<flex>100</flex>
+				<flex>0</flex>
 				<contact>0</contact>
 			</pinky>
 			<thumb-index>
@@ -44,7 +44,7 @@
 		</hand>
 		<hand side="right">
 			<thumb>
-				<flex>100</flex>
+				<flex>0</flex>
 				<contact>0</contact>
 			</thumb>
 			<index>
@@ -60,7 +60,7 @@
 				<contact>0</contact>
 			</ring>
 			<pinky>
-				<flex>100</flex>
+				<flex>0</flex>
 				<contact>0</contact>
 			</pinky>
 			<thumb-index>

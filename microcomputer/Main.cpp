@@ -76,7 +76,7 @@ volatile sig_atomic_t kbFlag = 0 ; // Keyboard interrupt flag.
 int main( int argc, char* argv[] ) {
 
     Gesture nextGesture ;                                            // The next gesture to be read in.
-    const char* script   = "gpio.py" ;                               // Script to collect data from GPIO pins and write gester data XML files.
+    const char* script   = "gpio.py" ;                               // Script to collect data from GPIO pins and write gesture XML files.
     const char* fName   = "../gesture_data/gesture_data_init.xml" ;  // The XML file containing sensor data.
     const char* newfName = "../gesture_data/gesture_data.complete" ; // The parsed XML file containing sensor data.
     const char* outfName = "../gesture_data/gesture_data.xml" ;      // The XML file that was just read.
@@ -359,11 +359,14 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         /* Query database for closest matching gesture */
         st = db->createStatement() ; 
         /* Construct the query. Assume only that the right hand is used for now. */
-        query = "SELECT gest FROM gesture_tbl WHERE hand = \"right\" AND th_flex = " ;
+        query = "SELECT gest FROM gesture_tbl WHERE hand = \"right\"" ;
+/*      Ignore thumb flex sensor for now.
+        query = " AND th_flex = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
         buffer << nextGesture.Right().Thumb().Flex() ;
-        query += buffer.str() ;
+        query += buffer.str() ; 
+*/
         query += " AND in_flex = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
@@ -637,8 +640,8 @@ bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText, 
     for( i = 0 ; i < NumHands ; i++ ){
         if( hand == NULL )
             return false ;
-        Finger nextFinger[NumFingers] ;                                                    // The next set of fingers to be read in
-        Fold nextFold[NumFolds] ;                                                          // The next set of interdigital folds to be read in
+        Finger nextFinger[NumFingers] ;                                                // The next set of fingers to be read in
+        Fold nextFold[NumFolds] ;                                                      // The next set of interdigital folds to be read in
         /* Read the next hand node. */
         scrText.SetStatus( "Reading %s hand\n" + string(hand->first_attribute("side")->value()) ) ;
 	output_to_display( scrText, true ) ;
