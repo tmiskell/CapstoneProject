@@ -52,6 +52,7 @@ bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText, 
 bool output_xml( const char* outfName, string &text, Gesture &nextGesture, string &sensorStatus, string &xmlVersion ) ;
 bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText ) ;
 bool text_to_speech( string text, string ttsScript, const char* tfName ) ;
+void add_to_query( string &query, ostringstream &buffer, string stmt ) ;
 void output_to_display( ScreenText scrText, bool eraseScr ) ;
 bool clean_up( Connection* db ) ;
 bool file_exists( const char* fName ) ;
@@ -359,80 +360,74 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         /* Query database for closest matching gesture */
         st = db->createStatement() ; 
         /* Construct the query. Assume only that the right hand is used for now. */
-        query = "SELECT gest FROM gesture_tbl WHERE hand = \"right\"" ;
-/*      Ignore thumb flex sensor for now.
-        query = " AND th_flex = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
-        buffer << nextGesture.Right().Thumb().Flex() ;
-        query += buffer.str() ; 
-*/
-        query += " AND in_flex = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        buffer << "SELECT gest FROM gesture_tbl WHERE hand = \"right\"" ;
+        add_to_query( query, buffer, " AND in_flex = " ) ;
         buffer << nextGesture.Right().Index().Flex() ;
-        query += buffer.str() ;
-        query += " AND mi_flex = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND mi_flex = " ) ;
         buffer << nextGesture.Right().Middle().Flex() ;
-        query += buffer.str() ; 
-        query += " AND ri_flex = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND ri_flex = " ) ;
         buffer << nextGesture.Right().Ring().Flex() ;
-        query += buffer.str() ; 
-        query += " AND pi_flex = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND pi_flex = " ) ;
         buffer << nextGesture.Right().Pinky().Flex() ;
-        query += buffer.str() ; 
-        query += " AND th_con = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND th_con_t = " ) ;
         buffer << nextGesture.Right().Thumb().ContactTip() ;
-        query += buffer.str() ; 
-        query += " AND in_con = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND in_con_t = " ) ;
         buffer << nextGesture.Right().Index().ContactTip() ;
-        query += buffer.str() ; 
-        query += " AND mi_con = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND mi_con_t = " ) ;
         buffer << nextGesture.Right().Middle().ContactTip() ;
-        query += buffer.str() ; 
-        query += " AND ri_con = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND ri_con_t = " ) ;
         buffer << nextGesture.Right().Ring().ContactTip() ;
-        query += buffer.str() ; 
-        query += " AND pi_con = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND pi_con_t = " ) ;
         buffer << nextGesture.Right().Pinky().ContactTip() ;
-        query += buffer.str() ; 
-        query += " AND ti_con = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND ti_con_t = " ) ;
         buffer << nextGesture.Right().TiFold().ContactTip() ;
-        query += buffer.str() ; 
-        query += " AND im_con = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND im_con_t = " ) ;
         buffer << nextGesture.Right().ImFold().ContactTip() ;
-        query += buffer.str() ; 
-        query += " AND mr_con = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND mr_con_t = " ) ;
         buffer << nextGesture.Right().MrFold().ContactTip() ;
-        query += buffer.str() ; 
-        query += " AND rp_con = " ;
-        buffer.str( "" ) ;
-        buffer.clear() ;
+        add_to_query( query, buffer, " AND rp_con_t = " ) ;
         buffer << nextGesture.Right().RpFold().ContactTip() ;
-        query += buffer.str() ;
-        query += ";" ;
+	/* Additional elements eventually to be added to query. */
+	/* add_to_query( query, buffer, " AND in_con_m = " ) ;
+           buffer << nextGesture.Right().Index.ContactMid() ;
+           add_to_query( query, buffer, " AND mi_con_m = " ) ;
+           buffer << nextGesture.Right().Middle.ContactMid() ;
+           add_to_query( query, buffer, " AND ri_con_m = " ) ;
+           buffer << nextGesture.Right().Ring.ContactMid() ;
+           add_to_query( query, buffer, " AND pi_con_m = " ) ;
+           buffer << nextGesture.Right().Pinky.ContactMid() ;
+           add_to_query( query, buffer, " AND accel_303_x = " ) ;
+           buffer << nextGesture.Right().Lsm303Vals.AccelX() ;
+           add_to_query( query, buffer, " AND accel_303_y = " ) ;
+           buffer << nextGesture.Right().Lsm303Vals.AccelY() ;
+           add_to_query( query, buffer, " AND accel_303_z = " ) ;
+           buffer << nextGesture.Right().Lsm303Vals.AccelZ() ;
+           add_to_query( query, buffer, " AND mag_303_x = " ) ;
+           buffer << nextGesture.Right().Lsm303Vals.MagX() ;
+           add_to_query( query, buffer, " AND mag_303_y = " ) ;
+           buffer << nextGesture.Right().Lsm303Vals.MagY() ;
+           add_to_query( query, buffer, " AND mag_303_z = " ) ;
+           buffer << nextGesture.Right().Lsm303Vals.MagZ() ;
+           add_to_query( query, buffer, " AND accel_9dof_x = " ) ;
+           buffer << nextGesture.Right().Lsm9dofVals.AccelX() ;
+           add_to_query( query, buffer, " AND accel_9dof_y = " ) ;
+           buffer << nextGesture.Right().Lsm9dofVals.AccelY() ;
+           add_to_query( query, buffer, " AND accel_9dof_z = " ) ;
+           buffer << nextGesture.Right().Lsm9dofVals.AccelZ() ;
+           add_to_query( query, buffer, " AND accel_9dof_x = " ) ;
+           buffer << nextGesture.Right().Lsm9dofVals.MagX() ;
+           add_to_query( query, buffer, " AND mag_9dof_y = " ) ;
+           buffer << nextGesture.Right().Lsm9dofVals.MagY() ;
+           add_to_query( query, buffer, " AND mag_9dof_z = " ) ;
+           buffer << nextGesture.Right().Lsm9dofVals.MagZ() ;
+           add_to_query( query, buffer, " AND gyro_9dof_x = " ) ;
+           buffer << nextGesture.Right().Lsm9dofVals.GyroX() ;
+           add_to_query( query, buffer, " AND gyro_9dof_y = " ) ;
+           buffer << nextGesture.Right().Lsm9dofVals.GyroY() ;
+           add_to_query( query, buffer, " AND gyro_9dof_z = " ) ;
+           buffer << nextGesture.Right().Lsm9dofVals.GyroZ() ;                      
+	 */
+        add_to_query( query, buffer, ";" ) ;
 	/* Perform the query. */
         rSet = st->executeQuery( query ) ;
         if( rSet->rowsCount() > 0 ){
@@ -963,5 +958,20 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
     outputFile.close() ;
 
     return true ;
+
+}
+
+void add_to_query( string &query, ostringstream &buffer, string stmt ){
+    /* Function to add to query to be sent to SQL database. */
+
+    /* Add in current buffer. */
+    query += buffer.str() ;   
+    /* Prepare next statement. */ 
+    query += stmt ;
+    /* Clear buffer. */
+    buffer.str( "" ) ;
+    buffer.clear() ;
+
+    return ;
 
 }

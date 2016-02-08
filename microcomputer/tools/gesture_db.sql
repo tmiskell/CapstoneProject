@@ -6,18 +6,34 @@
 /*        mi_flex: 	The middle finger flex sensor value. */ 
 /*        ri_flex: 	The ring finger flex sensor value. */ 
 /*        pi_flex: 	The pinky finger flex sensor value. */ 
-/*        th_con:	The thumb contact sensor value. */
-/*        in_con:  	The index finger contact sensor value. */
-/*        mi_con:	The middle finger contact sensor value. */
-/*        ri_con:	The ring finger contact sensor value. */
-/*        pi_con:	The pinky finger contact sensor value. */
-/*        ti_con:	The thumb-index interdigital fold contact sensor value. */
-/*        im_con:	The index-middle interdigital fold contact sensor value. */
-/*        mr_con:	The middle-ring interdigital fold contact sensor value. */
-/*        rp_con:	The ring-pinky interdigital fold contact sensor value. */
-/*        accel_x:      X axis accelerometer value. */
-/*        accel_y:      X axis accelerometer value. */
-/*        accel_z:      X axis accelerometer value. */
+/*        th_con_t:	The thumb tip contact sensor value. */
+/*        in_con_t:  	The index finger tip contact sensor value. */
+/*        mi_con_t:	The middle finger tip contact sensor value. */
+/*        ri_con_t:	The ring finger tip contact sensor value. */
+/*        pi_con_m:	The pinky finger mid contact sensor value. */
+/*        in_con_m:  	The index finger mid contact sensor value. */
+/*        mi_con_m:	The middle finger mid contact sensor value. */
+/*        ri_con_m:	The ring finger mid contact sensor value. */
+/*        pi_con_m:	The pinky finger mid contact sensor value. */
+/*        ti_con_t:	The thumb-index interdigital fold contact sensor value. */
+/*        im_con_t:	The index-middle interdigital fold contact sensor value. */
+/*        mr_con_t:	The middle-ring interdigital fold contact sensor value. */
+/*        rp_con_t:	The ring-pinky interdigital fold contact sensor value. */
+/*        accel_303_x:  LSM303 X axis accelerometer value. */
+/*        accel_303_y:  LSM303 Y axis accelerometer value. */
+/*        accel_303_z:  LSM303 X axis accelerometer value. */
+/*        mag_303_x:    LSM303 X axis magnetometer value. */
+/*        mag_303_y:    LSM303 Y axis magnetometer value. */
+/*        mag_303_z:    LSM303 X axis magnetometer value. */
+/*        accel_9dof_x: LSM9DOF X axis accelerometer value. */
+/*        accel_9dof_y: LSM9DOF Y axis accelerometer value. */
+/*        accel_9dof_z: LSM9DOF X axis accelerometer value. */
+/*        mag_9dof_x:   LSM9DOF X axis magnetometer value. */
+/*        mag_9dof_y:   LSM9DOF Y axis magnetometer value. */
+/*        mag_9dof_z:   LSM9DOF X axis magnetometer value. */
+/*        gyro_9dof_x:  LSM9DOF X axis gyrometer value. */
+/*        gyro_9dof_y:  LSM9DOF Y axis gyrometer value. */
+/*        gyro_9dof_z:  LSM9DOF X axis gyrometer value. */
 /*        gest:		The gesture that corresponds to the given set of sensor values. */
 /*        open:           100.0 */
 /*        half-open:       50.0 */
@@ -38,125 +54,245 @@ CREATE TABLE IF NOT EXISTS gesture_tbl (
    mi_flex DOUBLE NOT NULL,
    ri_flex DOUBLE NOT NULL,
    pi_flex DOUBLE NOT NULL,
-   th_con BOOLEAN NOT NULL,
-   in_con BOOLEAN NOT NULL,
-   mi_con BOOLEAN NOT NULL,
-   ri_con BOOLEAN NOT NULL,
-   pi_con BOOLEAN NOT NULL,
-   ti_con BOOLEAN NOT NULL,
-   im_con BOOLEAN NOT NULL,
-   mr_con BOOLEAN NOT NULL,
-   rp_con BOOLEAN NOT NULL,
-   accel_x DOUBLE NOT NULL,
-   accel_y DOUBLE NOT NULL,
-   accel_z DOUBLE NOT NULL,
+   th_con_t BOOLEAN NOT NULL,
+   in_con_t BOOLEAN NOT NULL,
+   mi_con_t BOOLEAN NOT NULL,
+   ri_con_t BOOLEAN NOT NULL,
+   pi_con_t BOOLEAN NOT NULL,
+   in_con_m BOOLEAN NOT NULL,
+   mi_con_m BOOLEAN NOT NULL,
+   ri_con_m BOOLEAN NOT NULL,
+   pi_con_m BOOLEAN NOT NULL,
+   ti_con_t BOOLEAN NOT NULL,
+   im_con_t BOOLEAN NOT NULL,
+   mr_con_t BOOLEAN NOT NULL,
+   rp_con_t BOOLEAN NOT NULL,
+   accel_303_x DOUBLE NOT NULL,
+   accel_303_y DOUBLE NOT NULL,
+   accel_303_z DOUBLE NOT NULL,
+   mag_303_x DOUBLE NOT NULL,
+   mag_303_y DOUBLE NOT NULL,
+   mag_303_z DOUBLE NOT NULL,
+   accel_9dof_x DOUBLE NOT NULL,
+   accel_9dof_y DOUBLE NOT NULL,
+   accel_9dof_z DOUBLE NOT NULL,
+   mag_9dof_x DOUBLE NOT NULL,
+   mag_9dof_y DOUBLE NOT NULL,
+   mag_9dof_z DOUBLE NOT NULL,
+   gyro_9dof_x DOUBLE NOT NULL,
+   gyro_9dof_y DOUBLE NOT NULL,
+   gyro_9dof_z DOUBLE NOT NULL,
    gest VARCHAR(100), 
    in_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY ( id )
    );
 /* Add entries to the table. Omit J and Z for now as they contain movement. */
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, " ");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, " ");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 0.0, 0.0, 0.0, 0.0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0.0, 0.0, 0.0, "A");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 0.0, 0.0, 0.0, 0.0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "A");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 100.0, 100.0, 100.0, 100.0, 100.0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0.0, 0.0, 0.0, "B");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 100.0, 100.0, 100.0, 100.0, 100.0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "B");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 50.0, 50.0, 50.0, 50.0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0.0, 0.0, 0.0, "C");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 50.0, 50.0, 50.0, 50.0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "C");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 100.0, 0.0, 0.0, 0.0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0.0, 0.0, 0.0, "D");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 100.0, 0.0, 0.0, 0.0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "D");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 0.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.0, 0.0, 0.0, "E");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 0.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "E");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 0.0, 100.0, 100.0, 100.0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0.0, 0.0, 0.0, "F");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 0.0, 100.0, 100.0, 100.0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "F");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 100.0, 0.0, 0.0, 0.0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0.0, 0.0, 0.0, "G");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 100.0, 0.0, 0.0, 0.0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "G");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 100.0, 100.0, 0.0, 0.0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0.0, 0.0, 0.0, "H");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 100.0, 100.0, 0.0, 0.0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "H");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 0.0, 0.0, 0.0, 100.0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0.0, 0.0, 0.0, "I");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 0.0, 0.0, 0.0, 100.0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "I");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 100.0, 100.0, 0.0, 0.0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0.0, 0.0, 0.0, "K");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 100.0, 100.0, 0.0, 0.0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "K");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 100.0, 100.0, 0.0, 0.0, 0.0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0.0, 0.0, 0.0, "L");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 100.0, 100.0, 0.0, 0.0, 0.0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "L");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 0.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0.0, 0.0, 0.0, "M");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 0.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "M");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 0.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0.0, 0.0, 0.0, "N");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 0.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "N");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 50.0, 50.0, 50.0, 50.0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0.0, 0.0, 0.0, "O");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 50.0, 50.0, 50.0, 50.0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "O");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 100.0, 100.0, 50.0, 50.0, 50.0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0.0, 0.0, 0.0, "P");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 100.0, 100.0, 50.0, 50.0, 50.0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "P");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 100.0, 0.0, 0.0, 0.0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0.0, 0.0, 0.0, "Q");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 100.0, 0.0, 0.0, 0.0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "Q");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 100.0, 100.0, 0.0, 0.0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0.0, 0.0, 0.0, "R");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 100.0, 100.0, 0.0, 0.0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "R");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0.0, 0.0, 0.0, "S");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "S");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0.0, 0.0, 0.0, "T");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 0.0, 0.0, 0.0, 0.0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "T");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 0.0, 100.0, 100.0, 0.0, 0.0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0.0, 0.0, 0.0, "U");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 0.0, 100.0, 100.0, 0.0, 0.0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "U");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
        VALUES("right", 0.0, 100.0, 100.0, 0.0, 0.0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 25.0, 25.0, 25.0, "V");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 0.0, 100.0, 100.0, 100.0, 0.0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0.0, 0.0, 0.0, "W");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 0.0, 100.0, 100.0, 100.0, 0.0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "W");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 0.0, 50.0, 0.0, 0.0, 0.0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0.0, 0.0, 0.0, "X");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 0.0, 50.0, 0.0, 0.0, 0.0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "X");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 100.0, 0.0, 0.0, 0.0, 100.0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0.0, 0.0, 0.0, "Y");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 100.0, 0.0, 0.0, 0.0, 100.0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "Y");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 50.0, 50.0, 50.0, 50.0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0.0, 0.0, 0.0, "0");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 50.0, 50.0, 50.0, 50.0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "0");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 100.0, 0.0, 0.0, 0.0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0.0, 0.0, 0.0, "1");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 100.0, 0.0, 0.0, 0.0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "1");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 0.0, 100.0, 100.0, 0.0, 0.0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0.0, 0.0, 0.0, "2");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 0.0, 100.0, 100.0, 0.0, 0.0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "2");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 100.0, 100.0, 100.0, 0.0, 0.0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0.0, 0.0, 0.0, "3");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 100.0, 100.0, 100.0, 0.0, 0.0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "3");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 0.0, 100.0, 100.0, 100.0, 100.0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0.0, 0.0, 0.0, "4");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 0.0, 100.0, 100.0, 100.0, 100.0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "4");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 100.0, 100.0, 100.0, 100.0, 100.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, "5");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 100.0, 100.0, 100.0, 100.0, 100.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "5");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 0.0, 100.0, 100.0, 100.0, 0.0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0.0, 0.0, 0.0, "6");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 0.0, 100.0, 100.0, 100.0, 0.0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "6");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 100.0, 100.0, 50.0, 100.0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, "7");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 100.0, 100.0, 50.0, 100.0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "7");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 100.0, 50.0, 100.0, 100.0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0.0, 0.0, 0.0, "8");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 100.0, 50.0, 100.0, 100.0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "8");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex, 
-                         th_con, in_con, mi_con, ri_con, pi_con, ti_con, im_con, mr_con, rp_con, accel_x, accel_y, accel_z, gest)
-       VALUES("right", 50.0, 50.0, 100.0, 100.0, 100.0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, "9");
+                         th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m, 
+                         accel_303_x, accel_303_y, accel_303_z, mag_303_x, mag_303_y, mag_303_z, 
+                         accel_9dof_x, accel_9dof_y, accel_9dof_z, mag_9dof_x, mag_9dof_y, mag_9dof_z, gyro_9dof_x, gyro_9dof_y, gyro_9dof_z, gest)
+       VALUES("right", 50.0, 50.0, 100.0, 100.0, 100.0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, "9");
