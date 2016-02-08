@@ -19,20 +19,21 @@
 
   PURPOSE:  Given a set of fingers, store their values as a "Hand".
 
-  INPUT  PARAMETERS:  th -- the thumb.
-                      in -- the index finger.
-                      mi -- the middle finger.
-                      ri -- the ring finger.
-                      pi -- the pinky finger.
-                      ti -- the thumb-index interdigital fold.
-                      im -- the index-middle interdigital fold.
-                      mr -- the middle-ring interdigital fold.
-                      rp -- the ring-pinky interdigital fold.
-                      ac -- the set of accelerometer values.
+  INPUT  PARAMETERS:  th    -- the thumb.
+                      in    -- the index finger.
+                      mi    -- the middle finger.
+                      ri    -- the ring finger.
+                      pi    -- the pinky finger.
+                      ti    -- the thumb-index interdigital fold.
+                      im    -- the index-middle interdigital fold.
+                      mr    -- the middle-ring interdigital fold.
+                      rp    -- the ring-pinky interdigital fold.
+                      l303  -- the set of LSM303 accelerometer values.
+                      l9dof -- the set of LSM9DOF accelerometer values.
 
 -----------------------------------------------------------------------------------*/
 
-void Hand::Set( Finger th, Finger in, Finger mi, Finger ri, Finger pi, Fold ti, Fold im, Fold mr, Fold rp, Accel ac ) {
+void Hand::Set( Finger th, Finger in, Finger mi, Finger ri, Finger pi, Fold ti, Fold im, Fold mr, Fold rp, Lsm303 l303, Lsm9dof l9dof ) {
 
 	thumb  = th ;
 	index  = in ;
@@ -43,7 +44,8 @@ void Hand::Set( Finger th, Finger in, Finger mi, Finger ri, Finger pi, Fold ti, 
         imFold = im ;
         mrFold = mr ;
         rpFold = rp ;
-	accel  = ac ;
+	lsm303  = l303 ;
+	lsm9dof = l9dof ;
 	defined = true ;
 	
 	return ;

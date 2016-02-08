@@ -11,7 +11,7 @@ FESTLIBDIR=-L /usr/include/festival/src/lib/ -L /usr/include/speech_tools/lib/
 FESTLIB=-l Festival -l estools -l estbase -l eststring
 CPPFLAGS=-g $(OPTMETHOD) $(FESTINCLUDE) # Add -g for debugging
 OUTPUT=sign2speech
-SRCS=Finger.cpp Fold.cpp Hand.cpp Gesture.cpp Main.cpp ScreenText.cpp
+SRCS=Finger.cpp Fold.cpp Hand.cpp Gesture.cpp Lsm303.cpp Lsm9dof.cpp Main.cpp ScreenText.cpp
 #
 all: 
 	$(CXX) $(SRCS) $(CPPFLAGS) -o $(OUTPUT) $(MYSQLLIB) $(STDLIB)

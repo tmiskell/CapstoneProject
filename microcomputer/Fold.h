@@ -30,14 +30,14 @@ class Fold {
 	
 	 /* Default and explicit constructor functions */
 	 inline Fold( ) : defined(false) { }          
-	 inline Fold( bool contactVal ) : contact(contactVal), defined(true) { }
+	 inline Fold( bool contactTipVal ) : contactTip(contactTipVal), defined(true) { }
 
 	 /* Accessor functions */
-	 inline bool Contact( )      const { return contact ; }  /* Access contact sensor value. */
-	 inline bool Defined( )      const { return defined ; }  /* Access defined value. */
+	 inline bool ContactTip( ) const { return contactTip ; }  /* Access contact sensor value. */
+	 inline bool Defined( )       const { return defined ; }  /* Access defined value. */
 	 
 	 /* Mutator function */
-	 void Set( bool contactVal ) ;            /* Sets sensor values. */
+	 void Set( bool contactTipVal ) ;            /* Sets sensor values. */
 			  
 	 /* Input/Output functions */
 	 void Show( ostream &os = cout ) const ;
@@ -45,7 +45,7 @@ class Fold {
   private:
 	
 	 bool defined ;                                  /* True if gesture is defined. */
-	 bool contact ;                                  /* Contact sensor value. */
+	 bool contactTip ;                               /* Contact sensor value. */
 	 				
 } ;
 

@@ -19,13 +19,13 @@
 
   PURPOSE:  Given a pair of sensors, store their values as a "Finger".
 
-  INPUT  PARAMETERS:  contactVal -- the contact sensor value.
+  INPUT  PARAMETERS:  contactTipVal -- the contact sensor value.
 
 -----------------------------------------------------------------------------------*/
 
-void Fold::Set( bool contactVal ) {
+void Fold::Set( bool contactTipVal ) {
 
-        contact = contactVal ;
+        contactTip = contactTipVal ;
 	defined = true ;
 	
 	return ;
@@ -45,7 +45,7 @@ void Fold::Set( bool contactVal ) {
 void Fold::Show( ostream &os ) const {
 
   if( defined ){
-    os << "\t\t" << "Contact Sensor:\t" << Contact() << "\n" ;
+    os << "\t\t" << "Contact Sensor:\t" << ContactTip() << "\n" ;
   }
 
   return ;

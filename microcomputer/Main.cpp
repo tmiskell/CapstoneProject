@@ -390,47 +390,47 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         query += " AND th_con = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
-        buffer << nextGesture.Right().Thumb().Contact() ;
+        buffer << nextGesture.Right().Thumb().ContactTip() ;
         query += buffer.str() ; 
         query += " AND in_con = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
-        buffer << nextGesture.Right().Index().Contact() ;
+        buffer << nextGesture.Right().Index().ContactTip() ;
         query += buffer.str() ; 
         query += " AND mi_con = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
-        buffer << nextGesture.Right().Middle().Contact() ;
+        buffer << nextGesture.Right().Middle().ContactTip() ;
         query += buffer.str() ; 
         query += " AND ri_con = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
-        buffer << nextGesture.Right().Ring().Contact() ;
+        buffer << nextGesture.Right().Ring().ContactTip() ;
         query += buffer.str() ; 
         query += " AND pi_con = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
-        buffer << nextGesture.Right().Pinky().Contact() ;
+        buffer << nextGesture.Right().Pinky().ContactTip() ;
         query += buffer.str() ; 
         query += " AND ti_con = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
-        buffer << nextGesture.Right().TiFold().Contact() ;
+        buffer << nextGesture.Right().TiFold().ContactTip() ;
         query += buffer.str() ; 
         query += " AND im_con = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
-        buffer << nextGesture.Right().ImFold().Contact() ;
+        buffer << nextGesture.Right().ImFold().ContactTip() ;
         query += buffer.str() ; 
         query += " AND mr_con = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
-        buffer << nextGesture.Right().MrFold().Contact() ;
+        buffer << nextGesture.Right().MrFold().ContactTip() ;
         query += buffer.str() ; 
         query += " AND rp_con = " ;
         buffer.str( "" ) ;
         buffer.clear() ;
-        buffer << nextGesture.Right().RpFold().Contact() ;
+        buffer << nextGesture.Right().RpFold().ContactTip() ;
         query += buffer.str() ;
         query += ";" ;
 	/* Perform the query. */
@@ -448,7 +448,7 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         output_to_display( scrText, true ) ;
 	return false ;
     }
- 
+    /* Clean up results. */ 
     delete rSet ;
     delete st ;
 
@@ -613,17 +613,21 @@ bool file_exists( const char* fName ){
 bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText, rapidxml::xml_document<> &doc,
                   string &sensorStatus, string &xmlVersion, string &convert ){
 
-    int i ;                                                                                     // Index variable.
-    int j ;                                                                                     // Index variable.
-    const unsigned int NumHands   = 2 ;                                                         // The number of hands.
-    const unsigned int NumFingers = 5 ;                                                         // The number of fingers on a hand.
-    const unsigned int NumFolds   = 4 ;                                                         // The number of interdigital folds on a hand.
-    const unsigned int NumAxes    = 3 ;                                                         // The number of axes.
-    string fingerName[NumFingers] = {"thumb", "index", "middle", "ring", "pinky"} ;             // Finger names.
-    string foldName[NumFolds] = {"thumb-index", "index-middle", "middle-ring", "ring-pinky" } ; // Interdigital fold names.
-    Hand nextHand[NumHands] ;                                                                   // The next pair of hands to be read in.
-    string axesNames[NumAxes] = {"x", "y", "z"} ;                                               // Axes names.
-    double accelVals[NumAxes] ;                                                                 // The next set of accelerometer values.
+    int i ;                                                                                        // Index variable.
+    int j ;                                                                                        // Index variable.
+    const unsigned int NumHands   = 2 ;                                                            // The number of hands.
+    const unsigned int NumFingers = 5 ;                                                            // The number of fingers on a hand.
+    const unsigned int NumFolds   = 4 ;                                                            // The number of interdigital folds on a hand.
+    const unsigned int NumLsm303  = 6 ;                                                            // The number of LSM303 values.
+    const unsigned int NumLsm9dof = 9 ;                                                            // The number of LSM9DOF values.
+    string fingerName[NumFingers] = {"thumb", "index", "middle", "ring", "pinky"} ;                // Finger names.
+    string foldName[NumFolds] = {"thumb-index", "index-middle", "middle-ring", "ring-pinky" } ;    // Interdigital fold names.
+    Hand nextHand[NumHands] ;                                                                      // The next pair of hands to be read in.
+    string lsm303Names[NumLsm303] = {"accel-x", "accel-y", "accel-z", "mag-x", "mag-y", "mag-z"} ; // LSM303 value names.
+    double lsm303AccelVals[NumLsm303] ;                                                            // The next set of accelerometer values.
+    string lsm9dofNames[NumLsm9dof] = {"accel-x", "accel-y", "accel-z", "mag-x", "mag-y", "mag-z", // LSM303 value names.
+                                       "gyro-x", "gyro-y", "gyro-z"} ; 
+    double lsm9dofAccelVals[NumLsm9dof] ;                                                          // The next set of accelerometer values.
 
     /* Parse the XML file. */
     rapidxml::file<> xmlFile( fName ) ;
@@ -650,20 +654,28 @@ bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText, 
             rapidxml::xml_node<>* nextNode = hand->first_node( fingerName[j].c_str() ) ;  
             if( nextNode == NULL )
                 return false ;
-	    /* Get the contact sensor node. */ 
-       	    rapidxml::xml_node<>* contact = nextNode->first_node("contact") ;             
-            if( contact == NULL )
+	    /* Get the tip contact sensor node. */ 
+            bool nextContactTipVal = false ;
+       	    rapidxml::xml_node<>* contactTip = nextNode->first_node("contact-tip") ;             
+            if( contactTip == NULL )
                 return false ;
+            if( strcmp(contactTip->value(), "true") == 0 )
+  	        nextContactTipVal = true ;
+            /* Get the mid contact sensor node. The thumb only has a tip contact sensor. */ 
+            bool nextContactMidVal = false ;
+            if( fingerName[j].compare("thumb") != 0 ){
+       	        rapidxml::xml_node<>* contactMid = nextNode->first_node("contact-mid") ;             
+                if( contactMid == NULL )
+                    return false ;
+                if( strcmp(contactMid->value(), "true") == 0 )
+    	            nextContactMidVal = true ;
+	    }
 	    /* Get the flex sensor node. */ 
    	    rapidxml::xml_node<>* flex = nextNode->first_node("flex") ;
             if( flex == NULL )
                 return false ;
             double nextFlexVal = (double)atof( flex->value() ) ;
-            bool nextContactVal = false ;
-            if( strcmp(contact->value(), "true") == 0 ){
-  	        nextContactVal = true ;
-	    }
-            nextFinger[j] = Finger( nextFlexVal, nextContactVal ) ; 
+            nextFinger[j] = Finger( nextFlexVal, nextContactTipVal, nextContactMidVal ) ; 
         }
         for( j = 0 ; j < NumFolds ; j++ ){
 	    /* Get the next interdigital fold node. */
@@ -671,29 +683,44 @@ bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText, 
             if( nextNode == NULL )
                 return false ;
             /* Get the next contact sensor node. */
-       	    rapidxml::xml_node<>* contact = nextNode->first_node("contact") ;              
-            if( contact == NULL )
+            bool nextContactTipVal = false ;
+       	    rapidxml::xml_node<>* contactTip = nextNode->first_node("contact-tip") ;              
+            if( contactTip == NULL )
                 return false ;
-            bool nextContactVal = false ;
-            if( strcmp(contact->value(), "true") == 0 ){
-  	        nextContactVal = true ;
-	    }
-            nextFold[j] = Fold( nextContactVal ) ; 
+            if( strcmp(contactTip->value(), "true") == 0 )
+  	        nextContactTipVal = true ;
+            nextFold[j] = Fold( nextContactTipVal ) ; 
 	}
-	/* Get the accelerometer values. */
-        rapidxml::xml_node<>* accel = hand->first_node("accel") ;  
-        if( accel == NULL )
+	/* Get the LSM303 accelerometer values. */
+        rapidxml::xml_node<>* lsm303 = hand->first_node("lsm303") ;  
+        if( lsm303 == NULL )
             return false ;
-        for( j = 0 ; j < NumAxes ; j++ ){
-  	    rapidxml::xml_node<>* nextNode = accel->first_node( axesNames[j].c_str() ) ;  
+        string lsm303Side = string( lsm303->first_attribute("side")->value() ) ;
+        for( j = 0 ; j < NumLsm303 ; j++ ){
+  	    rapidxml::xml_node<>* nextNode = lsm303->first_node( lsm303Names[j].c_str() ) ;  
             if( nextNode == NULL )
                 return false ;
-            accelVals[j] = (double)atof( nextNode->value() ) ;
+            lsm303AccelVals[j] = (double)atof( nextNode->value() ) ;
 	}
-	Accel nextAccel = Accel( accelVals[0], accelVals[1], accelVals[2] ) ;
+	Lsm303 nextLsm303 = Lsm303( lsm303AccelVals[0], lsm303AccelVals[1], lsm303AccelVals[2],
+                                    lsm303AccelVals[3], lsm303AccelVals[4], lsm303AccelVals[5], lsm303Side ) ;
+	/* Get the LSM9DOF accelerometer values. */
+        rapidxml::xml_node<>* lsm9dof = hand->first_node("lsm9dof") ;  
+        if( lsm9dof == NULL )
+            return false ;
+        string lsm9dofSide = string( lsm9dof->first_attribute("side")->value() ) ;
+        for( j = 0 ; j < NumLsm9dof ; j++ ){
+  	    rapidxml::xml_node<>* nextNode = lsm9dof->first_node( lsm9dofNames[j].c_str() ) ;  
+            if( nextNode == NULL )
+                return false ;
+            lsm9dofAccelVals[j] = (double)atof( nextNode->value() ) ;
+	}
+	Lsm9dof nextLsm9dof = Lsm9dof( lsm9dofAccelVals[0], lsm9dofAccelVals[1], lsm9dofAccelVals[2],
+                                       lsm9dofAccelVals[3], lsm9dofAccelVals[4], lsm9dofAccelVals[5],
+                                       lsm9dofAccelVals[6], lsm9dofAccelVals[7], lsm9dofAccelVals[8], lsm9dofSide ) ;
         /* Store the next hand set of data. */
         nextHand[i] = Hand( nextFinger[0], nextFinger[1], nextFinger[2], nextFinger[3], nextFinger[4],
-                            nextFold[0], nextFold[1], nextFold[2], nextFold[3], nextAccel ) ;         
+                            nextFold[0], nextFold[1], nextFold[2], nextFold[3], nextLsm303, nextLsm9dof ) ;         
         hand = hand->next_sibling("hand") ;
     }
     /* Store the next gesture set of data. */
@@ -735,17 +762,20 @@ bool get_gesture( Gesture &nextGesture, const char* fName, ScreenText &scrText, 
 
 bool output_xml( const char* outfName, string &text, Gesture &nextGesture, string &sensorStatus, string &xmlVersion ){
 
-    int i ;                          // Index variable.
-    int j ;                          // Index variable
-    const int NumHands   = 2 ;       // The number of hands.
-    const int NumFingers = 5 ;       // The number of fingers on a hand.
-    const int NumFolds   = 4 ;       // The number of interdigital folds on a hand.
-    const unsigned int NumAxes = 3 ; // The number of axes.
-    ofstream outputFile ;            // File to write to.
-    string handName[NumHands] = {"left", "right"} ;                                            // Hand names.
-    string fingerName[NumFingers] = {"thumb", "index", "middle", "ring", "pinky"} ;            // Finger names.
-    string foldName[NumFolds] = {"thumb-index", "index-middle", "middle-ring", "ring-pinky"} ; // Interdigital fold names.
-    string axesNames[NumAxes] = {"x", "y", "z"} ;                                              // Axes names.
+    int i ;                             // Index variable.
+    int j ;                             // Index variable
+    const int NumHands   = 2 ;          // The number of hands.
+    const int NumFingers = 5 ;          // The number of fingers on a hand.
+    const int NumFolds   = 4 ;          // The number of interdigital folds on a hand.
+    const unsigned int NumLsm303 = 6 ;  // The number of LSM303 values.
+    const unsigned int NumLsm9dof = 9 ; // The number of LSM9DOF values.
+    ofstream outputFile ;               // File to write to.
+    string handName[NumHands] = {"left", "right"} ;                                                // Hand names.
+    string fingerName[NumFingers] = {"thumb", "index", "middle", "ring", "pinky"} ;                // Finger names.
+    string foldName[NumFolds] = {"thumb-index", "index-middle", "middle-ring", "ring-pinky"} ;     // Interdigital fold names.
+    string lsm303Names[NumLsm303] = {"accel-x", "accel-y", "accel-z", "mag-x", "mag-y", "mag-z"} ; // LSM303 value names.
+    string lsm9dofNames[NumLsm9dof] = {"accel-x", "accel-y", "accel-z", "mag-x", "mag-y", "mag-z", // LSM303 value names.
+                                       "gyro-x", "gyro-y", "gyro-z"} ; 
 
     /* Open the file and output the header information. */
     outputFile.open( outfName ) ;
@@ -809,9 +839,15 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
       	    outputFile << nextFinger.Flex() ;
             outputFile << "</flex>\n" ;
 	    /* Get the contact sensor node. */ 
-            outputFile << "\t\t\t\t<contact>" ;
-	    outputFile << nextFinger.Contact() ;
-            outputFile << "</contact>\n" ;
+            outputFile << "\t\t\t\t<contact-tip>" ;
+	    outputFile << nextFinger.ContactTip() ;
+            outputFile << "</contact-tip>\n" ;
+	    if( fingerName[j].compare("thumb") != 0 ){
+	        /* Currently the thumb only has a tip contact sensor. */
+                outputFile << "\t\t\t\t<contact-mid>" ;
+  	        outputFile << nextFinger.ContactMid() ;
+                outputFile << "</contact-mid>\n" ;
+	    }
             outputFile << "\t\t\t</" << fingerName[j] << ">\n" ;
         }
         for( j = 0 ; j < NumFolds ; j++ ){
@@ -838,32 +874,80 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
   	        continue ;
 	    }
             /* Get the next contact sensor node. */
-            outputFile << "\t\t\t\t<contact>" ;
-	    outputFile << nextFold.Contact() ;
-            outputFile << "</contact>\n" ;
+            outputFile << "\t\t\t\t<contact-tip>" ;
+	    outputFile << nextFold.ContactTip() ;
+            outputFile << "</contact-tip>\n" ;
             outputFile << "\t\t\t</" << foldName[j] << ">\n" ;
 	}        
-	/* Get the accelerometer values. */
-        outputFile << "\t\t\t<accel>\n" ;
-        if( nextHand.AccelVals().Defined() ){
-            for( j = 0 ; j < NumAxes ; j++ ){
-  	        outputFile << "\t\t\t\t<" << axesNames[j] << ">" ;
-                if( axesNames[j].compare("x") == 0 ){
-  		    outputFile << nextHand.AccelVals().X() ; 
+	/* Get the LSM303 accelerometer values. */
+        outputFile << "\t\t\t<lsm303 side=\"" << nextHand.Lsm303Vals().Side() << "\">\n" ;
+        if( nextHand.Lsm303Vals().Defined() ){
+            for( j = 0 ; j < NumLsm303 ; j++ ){
+  	        outputFile << "\t\t\t\t<" << lsm303Names[j] << ">" ;
+                if( lsm303Names[j].compare("accel-x") == 0 ){
+  		    outputFile << nextHand.Lsm303Vals().AccelX() ; 
 		}
-		else if( axesNames[j].compare("y") == 0 ){
-		    outputFile << nextHand.AccelVals().Y() ; 
+		else if( lsm303Names[j].compare("accel-y") == 0 ){
+		    outputFile << nextHand.Lsm303Vals().AccelY() ; 
 		}
-		else if( axesNames[j].compare("z") == 0 ){
-		    outputFile << nextHand.AccelVals().Z() ; 
+		else if( lsm303Names[j].compare("accel-z") == 0 ){
+		    outputFile << nextHand.Lsm303Vals().AccelZ() ; 
+		} 
+		else if( lsm303Names[j].compare("mag-x") == 0 ){
+		    outputFile << nextHand.Lsm303Vals().MagX() ; 
+		} 
+		else if( lsm303Names[j].compare("mag-y") == 0 ){
+		    outputFile << nextHand.Lsm303Vals().MagY() ; 
+		} 
+		else if( lsm303Names[j].compare("mag-z") == 0 ){
+		    outputFile << nextHand.Lsm303Vals().MagZ() ; 
 		} 
 		else{
 		    return false ;
 		}
-       	        outputFile << "</" << axesNames[j] << ">\n" ;
+       	        outputFile << "</" << lsm303Names[j] << ">\n" ;
  	    }
 	}
-        outputFile << "\t\t\t</accel>\n" ;
+        outputFile << "\t\t\t</lsm303>\n" ;
+	/* Get the LSM9DOF accelerometer values. */
+        outputFile << "\t\t\t<lsm9dof side=\"" << nextHand.Lsm9dofVals().Side() << "\">\n" ;
+        if( nextHand.Lsm9dofVals().Defined() ){
+            for( j = 0 ; j < NumLsm9dof ; j++ ){
+  	        outputFile << "\t\t\t\t<" << lsm9dofNames[j] << ">" ;
+                if( lsm9dofNames[j].compare("accel-x") == 0 ){
+  		    outputFile << nextHand.Lsm9dofVals().AccelX() ; 
+		}
+		else if( lsm9dofNames[j].compare("accel-y") == 0 ){
+		    outputFile << nextHand.Lsm9dofVals().AccelY() ; 
+		}
+		else if( lsm9dofNames[j].compare("accel-z") == 0 ){
+		    outputFile << nextHand.Lsm9dofVals().AccelZ() ; 
+		} 
+		else if( lsm9dofNames[j].compare("mag-x") == 0 ){
+		    outputFile << nextHand.Lsm9dofVals().MagX() ; 
+		} 
+		else if( lsm9dofNames[j].compare("mag-y") == 0 ){
+		    outputFile << nextHand.Lsm9dofVals().MagY() ; 
+		} 
+		else if( lsm9dofNames[j].compare("mag-z") == 0 ){
+		    outputFile << nextHand.Lsm9dofVals().MagZ() ; 
+		} 
+		else if( lsm9dofNames[j].compare("gyro-x") == 0 ){
+		    outputFile << nextHand.Lsm9dofVals().GyroX() ; 
+		} 
+		else if( lsm9dofNames[j].compare("gyro-y") == 0 ){
+		    outputFile << nextHand.Lsm9dofVals().GyroY() ; 
+		} 
+		else if( lsm9dofNames[j].compare("gyro-z") == 0 ){
+		    outputFile << nextHand.Lsm9dofVals().GyroZ() ; 
+		} 
+		else{
+		    return false ;
+		}
+       	        outputFile << "</" << lsm9dofNames[j] << ">\n" ;
+ 	    }
+	}
+        outputFile << "\t\t\t</lsm9dof>\n" ;
         outputFile << "\t\t</hand>\n" ;
     }
     outputFile << "\t</gesture>\n" ;

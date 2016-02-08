@@ -6,84 +6,120 @@
 		<hand side="left">
 			<thumb>
 				<flex>0</flex>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
 			</thumb>
 			<index>
 				<flex>0</flex>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
+				<contact-mid>0</contact-mid>
 			</index>
 			<middle>
 				<flex>0</flex>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
+				<contact-mid>0</contact-mid>
 			</middle>
 			<ring>
 				<flex>0</flex>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
+				<contact-mid>0</contact-mid>
 			</ring>
 			<pinky>
 				<flex>0</flex>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
+				<contact-mid>0</contact-mid>
 			</pinky>
 			<thumb-index>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
 			</thumb-index>
 			<index-middle>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
 			</index-middle>
 			<middle-ring>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
 			</middle-ring>
 			<ring-pinky>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
 			</ring-pinky>
-			<accel>
-				<x>0</x>
-				<y>0</y>
-				<z>0</z>
-			</accel>
+			<lsm303 side="top">
+				<accel-x>0</accel-x>
+				<accel-y>0</accel-y>
+				<accel-z>0</accel-z>
+				<mag-x>0</mag-x>
+				<mag-y>0</mag-y>
+				<mag-z>0</mag-z>
+			</lsm303>
+			<lsm9dof side="top">
+				<accel-x>0</accel-x>
+				<accel-y>0</accel-y>
+				<accel-z>0</accel-z>
+				<mag-x>0</mag-x>
+				<mag-y>0</mag-y>
+				<mag-z>0</mag-z>
+				<gyro-x>0</gyro-x>
+				<gyro-y>0</gyro-y>
+				<gyro-z>0</gyro-z>
+			</lsm9dof>
 		</hand>
 		<hand side="right">
 			<thumb>
 				<flex>0</flex>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
 			</thumb>
 			<index>
-				<flex>0</flex>
-				<contact>0</contact>
+				<flex>73</flex>
+				<contact-tip>0</contact-tip>
+				<contact-mid>0</contact-mid>
 			</index>
 			<middle>
-				<flex>0</flex>
-				<contact>0</contact>
+				<flex>3</flex>
+				<contact-tip>0</contact-tip>
+				<contact-mid>0</contact-mid>
 			</middle>
 			<ring>
-				<flex>0</flex>
-				<contact>0</contact>
+				<flex>4</flex>
+				<contact-tip>0</contact-tip>
+				<contact-mid>0</contact-mid>
 			</ring>
 			<pinky>
-				<flex>0</flex>
-				<contact>0</contact>
+				<flex>8</flex>
+				<contact-tip>0</contact-tip>
+				<contact-mid>0</contact-mid>
 			</pinky>
 			<thumb-index>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
 			</thumb-index>
 			<index-middle>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
 			</index-middle>
 			<middle-ring>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
 			</middle-ring>
 			<ring-pinky>
-				<contact>0</contact>
+				<contact-tip>0</contact-tip>
 			</ring-pinky>
-			<accel>
-				<x>0</x>
-				<y>0</y>
-				<z>0</z>
-			</accel>
+			<lsm303 side="top">
+				<accel-x>112</accel-x>
+				<accel-y>-288</accel-y>
+				<accel-z>948</accel-z>
+				<mag-x>-117</mag-x>
+				<mag-y>299</mag-y>
+				<mag-z>-561</mag-z>
+			</lsm303>
+			<lsm9dof side="top">
+				<accel-x>3556</accel-x>
+				<accel-y>4669</accel-y>
+				<accel-z>14152</accel-z>
+				<mag-x>-21052</mag-x>
+				<mag-y>1912</mag-y>
+				<mag-z>-1225</mag-z>
+				<gyro-x>-21052</gyro-x>
+				<gyro-y>1912</gyro-y>
+				<gyro-z>-1225</gyro-z>
+			</lsm9dof>
 		</hand>
 	</gesture>
 		<converted-text></converted-text>
-	<status>disconnected</status>
+	<status>connected</status>
 	<convert>false</convert>
 	<version>1.0</version>
 </gestures>

@@ -19,15 +19,17 @@
 
   PURPOSE:  Given a pair of sensors, store their values as a "Finger".
 
-  INPUT  PARAMETERS:  flexVal    -- the flex sensor value.
-                      contactVal -- the contact sensor value.
+  INPUT  PARAMETERS:  flexVal       -- the flex sensor value.
+                      contactTipVal -- the tip contact sensor value.
+                      contactMidVal -- the mid contact sensor value.
 
 -----------------------------------------------------------------------------------*/
 
-void Finger::Set( double flexVal, bool contactVal ) {
+void Finger::Set( double flexVal, bool contactTipVal, bool contactMidVal ) {
 
-        flex    = flexVal ;
-        contact = contactVal ;
+        flex = flexVal ;
+        contactTip = contactTipVal ;
+        contactMid = contactMidVal ;
 	defined = true ;
 	
 	return ;
@@ -48,7 +50,8 @@ void Finger::Show( ostream &os ) const {
 
   if( defined ){
     os << "\t\t" << "Flex Sensor:\t" << Flex() << "\n" ;
-    os << "\t\t" << "Contact Sensor:\t" << Contact() << "\n" ;
+    os << "\t\t" << "Contact Tip Sensor:\t" << ContactTip() << "\n" ;
+    os << "\t\t" << "Contact Mid Sensor:\t" << ContactMid() << "\n" ;
   }
 
   return ;

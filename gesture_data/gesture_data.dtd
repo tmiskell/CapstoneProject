@@ -1,23 +1,33 @@
 <!ELEMENT gestures (gesture+, converted-text, status, convert, version)>
 <!ELEMENT converted-text (#PCDATA*)>
 <!ELEMENT status (#PDCATA)>
-<!ELEMENT version (#PCDATA)>
 <!ELEMENT convert (#PCDATA)>
+<!ELEMENT version (#PCDATA)>
 <!ELEMENT gesture (hand, hand)>
-<!ELEMENT hand (thumb, index, middle, ring, pinky, thumb-index, index-middle, middle-ring, ring-pinky, accel)>
+<!ELEMENT hand (thumb, index, middle, ring, pinky, thumb-index, index-middle, middle-ring, ring-pinky, lsm303+, lsm9dof+)>
 <!ATTLIST hand side (left | right) #REQUIRED>
-<!ELEMENT thumb (flex, contact)>
-<!ELEMENT index (flex, contact)>
-<!ELEMENT middle (flex, contact)>
-<!ELEMENT ring (flex, contact)>
-<!ELEMENT pinky (flex, contact)>
-<!ELEMENT thumb-index (contact)>
-<!ELEMENT index-middle (contact)>
-<!ELEMENT middle-ring (contact)>
-<!ELEMENT ring-pinky (contact)>
-<!ELEMENT accel (x, y, z)>
+<!ELEMENT thumb (flex, contact-tip)>
+<!ELEMENT index (flex, contact-tip, contact-mid)>
+<!ELEMENT middle (flex, contact-tip, contact-mid)>
+<!ELEMENT ring (flex, contact-tip, contact-mid)>
+<!ELEMENT pinky (flex, contact-tip, contact-mid)>
+<!ELEMENT thumb-index (contact-tip)>
+<!ELEMENT index-middle (contact-tip)>
+<!ELEMENT middle-ring (contact-tip)>
+<!ELEMENT ring-pinky (contact-tip)>
+<!ELEMENT lsm303 (accel-x, accel-y, accel-z, mag-x, mag-y, mag-z)>
+<!ATTLIST lsm303 side (top | bottom) #REQUIRED>
+<!ELEMENT lsm9dof (accel-x, accel-y, accel-z, mag-x, mag-y, mag-z, gyro-x, gyro-y, gyro-z)>
+<!ATTLIST lsm9dof side (top | bottom) #REQUIRED>
 <!ELEMENT flex (#PCDATA)>
-<!ELEMENT contact (#PCDATA)>
-<!ELEMENT x (#PCDATA)>
-<!ELEMENT y (#PCDATA)>
-<!ELEMENT z (#PCDATA)>
+<!ELEMENT contact-tip (#PCDATA)>
+<!ELEMENT contact-mid (#PCDATA)>
+<!ELEMENT accel-x (#PCDATA)>
+<!ELEMENT accel-y (#PCDATA)>
+<!ELEMENT accel-z (#PCDATA)>
+<!ELEMENT mag-x (#PCDATA)>
+<!ELEMENT mag-y (#PCDATA)>
+<!ELEMENT mag-z (#PCDATA)>
+<!ELEMENT gyro-x (#PCDATA)>
+<!ELEMENT gyro-y (#PCDATA)>
+<!ELEMENT gyro-z (#PCDATA)>

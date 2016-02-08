@@ -92,7 +92,7 @@ class GestureHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
 
 def main( args ):
 
-    HOST_NAME = 'localhost'
+    HOST_NAME = '169.254.1.1'
     PORT_NUMBER = 8080
     serverClass = BaseHTTPServer.HTTPServer
     httpd = serverClass( (HOST_NAME, PORT_NUMBER), GestureHandler )

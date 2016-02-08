@@ -30,15 +30,17 @@ class Finger {
 	
 	 /* Default and explicit constructor functions */
 	 inline Finger( ) : defined(false) { }          
-	 inline Finger( double flexVal, bool contactVal ) : flex(flexVal), contact(contactVal), defined(true) { }
+         inline Finger( double flexVal, bool contactTipVal, bool contactMidVal ) : 
+         flex(flexVal), contactTip(contactTipVal), contactMid(contactMidVal), defined(true) { }
 
 	 /* Accessor functions */
-   	 inline double Flex( )       const { return flex    ; }  /* Access flex sensor value.  */
-	 inline bool Contact( )      const { return contact ; }  /* Access contact sensor value.  */
-	 inline bool Defined( )      const { return defined ; }  /* Access defined value. */
+   	 inline double Flex( )       const { return flex       ; }  /* Access flex sensor value.  */
+	 inline bool ContactTip( )   const { return contactTip ; }  /* Access tip contact sensor value.  */
+	 inline bool ContactMid( )   const { return contactMid ; }  /* Access mid contact sensor value.  */
+	 inline bool Defined( )      const { return defined    ; }  /* Access defined value. */
 	 
 	 /* Mutator function */
-	 void Set( double flexVal, bool contactVal ) ;            /* Sets sensor values. */
+	 void Set( double flexVal, bool contactTipVal, bool contactMidVal ) ;     /* Sets sensor values. */
 			  
 	 /* Input/Output functions */
 	 void Show( ostream &os = cout ) const ;
@@ -47,7 +49,8 @@ class Finger {
 	
 	 bool defined ;                                  /* True if gesture is defined.  */
 	 double flex  ;                                  /* Flex sensor value.    */
-	 bool contact ;                                  /* Contact sensor value. */
+	 bool contactTip ;                               /* Tip contact sensor value. */
+	 bool contactMid ;                               /* Mid contact sensor value. */
 	 				
 } ;
 

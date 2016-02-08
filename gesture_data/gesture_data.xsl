@@ -5,7 +5,7 @@
         <html>
             <head>
                 <title>Gesture Data</title>
-                <meta http-equiv="refresh" content="2" />
+                <meta http-equiv="refresh" content="5" />
             </head>  
             <body>
                 <xsl:for-each select="gestures/gesture">
@@ -25,32 +25,38 @@
                                 <tr style="background-color: blue; color: white; width: 50px; text-align: left; font-size: 16px;">
                                     <th>Location</th>
                                     <th>Flex Sensor</th>
-                                    <th>Contact Sensor</th>
+                                    <th>Tip Contact Sensor</th>
+                                    <th>Mid Contact Sensor</th>
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>Thumb</td>
                                     <td><xsl:value-of select="thumb/flex" /></td>
-                                    <td><xsl:value-of select="thumb/contact" /></td>
+                                    <td><xsl:value-of select="thumb/contact-tip" /></td>
+                                    <td></td>
                                 </tr>
                                 <tr style="background-color: gray; text-align: left; font-size: 14px;">
                                     <td>Index</td>
                                     <td><xsl:value-of select="index/flex" /></td>
-                                    <td><xsl:value-of select="index/contact" /></td>
+                                    <td><xsl:value-of select="index/contact-tip" /></td>
+                                    <td><xsl:value-of select="index/contact-mid" /></td>
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>Middle</td>
                                     <td><xsl:value-of select="middle/flex" /></td>
-                                    <td><xsl:value-of select="middle/contact" /></td>
+                                    <td><xsl:value-of select="middle/contact-tip" /></td>
+                                    <td><xsl:value-of select="middle/contact-mid" /></td>
                                 </tr>
                                 <tr style="background-color: gray; text-align: left; font-size: 14px;">
                                     <td>Ring</td>
                                     <td><xsl:value-of select="ring/flex" /></td>
-                                    <td><xsl:value-of select="ring/contact" /></td>
+                                    <td><xsl:value-of select="ring/contact-tip" /></td>
+                                    <td><xsl:value-of select="ring/contact-mid" /></td>
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>Pinky</td>
                                     <td><xsl:value-of select="pinky/flex" /></td>
-                                    <td><xsl:value-of select="pinky/contact" /></td>
+                                    <td><xsl:value-of select="pinky/contact-tip" /></td>
+                                    <td><xsl:value-of select="pinky/contact-mid" /></td>
                                 </tr>
                             </table>
                           </div>
@@ -63,40 +69,74 @@
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>Thumb-Index</td>
-                                    <td><xsl:value-of select="thumb-index/contact" /></td>
+                                    <td><xsl:value-of select="thumb-index/contact-tip" /></td>
+                                    <td></td>
                                 </tr>
                                 <tr style="background-color: gray; text-align: left; font-size: 14px;">
                                     <td>Index-Middle</td>
-                                    <td><xsl:value-of select="index-middle/contact" /></td>
+                                    <td><xsl:value-of select="index-middle/contact-tip" /></td>
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>Middle-Ring</td>
-                                    <td><xsl:value-of select="middle-ring/contact" /></td>
+                                    <td><xsl:value-of select="middle-ring/contact-tip" /></td>
                                 </tr>
                                 <tr style="background-color: gray; text-align: left; font-size: 14px;">
                                     <td>Ring-Pinky</td>
-                                    <td><xsl:value-of select="ring-pinky/contact" /></td>
+                                    <td><xsl:value-of select="ring-pinky/contact-tip" /></td>
                                 </tr>
                             </table>
                           </div>
                           <div style="float: left; width: 33%;">
-                            <p style="text-align: center; font-size: 18px; font-weight: bold;">Accelerometer</p>
+                            <p style="text-align: center; font-size: 18px; font-weight: bold;">LSM303 <xsl:value-of select="lsm303/side" /></p>
                             <table style="border-collapse: collapse; border: 1px solid black; margin-left: auto; margin-right: auto; width: 90%;">
                                 <tr style="background-color: blue; color: white; text-align: left; font-size: 16px;">
-                                    <th>Location</th>
-                                    <th>Sensor</th>
+                                    <th>Axis</th>
+                                    <th>Accelerometer</th>
+                                    <th>Magnetometer</th>
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>X</td>
-                                    <td><xsl:value-of select="accel/x" /></td>
+                                    <td><xsl:value-of select="lsm303/accel-x" /></td>
+                                    <td><xsl:value-of select="lsm303/mag-x" /></td>
                                 </tr>
                                 <tr style="background-color: gray; text-align: left; font-size: 14px;">
                                     <td>Y</td> 
-                                    <td><xsl:value-of select="accel/y" /></td>
+                                    <td><xsl:value-of select="lsm303/accel-y" /></td>
+                                    <td><xsl:value-of select="lsm303/mag-y" /></td>
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>Z</td>
-                                    <td><xsl:value-of select="accel/z" /></td>
+                                    <td><xsl:value-of select="lsm303/accel-z" /></td>
+                                    <td><xsl:value-of select="lsm303/mag-z" /></td>
+                                </tr>
+                            </table>
+                          </div>
+                          <div style="float: left; width: 33%;">
+                            <p style="text-align: center; font-size: 18px; font-weight: bold;">LSM9DOF <xsl:value-of select="lsm9dof/side" /></p>
+                            <table style="border-collapse: collapse; border: 1px solid black; margin-left: auto; margin-right: auto; width: 90%;">
+                                <tr style="background-color: blue; color: white; text-align: left; font-size: 16px;">
+                                    <th>Axis</th>
+                                    <th>Accelerometer</th>
+                                    <th>Magnetometer</th>
+                                    <th>Gyrometer</th>
+                                </tr>
+                                <tr style="background-color: white; text-align: left; font-size: 14px;">
+                                    <td>X</td>
+                                    <td><xsl:value-of select="lsm9dof/accel-x" /></td>
+                                    <td><xsl:value-of select="lsm9dof/mag-x" /></td>
+                                    <td><xsl:value-of select="lsm9dof/gyro-x" /></td>
+                                </tr>
+                                <tr style="background-color: gray; text-align: left; font-size: 14px;">
+                                    <td>Y</td> 
+                                    <td><xsl:value-of select="lsm9dof/accel-y" /></td>
+                                    <td><xsl:value-of select="lsm9dof/mag-y" /></td>
+                                    <td><xsl:value-of select="lsm9dof/gyro-y" /></td>
+                                </tr>
+                                <tr style="background-color: white; text-align: left; font-size: 14px;">
+                                    <td>Z</td>
+                                    <td><xsl:value-of select="lsm9dof/accel-z" /></td>
+                                    <td><xsl:value-of select="lsm9dof/mag-z" /></td>
+                                    <td><xsl:value-of select="lsm9dof/gyro-z" /></td>
                                 </tr>
                             </table>
                           </div>

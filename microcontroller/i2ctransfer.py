@@ -70,7 +70,7 @@ def i2c_read( bus, data, i2c_addr, num_bytes ):
 
     if bus is not None:
         # Read next set of gesture data.
-        raw_data = bus.read_byte_data( i2c_addr, num_bytes ) 
+        raw_data = bus.read_word_data( i2c_addr, num_bytes ) 
         i = 0 # An iterator.
         k = 0 # An iterator.
         while i < (Data.num_hands - 1): # Reduce number of hands by 1 since there is currently only 1 glove.
@@ -192,9 +192,9 @@ def main( args ):
     suffix = ".xml"                                                     # Suffix of the output file. 
     output_dir = os.path.expanduser( "~/CapstoneProject/gesture_data" ) # Directory of the output file.
     fName = os.path.join( output_dir, prefix + suffix )                 # Absolute path of output file.
-    i2c_addr = 0x22                                                     # I2C address of microcontroller slave.
+    i2c_addr = 0x04                                                     # I2C address of microcontroller slave.
     ret_val = os.EX_OK                                                  # Return status code
-    num_bytes = 20                                                      # The total number of bytes to read from the slave device.
+    num_bytes = 4                                                       # The total number of bytes to read from the slave device.
     sleepTime = 5                                                       # The amount of time to sleep between transfers.
     bus = None                                                          # I2C connection.
     status = "disconnected"                                             # Status of the I2C connection.
@@ -208,15 +208,20 @@ def main( args ):
                 # Open the I2C connection.
                 sys.stdout.write( "Opening I2C connection\n" )
                 try:
-                    bus = smbus.SMBus( 0 )
+                    bus = smbus.SMBus( 1 )
                     status = "connected"
                 except IOError as io_error:
-                    sys.stderr.write( "*** Error while attempting I2C communication. ***\n" )
+                    sys.stderr.write( "*** Error while attempting to open I2C communication. ***\n" )
                     sys.stderr.write( "***" + str(io_error) + "***\n" )
                     sys.stderr.write( "*** Attempting to continue. ***\n" )
             # Read the gesture data.
             sys.stdout.write( "Reading gesture data\n" )
-            data = i2c_read( bus, data, i2c_addr, num_bytes )
+            try:
+                data = i2c_read( bus, data, i2c_addr, num_bytes )
+            except IOError as io_error:
+                sys.stderr.write( "*** Error while attempting to read during I2C communication. ***\n" )
+                sys.stderr.write( "***" + str(io_error) + "***\n" )
+                sys.stderr.write( "*** Attempting to continue. ***\n" )
             # Update the output file.
             sys.stdout.write( "Writing:\t" + os.path.basename(fName) + "\n" )
             output_data( fName, data, status )
