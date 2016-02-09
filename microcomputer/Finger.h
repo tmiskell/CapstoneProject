@@ -31,7 +31,7 @@ class Finger {
 	 /* Default and explicit constructor functions */
 	 inline Finger( ) : defined(false) { }          
          inline Finger( double flexVal, bool contactTipVal, bool contactMidVal ) : 
-         flex(flexVal), contactTip(contactTipVal), contactMid(contactMidVal), defined(true) { }
+         defined(true), flex(flexVal), contactTip(contactTipVal), contactMid(contactMidVal) { }
 
 	 /* Accessor functions */
    	 inline double Flex( )       const { return flex       ; }  /* Access flex sensor value.  */

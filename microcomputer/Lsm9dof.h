@@ -32,8 +32,8 @@ class Lsm9dof {
          inline Lsm9dof( double accelxVal, double accelyVal, double accelzVal,
                          double magxVal, double magyVal, double magzVal, 
                          double gyroxVal, double gyroyVal, double gyrozVal, string sideVal ) : 
-         accelx(accelxVal), accely(accelyVal), accelz(accelzVal), magx(magxVal), magy(magyVal), magz(magzVal), 
-         gyrox(gyroxVal), gyroy(gyroyVal), gyroz(gyrozVal), side(sideVal), defined(true) { }
+         defined(true), accelx(accelxVal), accely(accelyVal), accelz(accelzVal), magx(magxVal), magy(magyVal), magz(magzVal), 
+         gyrox(gyroxVal), gyroy(gyroyVal), gyroz(gyrozVal), side(sideVal) { }
 
 	 /* Accessor functions */
    	 inline double AccelX( )   const { return accelx ; }  /* Access x axis accelerometer value.  */

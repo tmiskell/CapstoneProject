@@ -31,7 +31,7 @@ class Gesture {
 	
 	 /* Default and explicit constructor functions */
 	 inline Gesture( ) : defined(false) { }          
-	 inline Gesture( Hand lHand, Hand rHand ) : left(lHand), right(rHand), defined(true) { }
+         inline Gesture( Hand lHand, Hand rHand ) : defined(true), left(lHand), right(rHand) { }
 
 	 /* Accessor functions */
    	 inline Hand Left( )       const { return left       ; }  /* Access left hand.  */

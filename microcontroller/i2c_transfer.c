@@ -12,22 +12,22 @@
 #include <string.h>
 #include <time.h>
 /* Define constants. */
-#define MAX_CHAR 1023          /* Number of characters in buffer. */
-#define ATMEGA_ADDR 0x04       /* Atmega I2C address. */
-#define TOTAL_NUM_CONTACTS 13  /* Total number of contact sensors. */
-#define NUM_FINGER_CONTACTS 2  /* Number of contact sensors per finger. */
-#define NUM_HANDS 2            /* Number of hands. */
-#define NUM_FINGERS 5          /* Number of fingers per hand. */
-#define NUM_FOLDS 4            /* Number of inter-digital folds per hand. */
-#define MAX_ADC 1023.0         /* The maximum 10-bit ADC value. */
-#define NUM_303 1              /* Number of connected LSM303 accelerometers. */
-#define NUM_303_VALS 6         /* Number of values per LSM303 accelerometer reading. */
-#define TOTAL_NUM_303 NUM_303 * NUM_303_VALS /* Total number of LSM303 values. */
-#define SEP_NUM_303 TOTAL_NUM_303 / 2 /* Number of LSM303 values for a given type (accelerometer or magnetometer). */
-#define NUM_9DOF 1             /* Number of connected LSM9DOF accelerometers. */
-#define NUM_9DOF_VALS 9        /* Number of values per LSM9DOF accelerometer reading. */
+#define MAX_CHAR 1023                           /* Number of characters in buffer. */
+#define ATMEGA_ADDR 0x04                        /* Atmega I2C address. */
+#define TOTAL_NUM_CONTACTS 13                   /* Total number of contact sensors. */
+#define NUM_FINGER_CONTACTS 2                   /* Number of contact sensors per finger. */
+#define NUM_HANDS 2                             /* Number of hands. */
+#define NUM_FINGERS 5                           /* Number of fingers per hand. */
+#define NUM_FOLDS 4                             /* Number of inter-digital folds per hand. */
+#define MAX_ADC 1023.0                          /* The maximum 10-bit ADC value. */
+#define NUM_303 2                               /* Number of connected LSM303 accelerometers. */
+#define NUM_303_VALS 6                          /* Number of values per LSM303 accelerometer reading. */
+#define TOTAL_NUM_303 NUM_303 * NUM_303_VALS    /* Total number of LSM303 values. */
+#define SEP_NUM_303 TOTAL_NUM_303 / 2           /* Number of LSM303 values for a given type (accelerometer or magnetometer). */
+#define NUM_9DOF 2                              /* Number of connected LSM9DOF accelerometers. */
+#define NUM_9DOF_VALS 9                         /* Number of values per LSM9DOF accelerometer reading. */
 #define TOTAL_NUM_9DOF NUM_9DOF * NUM_9DOF_VALS /* Total bumber of LSM9DOF values. */
-#define SEP_NUM_9DOF TOTAL_NUM_9DOF / 3 /* Number of LSM9DOF values for a given type (accelerometer, magnetometer, or gyrometer). */
+#define SEP_NUM_9DOF TOTAL_NUM_9DOF / 3         /* Number of LSM9DOF values for a given type (accelerometer, magnetometer, or gyrometer). */
 /* Custom type definitions. */
 typedef enum{ false, true } bool ; /* Used to define boolean values. */
 struct Finger{  /* Structure to store finger related data. */
@@ -88,6 +88,7 @@ void group_data( struct Hand hands[NUM_HANDS], unsigned int left_flex[NUM_FINGER
                  double right_9dof_accel[SEP_NUM_9DOF], double right_9dof_mag[SEP_NUM_9DOF], double right_9dof_gyro[SEP_NUM_9DOF] ) ;
 void print_values( struct Hand hands[NUM_HANDS] ) ;
 bool reset_sensor( char* f_name ) ;
+unsigned int round_flex( unsigned int x, unsigned int lb, unsigned int ub ) ;
 void signal_handler( int sig ) ;
 
 int main( int argc, char* argv[] ){
@@ -124,7 +125,7 @@ int main( int argc, char* argv[] ){
   double right_9dof_mag[SEP_NUM_9DOF] ;     /* LSM9DOF magnetometer data for the right hand. */
   double right_9dof_gyro[SEP_NUM_9DOF] ;    /* LSM9DOF gyrometer data for the right hand. */
   char* f_name = "/home/pi/CapstoneProject/gesture_data/gesture_data_init.xml" ; /* File to store data. */
-  /*char* gpio_f_name = "/sys/class/gpio/gpio17/value" ; File handle used to reset microcontroller. */
+  char* gpio_f_name = "/sys/class/gpio/gpio27/value" ; /* File handle used to reset microcontroller. */
 
   fprintf( stdout, "Initializing\n" ) ;
   /* Initialize the screen. Register keyboard interrupt handler. */
@@ -137,11 +138,11 @@ int main( int argc, char* argv[] ){
              left_303_accel, left_303_mag, right_303_accel, right_303_mag,
              left_9dof_accel, left_9dof_mag, left_9dof_gyro, right_9dof_accel, right_9dof_mag, right_9dof_gyro ) ;
   t1.tv_sec = 0 ;                  
-  /* Reset microcontroller.
+  /* Reset microcontroller. */
   fprintf( stdout, "Reseting microcontroller.\n" ) ;
   if( !reset_sensor(gpio_f_name) ){
     perror( "*** Unable to reset sensor " ) ;
-  } */
+  }
   /* Continually read current sensor data. */
   while( true ){
     buffer_init( buffer ) ;
@@ -154,11 +155,11 @@ int main( int argc, char* argv[] ){
       strcpy( status, "disconnected" ) ;
     }
     /* Allow microcontroller sufficient time to update values. */
-    t1.tv_nsec = 250000000L ;   
+    t1.tv_nsec = 62500000L ;   
     nanosleep( &t1, &t2 ) ;
     /* Read flex sensors. */
     fprintf( stdout, "Reading flex sensors\n" ) ;
-    t1.tv_nsec = 100000000L ;   
+    t1.tv_nsec = 31250000L ;   
     num_bytes = 4 ;
     for( i = 0 ; i < (NUM_FINGERS - 1) ; i++ ){ /* Note the thumb currently doesn't have a flex sensor. */
       if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
@@ -488,7 +489,7 @@ bool write_file( char* f_name, struct Hand hands[NUM_HANDS], char status[MAX_CHA
                                     "pinky",
                                     "thumb"
                                    } ;
-  char* fold_name[NUM_FOLDS] = {"thumb-index",  /* A list of names for the folds between fingers. */
+  char* fold_name[NUM_FOLDS] = {"thumb-index",              /* A list of names for the folds between fingers. */
                                 "index-middle", 
                                 "middle-ring", 
                                 "ring-pinky"
@@ -496,15 +497,19 @@ bool write_file( char* f_name, struct Hand hands[NUM_HANDS], char status[MAX_CHA
   char* contact_name[NUM_FINGER_CONTACTS] = {"contact-tip", /* A list of the contact names. */
                                              "contact-mid"
                                             } ;       
-  char* lsm303_side[NUM_303] = {"top"          /* A list of the LSM303 positions. */
-                                //"bottom"
+  char* lsm303_side[NUM_303] = {"top",                      /* A list of the LSM303 positions. */
+                                "bottom"
                                } ;       
-  char* lsm9dof_side[NUM_9DOF] = {"top"          /* A list of the LSM303 positions. */
-                                  //"bottom"
+  char* lsm9dof_side[NUM_9DOF] = {"top",                    /* A list of the LSM303 positions. */
+                                  "bottom"
                                  } ;       
   unsigned int i ;  /* An iterator. */
   unsigned int j ;  /* An iterator. */
   unsigned int k ;  /* An iterator. */
+  unsigned int flex_adjust ; /* The adjusted flex sensor value, in the range 0 - 100. */
+  unsigned int flex_round ;  /* The flex sensor value rounded to one of three values: 0, 50, 100.*/
+  const unsigned int lb = 10 ; /* The lower bound for rounding. */
+  const unsigned int ub = 40 ; /* The upper bound for rounding. */
 
   fp = fopen( f_name, "w" ) ;
   if( fp == NULL ){
@@ -525,7 +530,9 @@ bool write_file( char* f_name, struct Hand hands[NUM_HANDS], char status[MAX_CHA
       /* Write the next set of finger data. */
       fprintf( fp, "\t\t\t<%s>\n", finger_name[j] ) ;
       /* Express flex sensor values in range 0-100.*/
-      fprintf( fp, "\t\t\t\t<flex>%d</flex>\n", (int)(((float)hands[i].fingers[j].flex / MAX_ADC) * 100.0) ) ; 
+      flex_adjust = (unsigned int)(((float)hands[i].fingers[j].flex / MAX_ADC) * 100.0) ;
+      flex_round = round_flex( flex_adjust, lb, ub ) ;
+      fprintf( fp, "\t\t\t\t<flex>%u</flex>\n", flex_round ) ; 
       for( k = 0 ; k < NUM_FINGER_CONTACTS ; k++ ){
 	if( (strcmp(finger_name[j], "thumb") == 0) && (k == (NUM_FINGER_CONTACTS - 1)) ){
 	  /* Thumb only has a tip contact sensor. */
@@ -620,23 +627,33 @@ bool reset_sensor( char* f_name ){
   FILE* fp ;                                /* File handle. */
   struct timespec t1 ;                      /* Amount of time to wait. */
   struct timespec t2 ;                      /* Remaining time if delay is interrupted. */
+  const unsigned int NUM_REPS = 3 ;         /* The number of iterations to perform. */
+  unsigned int i ;                          /* An iterator. */
 
   t1.tv_sec = 0.0 ;
   t1.tv_nsec = 250000000L ;   
 
-  /* Open a handle to the GPIO pin. Create a distinct pulse.
-     Wait sufficient time for the microcontroller to reset.  */
-  fp = fopen( f_name, "w" ) ;
-  if( fp == NULL ){
-    return false ;
+  /* Open a handle to the GPIO pin. Create a distinct pulse. */
+  for( i = 0 ; i < NUM_REPS ; i++ ){
+    fp = fopen( f_name, "w" ) ;
+    if( fp == NULL ){
+      return false ;
+    }
+    if( (i % 2) != 0 ){
+      fprintf( fp, "0" ) ;  
+    }
+    else{
+      fprintf( fp, "1" ) ;  
+    }
+    fclose( fp ) ;
+    nanosleep( &t1, &t2 ) ;
   }
-  fprintf( fp, "1" ) ;  
+  /* Wait sufficient time for the microcontroller to reset.  */
+  t1.tv_sec = 2.0 ;
+  t1.tv_nsec = 0 ;   
+  fprintf( stdout, "Waiting for microcontroller to reset..." ) ;
   nanosleep( &t1, &t2 ) ;
-  fprintf( fp, "0" ) ;  
-  nanosleep( &t1, &t2 ) ;
-  fprintf( fp, "1" ) ;  
-  nanosleep( &t1, &t2 ) ;
-  fclose( fp ) ;
+  fprintf( stdout, "Done.\n" ) ;
 
   return true ;
 }
@@ -644,10 +661,10 @@ bool reset_sensor( char* f_name ){
 void print_values( struct Hand hands[NUM_HANDS] ){
   /* Function to print the values read from the sensors to the screen. */
 
-  char* hand_name[NUM_HANDS] = {"left",        /* A list of names for the hands. */
+  char* hand_name[NUM_HANDS] = {"left",         /* A list of names for the hands. */
                                 "right"
                                } ;
-  char* finger_name[NUM_FINGERS] = {"index",   /* A list of names for the flex sensors. */
+  char* finger_name[NUM_FINGERS] = {"index",    /* A list of names for the flex sensors. */
                                     "middle", 
                                     "ring", 
                                     "pinky",
@@ -658,66 +675,81 @@ void print_values( struct Hand hands[NUM_HANDS] ){
                                 "middle-Ring", 
                                 "ring-Pinky"
                                } ;             
-  char* lsm303_side[NUM_303] = {"top"          /* A list of the LSM303 positions. */
-                                //"bottom"
+  char* lsm303_side[NUM_303] = {"top",          /* A list of the LSM303 positions. */
+                                "bottom"
                                } ;       
-  char* lsm9dof_side[NUM_9DOF] = {"top"          /* A list of the LSM303 positions. */
-                                  //"bottom"
+  char* lsm9dof_side[NUM_9DOF] = {"top",        /* A list of the LSM303 positions. */
+                                  "bottom"
                                  } ;       
+  char* border = "***\n" ;                      /* The border to print. */
   unsigned int i ;
   unsigned int j ;
 
   /* Print out the flex sensor values. */
   for( i = 0 ; i < NUM_HANDS ; i++ ){
-    fprintf( stdout, "%s:\n", hand_name[i] ) ;
+    fprintf( stdout, "%s Hand:\n", hand_name[i] ) ;
+    fprintf( stdout, border ) ;
     for( j = 0 ; j < NUM_FINGERS ; j++ ){
-      if( strcmp(finger_name[j], "thumb") == 0 ){
+      if( strcmp(finger_name[j], "thumb") == 0 )
 	/* Currently the thumb does not have a flex sensor. */
 	continue ;
-      }
-      fprintf( stdout, "%s Flex: %u\t", finger_name[j], hands[i].fingers[j].flex ) ;
+      fprintf( stdout, "%s Flex: %u\t\t", finger_name[j], hands[i].fingers[j].flex ) ;
     }
     fprintf( stdout, "\n" ) ;
+    fprintf( stdout, border ) ;
     /* Print out the contact sensor values. */
     for( j = 0 ; j < NUM_FINGERS ; j++ ){
       fprintf( stdout, "%s Tip Contact: %u\t\t", finger_name[j], hands[i].fingers[j].contact[0] ) ;
-      if( i == NUM_FINGERS - 1 ){
+      if( strcmp(finger_name[j], "thumb") == 0 ){
         /* Currently the thumb has only one contact sensor. */
-        break ;
+	fprintf( stdout, "\n" ) ;
+        continue ;
       }
       fprintf( stdout, "%s Mid Contact: %u\n", finger_name[j], hands[i].fingers[j].contact[1] ) ;
     }
+    fprintf( stdout, border ) ;
     for( j = 0 ; j < NUM_FOLDS ; j++ ){
-      fprintf( stdout, "%s Contact: %u\t", fold_name[j], hands[i].fold[j].contact ) ;
+      fprintf( stdout, "%s Contact: %u\t\t", fold_name[j], hands[i].fold[j].contact ) ;
       if( (j % 2) != 0 ){
 	fprintf( stdout, "\n" ) ;
       }
     }
-    fprintf( stdout, "\n" ) ;
+    fprintf( stdout, border ) ;
     for( j = 0 ; j < NUM_303 ; j++ ){
       fprintf( stdout, "LSM303 Side: %s\n", lsm303_side[j] ) ;
-      fprintf( stdout, "LSM303 Accel X: %f\t", hands[i].lsm303[j].accel_x ) ;
-      fprintf( stdout, "LSM303 Mag X: %f\n", hands[i].lsm303[j].mag_x ) ;
-      fprintf( stdout, "LSM303 Accel Y: %f\t", hands[i].lsm303[j].accel_y ) ;
-      fprintf( stdout, "LSM303 Mag Y: %f\n", hands[i].lsm303[j].mag_y ) ;
-      fprintf( stdout, "LSM303 Accel Z: %f\t", hands[i].lsm303[j].accel_z ) ;
-      fprintf( stdout, "LSM303 Mag Z: %f\n", hands[i].lsm303[j].mag_z ) ;
+      fprintf( stdout, "LSM303 Accel: (%f, %f, %f)\t", hands[i].lsm303[j].accel_x, hands[i].lsm303[j].accel_y, hands[i].lsm303[j].accel_z ) ;
+      fprintf( stdout, "LSM303 Mag: (%f, %f, %f)\n", hands[i].lsm303[j].mag_y, hands[i].lsm303[j].mag_x, hands[i].lsm303[j].mag_z ) ;
     }
+    fprintf( stdout, border ) ;
     for( j = 0 ; j < NUM_9DOF ; j++ ){
       fprintf( stdout, "LSM9DOF Side: %s\n", lsm9dof_side[j] ) ;
-      fprintf( stdout, "LSM9DOF Accel X: %f\t", hands[i].lsm9dof[j].accel_x ) ;
-      fprintf( stdout, "LSM9DOF MAG X: %f\t", hands[i].lsm9dof[j].mag_x ) ;
-      fprintf( stdout, "LSM9DOF GYRO X: %f\n", hands[i].lsm9dof[j].gyro_x ) ;
-      fprintf( stdout, "LSM9DOF Accel Y: %f\t", hands[i].lsm9dof[j].accel_y ) ;
-      fprintf( stdout, "LSM9DOF MAG Y: %f\t", hands[i].lsm9dof[j].mag_y ) ;
-      fprintf( stdout, "LSM9DOF GYRO Y: %f\n", hands[i].lsm9dof[j].gyro_y ) ;
-      fprintf( stdout, "LSM9DOF Accel Z: %f\t", hands[i].lsm9dof[j].accel_z ) ;
-      fprintf( stdout, "LSM9DOF MAG Z: %f\t", hands[i].lsm9dof[j].mag_z ) ;
-      fprintf( stdout, "LSM9DOF GYRO Z: %f\n", hands[i].lsm9dof[j].gyro_z ) ;
+      fprintf( stdout, "LSM9DOF Accel: (%f, %f, %f)\t", hands[i].lsm9dof[j].accel_x, hands[i].lsm9dof[j].accel_y, hands[i].lsm9dof[j].accel_z ) ;
+      fprintf( stdout, "LSM9DOF Mag: (%f, %f, %f)\t", hands[i].lsm9dof[j].mag_x, hands[i].lsm9dof[j].mag_y, hands[i].lsm9dof[j].mag_z ) ;
+      fprintf( stdout, "LSM9DOF Gyro: (%f, %f, %f)\n", hands[i].lsm9dof[j].gyro_x, hands[i].lsm9dof[j].gyro_y, hands[i].lsm9dof[j].gyro_z ) ;
     }
+    fprintf( stdout, border ) ;
   }
 
   return ;
+
+}
+
+unsigned int round_flex( unsigned int x, unsigned int lb, unsigned int ub ){
+  /* Function to round input flex sensor values. */
+
+  const unsigned int MIN_VAL = 0 ;
+  const unsigned int MID_VAL = 50 ;
+  const unsigned int MAX_VAL = 100 ;
+
+  if( x < lb ){
+    return MIN_VAL ;
+  }
+  else if( x > ub ){
+    return MAX_VAL ;
+  } 
+  else{
+    return MID_VAL ;
+  }
 
 }
 

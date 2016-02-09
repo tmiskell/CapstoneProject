@@ -30,7 +30,7 @@ class Fold {
 	
 	 /* Default and explicit constructor functions */
 	 inline Fold( ) : defined(false) { }          
-	 inline Fold( bool contactTipVal ) : contactTip(contactTipVal), defined(true) { }
+         inline Fold( bool contactTipVal ) : defined(true), contactTip(contactTipVal) { }
 
 	 /* Accessor functions */
 	 inline bool ContactTip( ) const { return contactTip ; }  /* Access contact sensor value. */

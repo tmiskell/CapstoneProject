@@ -31,7 +31,7 @@ class Lsm303 {
 	 inline Lsm303( ) : defined(false) { }          
          inline Lsm303( double accelxVal, double accelyVal, double accelzVal,
                         double magxVal, double magyVal, double magzVal, string sideVal ) : 
-         accelx(accelxVal), accely(accelyVal), accelz(accelzVal), magx(magxVal), magy(magyVal), magz(magzVal), side(sideVal), defined(true) { }
+         defined(true), accelx(accelxVal), accely(accelyVal), accelz(accelzVal), magx(magxVal), magy(magyVal), magz(magzVal), side(sideVal) { }
 
 	 /* Accessor functions */
    	 inline double AccelX( )   const { return accelx ; }  /* Access x axis accelerometer value.  */

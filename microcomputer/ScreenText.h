@@ -30,7 +30,7 @@ class ScreenText {
 	 /* Default and explicit constructor functions */
 	 inline ScreenText( ) : defined(false) { }          
          inline ScreenText( string statVal, string gestDataVal, string gestConvVal, string instrDataVal ) : 
-  	                    status(statVal), gestureData(gestDataVal), gestureConv(gestConvVal), instrData(instrDataVal), defined(true) { }
+	   defined(true), status(statVal), gestureData(gestDataVal), gestureConv(gestConvVal), instrData(instrDataVal) { }
 
 	 /* Accessor functions */
    	 inline string Status( )      const { return status      ; }  /* Access status.  */

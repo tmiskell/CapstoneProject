@@ -3,9 +3,10 @@ export CONVERT_DIR=microcomputer
 export TRANSFER_DIR=microcontroller
 export LOG_DIR=log
 IP_ADDR=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
-#echo "Configuring GPIO pins"
-#gpio export 17 out
-#sleep 1
+echo "Configuring GPIO pins"
+gpio export 27 out
+echo 1 > /sys/class/gpio/gpio27/value
+sleep 1
 echo "Starting I2C transfers from sensors"
 $TRANSFER_DIR/i2c_transfer > $LOG_DIR/transfer.log 2> $LOG_DIR/transfer_error.log &
 sleep 1

@@ -1,7 +1,7 @@
 # Make file for sign language to speech conversion software
 # Variables
 CXX=g++
-OPTMETHOD=               # Add -O for optimization
+OPTMETHOD=-std=c++98 -pedantic -Wall # Add -O for optimization
 CONNINCLUDE=/usr/include/cppconn
 FESTINCLUDE=-I /usr/include/festival/src/include/ -I /usr/include/speech_tools/include/ -I /usr/include/speech_tools/base_class/string/
 LIBRARY=/usr/lib

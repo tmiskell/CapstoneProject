@@ -24,6 +24,9 @@
 #include "Lsm9dof.h"
 using namespace std ;
 
+#define NUM_LSM303 2
+#define NUM_LSM9DOF 2
+
 /*----------Type Definitions-------------------------------------------------------*/
 
 /* Type "Hand" represents a left or hand.       */
@@ -33,10 +36,10 @@ class Hand {
   public:  
 	
 	 /* Default and explicit constructor functions */
-	 inline Hand( ) : defined(false) { }          
-         inline Hand( Finger th, Finger in, Finger mi, Finger ri, Finger pi, Fold ti, Fold im, Fold mr, Fold rp, Lsm303 l303, Lsm9dof l9dof ) : 
-    	              thumb(th), index(in), middle(mi), ring(ri), pinky(pi), 
-  	              tiFold(ti), imFold(im), mrFold(mr), rpFold(rp), lsm303(l303), lsm9dof(l9dof), defined(true) { }
+         inline Hand( ) : defined(false), lsm303(NULL), lsm9dof(NULL) { }          
+         inline Hand( Finger th, Finger in, Finger mi, Finger ri, Finger pi, Fold ti, Fold im, Fold mr, Fold rp ) : 
+	   defined(true), thumb(th), index(in), middle(mi), ring(ri), pinky(pi), tiFold(ti), imFold(im), mrFold(mr), rpFold(rp) { }
+	 /* Destructor function. ~Hand( ) ; */
 
 	 /* Accessor functions */
    	 inline Finger  Thumb( )       const { return thumb       ; }  /* Access thumb.  */
@@ -48,13 +51,16 @@ class Hand {
 	 inline Fold    ImFold( )      const { return imFold      ; }  /* Access index-middle interdigital fold. */
 	 inline Fold    MrFold( )      const { return mrFold      ; }  /* Access middler-ring interdigital fold. */
 	 inline Fold    RpFold( )      const { return rpFold      ; }  /* Access ring-pinky interdigital fold. */
-	 inline Lsm303  Lsm303Vals( )  const { return lsm303      ; }  /* Access LSM303 accelerometer values. */
-	 inline Lsm9dof Lsm9dofVals( ) const { return lsm9dof     ; }  /* Access LSM9DOF accelerometer values. */
-	 inline bool    Defined( )     const { return defined ; }      /* Access defined value. */
+	 inline bool    Defined( )     const { return defined ; }      /* Access defined value. */         
+	 Lsm303  Lsm303Vals( unsigned int i )  ;                       /* Access LSM303 accelerometer. */
+	 Lsm9dof Lsm9dofVals( unsigned int i ) ;                       /* Access LSM9DOF accelerometer. */
 	 
 	 /* Mutator function */
+         /* Set fingers, interdigital folds, accelerometer values. */
 	 void Set( Finger th, Finger in, Finger mi, Finger ri, Finger pi, 
-                   Fold tiFold, Fold imFold, Fold mrFold, Fold rpFold, Lsm303 l303, Lsm9dof l9dof ) ;  /* Sets fingers, interdigital folds, accelerometer values. */
+                   Fold tiFold, Fold imFold, Fold mrFold, Fold rpFold, Lsm303 l3030, Lsm303 l3031, Lsm9dof l9dof0, Lsm9dof l9dof1 ) ;  
+	 /* Initializers for accelerometers. */
+	 void LsmInit( ) ;
 			  
 	 /* Input/Output functions */
 	 void Show( ostream &os = cout ) const ;
@@ -71,8 +77,8 @@ class Hand {
          Fold   imFold ;                                 /* Index-middle interdigital fold. */
          Fold   mrFold ;                                 /* Middle-ring interdigital fold. */
          Fold   rpFold ;                                 /* Ring-pinky interdigital fold. */
-	 Lsm303 lsm303 ;                                 /* The LSM303 accelerometer values. */
-	 Lsm9dof lsm9dof ;                               /* The LSM9DOF accelerometer values. */
+	 Lsm303* lsm303 ;                                /* The LSM303 accelerometer values. There are 2 accelerometers attached. */
+	 Lsm9dof* lsm9dof ;                              /* The LSM9DOF accelerometer values. There are 2 accelerometers attached.*/
 	 				
 } ;
 

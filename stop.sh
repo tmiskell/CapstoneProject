@@ -14,5 +14,5 @@ kill $PID
 sleep 1
 cat $LOG_DIR/transfer_error.log >> $LOG_DIR/transfer.log
 rm $LOG_DIR/transfer_error.log
-#echo "Cleaning up GPIO pin configuration"
-#gpio unexportall
+echo "Cleaning up GPIO pin configuration"
+gpio unexportall
