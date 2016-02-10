@@ -86,8 +86,14 @@
                                 </tr>
                             </table>
                           </div>
-                          <div style="float: left; width: 33%;">
-                            <p style="text-align: center; font-size: 18px; font-weight: bold;">LSM303 <xsl:value-of select="lsm303/side" /></p>
+                          <xsl:for-each select="lsm303">
+                           <div style="float: left; width: 33%;">
+                            <xsl:if test="@side = 'top'">
+                                <p style="text-align: center; font-size: 18px; font-weight: bold;">Top LSM303</p>
+                            </xsl:if>
+                            <xsl:if test="@side = 'bottom'">
+                                <p style="text-align: center; font-size: 18px; font-weight: bold;">Bottom LSM303</p>
+                            </xsl:if>
                             <table style="border-collapse: collapse; border: 1px solid black; margin-left: auto; margin-right: auto; width: 90%;">
                                 <tr style="background-color: blue; color: white; text-align: left; font-size: 16px;">
                                     <th>Axis</th>
@@ -96,23 +102,30 @@
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>X</td>
-                                    <td><xsl:value-of select="lsm303/accel-x" /></td>
-                                    <td><xsl:value-of select="lsm303/mag-x" /></td>
+                                    <td><xsl:value-of select="accel-x" /></td>
+                                    <td><xsl:value-of select="mag-x" /></td>
                                 </tr>
                                 <tr style="background-color: gray; text-align: left; font-size: 14px;">
                                     <td>Y</td> 
-                                    <td><xsl:value-of select="lsm303/accel-y" /></td>
-                                    <td><xsl:value-of select="lsm303/mag-y" /></td>
+                                    <td><xsl:value-of select="accel-y" /></td>
+                                    <td><xsl:value-of select="mag-y" /></td>
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>Z</td>
-                                    <td><xsl:value-of select="lsm303/accel-z" /></td>
-                                    <td><xsl:value-of select="lsm303/mag-z" /></td>
+                                    <td><xsl:value-of select="accel-z" /></td>
+                                    <td><xsl:value-of select="mag-z" /></td>
                                 </tr>
                             </table>
-                          </div>
-                          <div style="float: left; width: 33%;">
-                            <p style="text-align: center; font-size: 18px; font-weight: bold;">LSM9DOF <xsl:value-of select="lsm9dof/side" /></p>
+                           </div>
+                          </xsl:for-each>
+                          <xsl:for-each select="lsm9dof">
+                           <div style="float: left; width: 33%;">
+                            <xsl:if test="@side = 'top'">
+                                <p style="text-align: center; font-size: 18px; font-weight: bold;">Top LSM9DOF</p>
+                            </xsl:if>
+                            <xsl:if test="@side = 'bottom'">
+                                <p style="text-align: center; font-size: 18px; font-weight: bold;">Bottom LSM9DOF</p>
+                            </xsl:if>
                             <table style="border-collapse: collapse; border: 1px solid black; margin-left: auto; margin-right: auto; width: 90%;">
                                 <tr style="background-color: blue; color: white; text-align: left; font-size: 16px;">
                                     <th>Axis</th>
@@ -122,24 +135,25 @@
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>X</td>
-                                    <td><xsl:value-of select="lsm9dof/accel-x" /></td>
-                                    <td><xsl:value-of select="lsm9dof/mag-x" /></td>
-                                    <td><xsl:value-of select="lsm9dof/gyro-x" /></td>
+                                    <td><xsl:value-of select="accel-x" /></td>
+                                    <td><xsl:value-of select="mag-x" /></td>
+                                    <td><xsl:value-of select="gyro-x" /></td>
                                 </tr>
                                 <tr style="background-color: gray; text-align: left; font-size: 14px;">
                                     <td>Y</td> 
-                                    <td><xsl:value-of select="lsm9dof/accel-y" /></td>
-                                    <td><xsl:value-of select="lsm9dof/mag-y" /></td>
-                                    <td><xsl:value-of select="lsm9dof/gyro-y" /></td>
+                                    <td><xsl:value-of select="accel-y" /></td>
+                                    <td><xsl:value-of select="mag-y" /></td>
+                                    <td><xsl:value-of select="gyro-y" /></td>
                                 </tr>
                                 <tr style="background-color: white; text-align: left; font-size: 14px;">
                                     <td>Z</td>
-                                    <td><xsl:value-of select="lsm9dof/accel-z" /></td>
-                                    <td><xsl:value-of select="lsm9dof/mag-z" /></td>
-                                    <td><xsl:value-of select="lsm9dof/gyro-z" /></td>
+                                    <td><xsl:value-of select="accel-z" /></td>
+                                    <td><xsl:value-of select="mag-z" /></td>
+                                    <td><xsl:value-of select="gyro-z" /></td>
                                 </tr>
                             </table>
-                          </div>
+                           </div>
+                          </xsl:for-each>
                           <br style="clear: left;" />
                         </div>
                     </xsl:for-each>

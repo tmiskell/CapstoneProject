@@ -891,7 +891,7 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
 		    else{
 		        return false ;
 		    }
-       	            outputFile << "</" << lsm303Names[j] << ">\n" ;
+       	            outputFile << "</" << lsm303Names[k] << ">\n" ;
 		}
  	    }
             outputFile << "\t\t\t</lsm303>\n" ;
