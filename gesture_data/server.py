@@ -92,6 +92,9 @@ class GestureHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
 
 def main( args ):
 
+    if len(args) <= 1:
+        print "Usage: server.py IP_ADDRESS"
+        return os.EX_OK
     HOST_NAME = args[1]
     PORT_NUMBER = 8080
     serverClass = BaseHTTPServer.HTTPServer
