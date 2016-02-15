@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <string.h>
+#include <ncurses.h>
 #include <time.h>
 /* Define constants. */
 #define MAX_CHAR 1023                           /* Number of characters in buffer. */
@@ -24,12 +25,15 @@
 #define NUM_303_VALS 6                          /* Number of values per LSM303 accelerometer reading. */
 #define TOTAL_NUM_303 NUM_303 * NUM_303_VALS    /* Total number of LSM303 values. */
 #define SEP_NUM_303 TOTAL_NUM_303 / 2           /* Number of LSM303 values for a given type (accelerometer or magnetometer). */
+#define NUM_303_NAMES 3                         /* The number of LSM303 value names. */
 #define NUM_9DOF 2                              /* Number of connected LSM9DOF accelerometers. */
 #define NUM_9DOF_VALS 9                         /* Number of values per LSM9DOF accelerometer reading. */
 #define TOTAL_NUM_9DOF NUM_9DOF * NUM_9DOF_VALS /* Total bumber of LSM9DOF values. */
 #define SEP_NUM_9DOF TOTAL_NUM_9DOF / 3         /* Number of LSM9DOF values for a given type (accelerometer, magnetometer, or gyrometer). */
+#define NUM_9DOF_NAMES 4                        /* The number of LSM9DOF value names. */
+#define NUM_ARGS ((NUM_FINGERS * 2) + 1)        /* The number of command line arguments. */
 /* Custom type definitions. */
-typedef enum{ false, true } bool ; /* Used to define boolean values. */
+//typedef enum{ false, true } bool ; /* Used to define boolean values. */
 struct Finger{  /* Structure to store finger related data. */
   unsigned int flex ;
   bool contact[NUM_FINGER_CONTACTS] ;
@@ -76,7 +80,7 @@ void data_init( struct Hand hands[NUM_HANDS], unsigned int left_flex[NUM_FINGERS
                 double right_303_accel[SEP_NUM_303], double right_303_mag[SEP_NUM_303],
                 double left_9dof_accel[SEP_NUM_9DOF], double left_9dof_mag[SEP_NUM_9DOF], double left_9dof_gyro[SEP_NUM_9DOF],
                 double right_9dof_accel[SEP_NUM_9DOF], double right_9dof_mag[SEP_NUM_9DOF], double right_9dof_gyro[SEP_NUM_9DOF] ) ;
-bool write_file( char* f_name, struct Hand hands[NUM_HANDS], char status[MAX_CHAR] ) ;
+bool write_file( char* f_name, struct Hand hands[NUM_HANDS], char status[MAX_CHAR], unsigned int lb[NUM_FINGERS], unsigned int ub[NUM_FINGERS] ) ;
 void store_data( struct Hand hands[NUM_HANDS], unsigned int flex[NUM_FINGERS], bool contact[TOTAL_NUM_CONTACTS], 
                  double accel303[SEP_NUM_303], double mag303[SEP_NUM_303], double accel9dof[SEP_NUM_9DOF], double mag9dof[SEP_NUM_9DOF],
                  double gyro9dof[SEP_NUM_9DOF], unsigned int i ) ;
@@ -89,7 +93,11 @@ void group_data( struct Hand hands[NUM_HANDS], unsigned int left_flex[NUM_FINGER
 void print_values( struct Hand hands[NUM_HANDS] ) ;
 bool reset_sensor( char* f_name ) ;
 unsigned int round_flex( unsigned int x, unsigned int lb, unsigned int ub ) ;
+void print_table( char border[MAX_CHAR], char title[MAX_CHAR], char header[MAX_CHAR], char entry[MAX_CHAR] ) ;
+void add_border( char border[MAX_CHAR], int border_len, char c_div, char v_div ) ;
+void add_title( char title[MAX_CHAR], int title_len, char* text, char h_div ) ;
 void signal_handler( int sig ) ;
+bool valid_int( char* str ) ;
 
 int main( int argc, char* argv[] ){
   /* Main function. */
@@ -100,6 +108,7 @@ int main( int argc, char* argv[] ){
   char buffer[MAX_CHAR] ;                   /* Buffer to store current data read from I2C device. */
   char cmd[MAX_CHAR] ;                      /* The next command to send to the microcontroller. */
   unsigned int i ;                          /* An iterator. */
+  unsigned int j ;                          /* An iterator. */
   bool open_file = true ;                   /* An indicator if a file should be opened. */
   bool close_file = true ;                  /* An indicator if a file should be closed. */
   int oflags = O_RDWR ;                     /* Flags to use when opening a file. */
@@ -126,8 +135,26 @@ int main( int argc, char* argv[] ){
   double right_9dof_gyro[SEP_NUM_9DOF] ;    /* LSM9DOF gyrometer data for the right hand. */
   char* f_name = "/home/pi/CapstoneProject/gesture_data/gesture_data_init.xml" ; /* File to store data. */
   char* gpio_f_name = "/sys/class/gpio/gpio27/value" ; /* File handle used to reset microcontroller. */
+  unsigned int lb[NUM_FINGERS] ;            /* The lower bounds to use for calibrating the flex sensors. */
+  unsigned int ub[NUM_FINGERS] ;            /* The upper bounds to use for calibrating the flex sensors. */
 
   fprintf( stdout, "Initializing\n" ) ;
+  fprintf( stdout, "Configuring calibration settings\n" ) ;
+  if( argc != NUM_ARGS ){
+    fprintf( stderr, "Usage: %s index_lb index_ub middle_lb middle_ub ring_lb ring_ub pinky_lb pinky_ub\n", argv[0] ) ;
+    return EXIT_FAILURE ;
+  }
+  j = 1 ;
+  for( i = 0 ; i < NUM_FINGERS ; i++ ){
+    if( !valid_int(argv[j]) )
+      fprintf( stderr, "Invalid calibration setting: %s", argv[j] ) ;
+    lb[i] = atoi( argv[j++] ) ;
+    if( !valid_int(argv[j]) )
+      fprintf( stderr, "Invalid calibration setting: %s", argv[j] ) ;
+    ub[i] = atoi( argv[j++] ) ;
+    if( lb[i] == ub[i] )
+      fprintf( stderr, "Invalid calibration setting: Lower bound and upper bound should not be equal." ) ;
+  }
   /* Initialize the screen. Register keyboard interrupt handler. */
   signal( SIGINT, signal_handler ) ;
   /* Initialize status and command. */
@@ -247,7 +274,7 @@ int main( int argc, char* argv[] ){
     print_values( hands ) ;
     /* Output current sensor data to file. */
     fprintf( stdout, "Writing sensor data to:\t%s\n", f_name ) ;
-    if( !write_file(f_name, hands, status) ){
+    if( !write_file(f_name, hands, status, lb, ub) ){
       perror( "*** Error writing sensor data " ) ;
     }
     if( kb_flag ){
@@ -271,17 +298,20 @@ bool i2c_read( const char* f_name, char buffer[MAX_CHAR], unsigned int num_bytes
     if( *fd == -1 ){
       /* File did not open successfully.  */
       perror( "*** Unable to open I2C connection " ) ;
+      close(*fd) ;
       return false ;
     }
   }
   /* Address device. */
   if( ioctl(*fd, I2C_SLAVE, addr) < 0 ){
     perror( "*** Unable to address I2C device " ) ;
+    close(*fd) ;
     return false ;
   }
   /* Read byte(s) from register. */
   if( read(*fd, buffer, num_bytes) != num_bytes  ){
     perror( "*** Unable to read from I2C bus " ) ;
+    close(*fd) ;
     return false ;
   }
   if( close_file ){
@@ -308,17 +338,20 @@ bool i2c_write( const char* f_name, char buffer[MAX_CHAR], unsigned int num_byte
     if( *fd == -1 ){
       /* File did not open successfully.  */
       perror( "*** Unable to open I2C connection " ) ;
+      close(*fd) ;
       return false ;
     }
   }
   /* Address device. */
   if( ioctl(*fd, I2C_SLAVE, addr) < 0 ){
     perror( "*** Unable to address I2C device " ) ;
+    close(*fd) ;
     return false ;
   }
   /* Write to device. */
   if( write(*fd, buffer, num_bytes) != num_bytes ){
     perror( "*** Unable to write to I2C bus " ) ;
+    close(*fd) ;
     return false ;
   }
   if( close_file ){
@@ -476,7 +509,7 @@ void group_data( struct Hand hands[NUM_HANDS], unsigned int left_flex[NUM_FINGER
 
 }
 
-bool write_file( char* f_name, struct Hand hands[NUM_HANDS], char status[MAX_CHAR] ){
+bool write_file( char* f_name, struct Hand hands[NUM_HANDS], char status[MAX_CHAR], unsigned int lb[NUM_FINGERS], unsigned int ub[NUM_FINGERS] ){
   /* Function to generate an output XML file. */
 
   FILE* fp ;                                   /* File handle. */
@@ -508,8 +541,6 @@ bool write_file( char* f_name, struct Hand hands[NUM_HANDS], char status[MAX_CHA
   unsigned int k ;  /* An iterator. */
   unsigned int flex_adjust ; /* The adjusted flex sensor value, in the range 0 - 100. */
   unsigned int flex_round ;  /* The flex sensor value rounded to one of three values: 0, 50, 100.*/
-  const unsigned int lb = 10 ; /* The lower bound for rounding. */
-  const unsigned int ub = 40 ; /* The upper bound for rounding. */
 
   fp = fopen( f_name, "w" ) ;
   if( fp == NULL ){
@@ -531,7 +562,7 @@ bool write_file( char* f_name, struct Hand hands[NUM_HANDS], char status[MAX_CHA
       fprintf( fp, "\t\t\t<%s>\n", finger_name[j] ) ;
       /* Express flex sensor values in range 0-100.*/
       flex_adjust = (unsigned int)(((float)hands[i].fingers[j].flex / MAX_ADC) * 100.0) ;
-      flex_round = round_flex( flex_adjust, lb, ub ) ;
+      flex_round = round_flex( flex_adjust, lb[i], ub[i] ) ;
       fprintf( fp, "\t\t\t\t<flex>%u</flex>\n", flex_round ) ; 
       for( k = 0 ; k < NUM_FINGER_CONTACTS ; k++ ){
 	if( (strcmp(finger_name[j], "thumb") == 0) && (k == (NUM_FINGER_CONTACTS - 1)) ){
@@ -670,64 +701,138 @@ void print_values( struct Hand hands[NUM_HANDS] ){
                                     "pinky",
                                     "thumb"
                                    } ;
-  char* fold_name[NUM_FOLDS] = {"thumb-Index",  /* A list of names for the folds between fingers. */
-                                "index-Middle", 
-                                "middle-Ring", 
-                                "ring-Pinky"
+  char* fold_name[NUM_FOLDS] = {"thumb-index",  /* A list of names for the folds between fingers. */
+                                "index-middle", 
+                                "middle-ring", 
+                                "ring-pinky"
                                } ;             
   char* lsm303_side[NUM_303] = {"top",          /* A list of the LSM303 positions. */
                                 "bottom"
                                } ;       
+  char* lsm303_name[NUM_303_NAMES] = {"Location",           /* A list of the LSM303 value names. */
+                                      "Accel.",
+                                      "Mag."
+                                     } ;       
   char* lsm9dof_side[NUM_9DOF] = {"top",        /* A list of the LSM303 positions. */
                                   "bottom"
                                  } ;       
-  char* border = "***\n" ;                      /* The border to print. */
-  unsigned int i ;
-  unsigned int j ;
+  char* lsm9dof_name[NUM_9DOF_NAMES] = {"Location",          /* A list of the LSM9DOF value names. */
+                                        "Accel.",
+                                        "Mag.",
+                                        "Gyro."
+                                       } ;       
+  char c_div = '+' ;                            /* The corner divider to print. */
+  char v_div = '-' ;                            /* The vertical divider to print. */
+  char h_div = '|' ;                            /* The horizontal divider to print. */
+  unsigned int i ;                              /* An iterator. */
+  unsigned int j ;                              /* An iterator. */
+  char border[MAX_CHAR] ;                       /* Buffer to store the border. */
+  char header[MAX_CHAR] ;                       /* Buffer to store the table entry contents. */
+  char title[MAX_CHAR] ;                        /* Buffer to store the table entry contents. */
+  char entry[MAX_CHAR] ;                        /* Buffer to store the table entry contents. */
 
-  /* Print out the flex sensor values. */
+  /* Print out the table of flex sensor values. */
   for( i = 0 ; i < NUM_HANDS ; i++ ){
-    fprintf( stdout, "%s Hand:\n", hand_name[i] ) ;
-    fprintf( stdout, border ) ;
+    fprintf( stdout, "%s hand:\n", hand_name[i] ) ;
+    buffer_init( header ) ;
+    buffer_init( border ) ;
+    buffer_init( entry ) ;
     for( j = 0 ; j < NUM_FINGERS ; j++ ){
       if( strcmp(finger_name[j], "thumb") == 0 )
 	/* Currently the thumb does not have a flex sensor. */
 	continue ;
-      fprintf( stdout, "%s Flex: %u\t\t", finger_name[j], hands[i].fingers[j].flex ) ;
+      sprintf( header + strlen(header), "%c %s ", h_div, finger_name[j] ) ;
+      sprintf( entry + strlen(entry), "%c%*u", h_div, strlen(finger_name[j]) + 2, hands[i].fingers[j].flex ) ;
+      add_border( border, strlen(finger_name[j]) + 2, c_div, v_div ) ;
     }
-    fprintf( stdout, "\n" ) ;
-    fprintf( stdout, border ) ;
-    /* Print out the contact sensor values. */
+    sprintf( border + strlen(border), "%c\n", c_div ) ;
+    sprintf( header + strlen(header), "%c\n", h_div ) ;
+    sprintf( entry + strlen(entry), "%c\n", h_div ) ;
+    add_title( title, strlen(header) - 4, "Flex", h_div ) ;
+    print_table( border, title, header, entry ) ;
+    /* Print out the table of contact sensor values. */
+    buffer_init( header ) ;
+    buffer_init( border ) ;
+    buffer_init( entry ) ;
     for( j = 0 ; j < NUM_FINGERS ; j++ ){
-      fprintf( stdout, "%s Tip Contact: %u\t\t", finger_name[j], hands[i].fingers[j].contact[0] ) ;
+      sprintf( header + strlen(header), "%c %s tip ", h_div, finger_name[j] ) ;
+      sprintf( entry + strlen(entry), "%c%*u", h_div, strlen(finger_name[j]) + 1 + strlen(" tip "), hands[i].fingers[j].contact[0] ) ;
+      add_border( border, strlen(finger_name[j]) + strlen(" tip ") + 1, c_div, v_div ) ;
       if( strcmp(finger_name[j], "thumb") == 0 ){
         /* Currently the thumb has only one contact sensor. */
-	fprintf( stdout, "\n" ) ;
         continue ;
       }
-      fprintf( stdout, "%s Mid Contact: %u\n", finger_name[j], hands[i].fingers[j].contact[1] ) ;
+      sprintf( header + strlen(header), "%c %s mid ", h_div, finger_name[j] ) ;
+      sprintf( entry + strlen(entry), "%c%*u", h_div, strlen(finger_name[j]) + 1 + strlen(" tip "), hands[i].fingers[j].contact[1] ) ;
+      add_border( border, strlen(finger_name[j]) + strlen(" mid ") + 1, c_div, v_div ) ;
     }
-    fprintf( stdout, border ) ;
+    sprintf( border + strlen(border), "%c\n", c_div ) ;
+    sprintf( header + strlen(header), "%c\n", h_div ) ;
+    sprintf( entry + strlen(entry), "%c\n", h_div ) ;
+    add_title( title, strlen(header) - 4, "Contact", h_div ) ;
+    print_table( border, title, header, entry ) ;
+    /* Print out the table of interdigital fold contact values. */
+    buffer_init( header ) ;
+    buffer_init( border ) ;
+    buffer_init( entry ) ;
     for( j = 0 ; j < NUM_FOLDS ; j++ ){
-      fprintf( stdout, "%s Contact: %u\t\t", fold_name[j], hands[i].fold[j].contact ) ;
-      if( (j % 2) != 0 ){
-	fprintf( stdout, "\n" ) ;
+      sprintf( header + strlen(header), "%c %s ", h_div, fold_name[j] ) ;
+      sprintf( entry + strlen(entry), "%c%*u", h_div, strlen(fold_name[j]) + 2, hands[i].fold[j].contact ) ;
+      add_border( border, strlen(fold_name[j]) + 2, c_div, v_div ) ;
+    }
+    sprintf( border + strlen(border), "%c\n", c_div ) ;
+    sprintf( header + strlen(header), "%c\n", h_div ) ;
+    sprintf( entry + strlen(entry), "%c\n", h_div ) ;
+    add_title( title, strlen(header) - 4, "Contact", h_div ) ;
+    print_table( border, title, header, entry ) ;
+    buffer_init( header ) ;
+    buffer_init( border ) ;
+    buffer_init( entry ) ;
+    for( j = 0 ; j < NUM_303_NAMES ; j++ ){
+      if( strcmp(lsm303_name[j], "Location") == 0 ){
+        sprintf( header + strlen(header), "%c %s ", h_div, lsm303_name[j] ) ;
+        add_border( border, strlen(lsm303_name[j]) + 2, c_div, v_div ) ;
+      }
+      else{
+        sprintf( header + strlen(header), "%c %-*s ", h_div, strlen("(+xxx.x, +xxx.x, +xxx.x)"), lsm303_name[j] ) ;
+        add_border( border, strlen("(+xxx.x, +xxx.x, +xxx.x)") + 2, c_div, v_div ) ;
       }
     }
-    fprintf( stdout, border ) ;
+    sprintf( border + strlen(border), "%c\n", c_div ) ;
+    sprintf( header + strlen(header), "%c\n", h_div ) ;
     for( j = 0 ; j < NUM_303 ; j++ ){
-      fprintf( stdout, "LSM303 Side: %s\n", lsm303_side[j] ) ;
-      fprintf( stdout, "LSM303 Accel: (%f, %f, %f)\t", hands[i].lsm303[j].accel_x, hands[i].lsm303[j].accel_y, hands[i].lsm303[j].accel_z ) ;
-      fprintf( stdout, "LSM303 Mag: (%f, %f, %f)\n", hands[i].lsm303[j].mag_y, hands[i].lsm303[j].mag_x, hands[i].lsm303[j].mag_z ) ;
+      sprintf( entry + strlen(entry), "%c %-*s %c (%+06.1f, %+06.1f, %+06.1f) ", h_div, strlen(lsm303_name[0]), lsm303_side[j], h_div, 
+               hands[i].lsm303[j].accel_x, hands[i].lsm303[j].accel_y, hands[i].lsm303[j].accel_z ) ;
+      sprintf( entry + strlen(entry), "%c (%+06.1f, %+06.1f, %+06.1f) %c\n", h_div,
+               hands[i].lsm303[j].mag_x, hands[i].lsm303[j].mag_y, hands[i].lsm303[j].mag_z, h_div ) ;
     }
-    fprintf( stdout, border ) ;
+    add_title( title, strlen(header) - 4, "LSM303", h_div ) ;
+    print_table( border, title, header, entry ) ;
+    buffer_init( header ) ;
+    buffer_init( border ) ;
+    buffer_init( entry ) ;
+    for( j = 0 ; j < NUM_9DOF_NAMES ; j++ ){
+      if( strcmp(lsm9dof_name[j], "Location") == 0 ){
+        sprintf( header + strlen(header), "%c %s ", h_div, lsm9dof_name[j] ) ;
+        add_border( border, strlen(lsm9dof_name[j]) + 2, c_div, v_div ) ;
+      }
+      else{
+        sprintf( header + strlen(header), "%c %-*s ", h_div, strlen("(+xxx.x, +xxx.x, +xxx.x)"), lsm9dof_name[j] ) ;
+        add_border( border, strlen("(+xxx.x, +xxx.x, +xxx.x)") + 2, c_div, v_div ) ;
+      }
+    }
+    sprintf( border + strlen(border), "%c\n", c_div ) ;
+    sprintf( header + strlen(header), "%c\n", h_div ) ;
     for( j = 0 ; j < NUM_9DOF ; j++ ){
-      fprintf( stdout, "LSM9DOF Side: %s\n", lsm9dof_side[j] ) ;
-      fprintf( stdout, "LSM9DOF Accel: (%f, %f, %f)\t", hands[i].lsm9dof[j].accel_x, hands[i].lsm9dof[j].accel_y, hands[i].lsm9dof[j].accel_z ) ;
-      fprintf( stdout, "LSM9DOF Mag: (%f, %f, %f)\t", hands[i].lsm9dof[j].mag_x, hands[i].lsm9dof[j].mag_y, hands[i].lsm9dof[j].mag_z ) ;
-      fprintf( stdout, "LSM9DOF Gyro: (%f, %f, %f)\n", hands[i].lsm9dof[j].gyro_x, hands[i].lsm9dof[j].gyro_y, hands[i].lsm9dof[j].gyro_z ) ;
+      sprintf( entry + strlen(entry), "%c %-*s %c (%+06.1f, %+06.1f, %+06.1f) ", h_div, strlen(lsm9dof_name[0]), lsm9dof_side[j], h_div, 
+               hands[i].lsm9dof[j].accel_x, hands[i].lsm9dof[j].accel_y, hands[i].lsm9dof[j].accel_z ) ;
+      sprintf( entry + strlen(entry), "%c (%+06.1f, %+06.1f, %+06.1f) ", h_div,
+               hands[i].lsm9dof[j].mag_x, hands[i].lsm9dof[j].mag_y, hands[i].lsm9dof[j].mag_z ) ;
+      sprintf( entry + strlen(entry), "%c (%+06.1f, %+06.1f, %+06.1f) %c\n", h_div,
+               hands[i].lsm9dof[j].gyro_x, hands[i].lsm9dof[j].gyro_y, hands[i].lsm9dof[j].gyro_z, h_div ) ;
     }
-    fprintf( stdout, border ) ;
+    add_title( title, strlen(header) - 4, "LSM9DOF", h_div ) ;
+    print_table( border, title, header, entry ) ;
   }
 
   return ;
@@ -758,5 +863,63 @@ void signal_handler( int sig ){
     kb_flag = 1 ; 
 
     return ;
+
+}
+
+bool valid_int( char* str ){
+
+  int result ;  /* The result of the string to integer conversion. */
+  
+  result = atoi( str ) ;
+  if( (result == 0) && (str[0] != '0') )
+    /* Not a valid integer. */
+    return false ;
+  if( result < 0 )
+    /* Calibration settings should be non-negative. */
+    return false ;
+  /* Valid integer. */
+  return true ;
+
+}
+
+void print_table( char border[MAX_CHAR], char title[MAX_CHAR], char header[MAX_CHAR], char entry[MAX_CHAR] ){
+  /* Function to print a table. */
+
+  fprintf( stdout, border ) ;
+  fprintf( stdout, title ) ;
+  fprintf( stdout, border ) ;
+  fprintf( stdout, header ) ;
+  fprintf( stdout, border ) ;
+  fprintf( stdout, entry ) ;
+  fprintf( stdout, border ) ;
+
+  return ;
+
+}
+
+void add_border( char border[MAX_CHAR], int border_len, char c_div, char v_div ){
+  /* Function to add a border to a table. */
+
+  int i ; /* An iterator. */
+
+  /* Print the border. */
+  border[strlen(border)] = c_div ;
+  for( i = 0 ; i < border_len ; i++ ){
+    border[strlen(border)] = v_div ;
+  }
+
+  return ;
+
+}
+
+void add_title( char title[MAX_CHAR], int title_len, char* text, char h_div ){
+  /* Function to add a title to a table. */
+
+  buffer_init( title ) ;
+  sprintf( title, "%c ", h_div ) ;
+  sprintf( title + strlen(title), "%-*s", title_len, text ) ;
+  sprintf( title + strlen(title), "%c\n", h_div ) ;
+
+  return ;
 
 }

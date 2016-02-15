@@ -18,9 +18,7 @@
 
 /*----------Hand::~Hand( )-----------------------------------------------------------
 
-  PURPOSE:  Destructor function for a "Hand". 
-            Note that if a destructor is created for the Hand class, then a 
-            destructor must also be created for the Lsm303 and Lsm9dof classes.
+  PURPOSE:  Destructor function for a "Hand".
 
 Hand::~Hand( ){
 
@@ -120,7 +118,7 @@ void Hand::Set( Finger th, Finger in, Finger mi, Finger ri, Finger pi, Fold ti, 
         imFold = im ;
         mrFold = mr ;
         rpFold = rp ;
-	lsm303[0] = l3030 ;
+	lsm303[0] = l3031 ;
 	lsm303[1] = l3031 ;
 	lsm9dof[0] = l9dof0 ;
 	lsm9dof[1] = l9dof1 ;

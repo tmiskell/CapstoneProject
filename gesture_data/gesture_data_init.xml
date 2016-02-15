@@ -117,47 +117,47 @@
 				<contact-tip>false</contact-tip>
 			</ring-pinky>
 			<lsm303 side="top">
-				<accel-x>688.000000</accel-x>
-				<accel-y>-508.000000</accel-y>
-				<accel-z>492.000000</accel-z>
-				<mag-x>-327.000000</mag-x>
-				<mag-y>175.000000</mag-y>
-				<mag-z>-327.000000</mag-z>
+				<accel-x>0.000000</accel-x>
+				<accel-y>0.000000</accel-y>
+				<accel-z>0.000000</accel-z>
+				<mag-x>0.000000</mag-x>
+				<mag-y>0.000000</mag-y>
+				<mag-z>0.000000</mag-z>
 			</lsm303>
 			<lsm303 side="bottom">
-				<accel-x>-727.000000</accel-x>
-				<accel-y>347.000000</accel-y>
-				<accel-z>-323.000000</accel-z>
-				<mag-x>34.000000</mag-x>
-				<mag-y>56.000000</mag-y>
-				<mag-z>4.000000</mag-z>
+				<accel-x>0.000000</accel-x>
+				<accel-y>0.000000</accel-y>
+				<accel-z>0.000000</accel-z>
+				<mag-x>0.000000</mag-x>
+				<mag-y>0.000000</mag-y>
+				<mag-z>0.000000</mag-z>
 			</lsm303>
 			<lsm9dof side="top">
-				<accel-x>916.000000</accel-x>
-				<accel-y>142.000000</accel-y>
-				<accel-z>269.000000</accel-z>
-				<mag-x>-328.000000</mag-x>
-				<mag-y>679.000000</mag-y>
-				<mag-z>487.000000</mag-z>
-				<gyro-x>2637.000000</gyro-x>
-				<gyro-y>6266.000000</gyro-y>
-				<gyro-z>7509.000000</gyro-z>
+				<accel-x>0.000000</accel-x>
+				<accel-y>0.000000</accel-y>
+				<accel-z>0.000000</accel-z>
+				<mag-x>0.000000</mag-x>
+				<mag-y>0.000000</mag-y>
+				<mag-z>0.000000</mag-z>
+				<gyro-x>0.000000</gyro-x>
+				<gyro-y>0.000000</gyro-y>
+				<gyro-z>0.000000</gyro-z>
 			</lsm9dof>
 			<lsm9dof side="bottom">
-				<accel-x>312.000000</accel-x>
-				<accel-y>-856.000000</accel-y>
-				<accel-z>-552.000000</accel-z>
-				<mag-x>-13296.000000</mag-x>
-				<mag-y>769.000000</mag-y>
-				<mag-z>11647.000000</mag-z>
-				<gyro-x>40.000000</gyro-x>
-				<gyro-y>334.000000</gyro-y>
-				<gyro-z>-144.000000</gyro-z>
+				<accel-x>0.000000</accel-x>
+				<accel-y>0.000000</accel-y>
+				<accel-z>0.000000</accel-z>
+				<mag-x>0.000000</mag-x>
+				<mag-y>0.000000</mag-y>
+				<mag-z>0.000000</mag-z>
+				<gyro-x>0.000000</gyro-x>
+				<gyro-y>0.000000</gyro-y>
+				<gyro-z>0.000000</gyro-z>
 			</lsm9dof>
 		</hand>
 	</gesture>
 	<converted-text></converted-text>
-	<status>connected</status>
+	<status>disconnected</status>
 	<convert>false</convert>
 	<version>1.0</version>
 </gestures>

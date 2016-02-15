@@ -40,7 +40,7 @@
 			<ring-pinky>
 				<contact-tip>0</contact-tip>
 			</ring-pinky>
-			<lsm303 side="bottom">
+			<lsm303 side="top">
 				<accel-x>0</accel-x>
 				<accel-y>0</accel-y>
 				<accel-z>0</accel-z>
@@ -116,48 +116,48 @@
 			<ring-pinky>
 				<contact-tip>0</contact-tip>
 			</ring-pinky>
-			<lsm303 side="bottom">
-				<accel-x>-726</accel-x>
-				<accel-y>346</accel-y>
-				<accel-z>-327</accel-z>
-				<mag-x>34</mag-x>
-				<mag-y>56</mag-y>
-				<mag-z>4</mag-z>
+			<lsm303 side="top">
+				<accel-x>0</accel-x>
+				<accel-y>0</accel-y>
+				<accel-z>0</accel-z>
+				<mag-x>0</mag-x>
+				<mag-y>0</mag-y>
+				<mag-z>0</mag-z>
 			</lsm303>
 			<lsm303 side="bottom">
-				<accel-x>-726</accel-x>
-				<accel-y>346</accel-y>
-				<accel-z>-327</accel-z>
-				<mag-x>34</mag-x>
-				<mag-y>56</mag-y>
-				<mag-z>4</mag-z>
+				<accel-x>0</accel-x>
+				<accel-y>0</accel-y>
+				<accel-z>0</accel-z>
+				<mag-x>0</mag-x>
+				<mag-y>0</mag-y>
+				<mag-z>0</mag-z>
 			</lsm303>
 			<lsm9dof side="top">
-				<accel-x>916</accel-x>
-				<accel-y>142</accel-y>
-				<accel-z>269</accel-z>
-				<mag-x>-325</mag-x>
-				<mag-y>677</mag-y>
-				<mag-z>486</mag-z>
-				<gyro-x>-325</gyro-x>
-				<gyro-y>677</gyro-y>
-				<gyro-z>486</gyro-z>
+				<accel-x>0</accel-x>
+				<accel-y>0</accel-y>
+				<accel-z>0</accel-z>
+				<mag-x>0</mag-x>
+				<mag-y>0</mag-y>
+				<mag-z>0</mag-z>
+				<gyro-x>0</gyro-x>
+				<gyro-y>0</gyro-y>
+				<gyro-z>0</gyro-z>
 			</lsm9dof>
 			<lsm9dof side="bottom">
-				<accel-x>320</accel-x>
-				<accel-y>-852</accel-y>
-				<accel-z>-560</accel-z>
-				<mag-x>-13223</mag-x>
-				<mag-y>749</mag-y>
-				<mag-z>11670</mag-z>
-				<gyro-x>-13223</gyro-x>
-				<gyro-y>749</gyro-y>
-				<gyro-z>11670</gyro-z>
+				<accel-x>0</accel-x>
+				<accel-y>0</accel-y>
+				<accel-z>0</accel-z>
+				<mag-x>0</mag-x>
+				<mag-y>0</mag-y>
+				<mag-z>0</mag-z>
+				<gyro-x>0</gyro-x>
+				<gyro-y>0</gyro-y>
+				<gyro-z>0</gyro-z>
 			</lsm9dof>
 		</hand>
 	</gesture>
-		<converted-text>          </converted-text>
-	<status>connected</status>
+		<converted-text>                                    </converted-text>
+	<status>disconnected</status>
 	<convert>false</convert>
 	<version>1.0</version>
 </gestures>

@@ -42,9 +42,9 @@ class Lsm9dof {
    	 inline double MagX( )       const { return magx ; }  /* Access x axis magnetometer value.  */
    	 inline double MagY( )       const { return magy ; }  /* Access y axis magnetometer value.  */
    	 inline double MagZ( )       const { return magz ; }  /* Access z axis magnetometer value.  */
-   	 inline double GyroX( )      const { return magx ; }  /* Access x axis gyrometer value.  */
-   	 inline double GyroY( )      const { return magy ; }  /* Access y axis gyrometer value.  */
-   	 inline double GyroZ( )      const { return magz ; }  /* Access z axis gyrometer value.  */
+   	 inline double GyroX( )     const { return gyrox ; }  /* Access x axis gyrometer value.  */
+   	 inline double GyroY( )     const { return gyroy ; }  /* Access y axis gyrometer value.  */
+   	 inline double GyroZ( )     const { return gyroz ; }  /* Access z axis gyrometer value.  */
    	 inline string Side( )       const { return side ; }  /* Access location of LSM9DOF.  */
 	 inline bool   Defined( ) const { return defined ; }  /* Access defined value. */
 	 
