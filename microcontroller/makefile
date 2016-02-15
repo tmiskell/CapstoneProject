@@ -3,7 +3,6 @@
 CC=gcc
 OPTMETHOD=               # Add -O for optimization
 CFLAGS=-std=gnu99 -pedantic -Wall # Add -g for debugging
-STDLIB=-l ncurses
 OUTPUT=i2c_transfer
 SRCS=i2c_transfer.c
 #

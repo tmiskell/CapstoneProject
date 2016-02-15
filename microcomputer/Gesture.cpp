@@ -13,8 +13,14 @@
 ************************************************************************************/
 
 #include <climits>
+#include <string.h>
 #include <sstream>
+#include <stdio.h>
 #include "Gesture.h"
+
+#define MAX_CHAR 1023 /* The number of characters in an array. */
+
+void add_border( char border[MAX_CHAR], int border_len, char c_div, char v_div ) ;
 
 /*----------Gesture::Set( )----------------------------------------------------------
 
@@ -69,81 +75,238 @@ void Gesture::Show( ostream &os ) const {
 string Gesture::AsString( ) {
 
     ostringstream buffer ;               // Buffer used to convert numerical values to strings.
-    int i ;                              // An iterator.
+    const unsigned int NUM_HANDS = 2 ;                         /* Number of hands. */
+    const unsigned int NUM_FINGERS = 5 ;                       /* Number of fingers per hand. */
+    const unsigned int NUM_FOLDS = 4 ;                         /* Number of inter-digital folds per hand. */
+    const unsigned int NUM_303 = 2 ;                           /* Number of connected LSM303 accelerometers. */
+    const unsigned int NUM_303_NAMES = 3 ;                     /* The number of LSM303 value names. */
+    const unsigned int NUM_9DOF = 2 ;                          /* Number of connected LSM9DOF accelerometers. */
+    const unsigned int NUM_9DOF_NAMES = 4 ;                    /* The number of LSM9DOF value names. */
+    string hand_name[NUM_HANDS] = {"left",         /* A list of names for the hands. */
+                                  "right"
+                                  } ;
+    string finger_name[NUM_FINGERS] = {"ind",    /* A list of names for the flex sensors. */
+                                       "mid", 
+                                       "ri", 
+                                       "pi",
+                                       "th"
+                                      } ;
+    string fold_name[NUM_FOLDS] = {"th-ind",  /* A list of names for the folds between fingers. */
+                                   "ind-mid", 
+                                   "mid-ri", 
+                                   "ri-pi"
+                                  } ;             
+    string lsm303_name[NUM_303_NAMES] = {"LSM303 Loc.",           /* A list of the LSM303 value names. */
+                                         "Accelerometer",
+                                         "Magnetometer"
+                                        } ;       
+    string lsm9dof_name[NUM_9DOF_NAMES] = {"LSM9DOF Loc.",          /* A list of the LSM9DOF value names. */
+                                           "Accelerometer",
+                                           "Magnetometer",
+                                           "Gyrometer"
+                                          } ;       
+    char border[MAX_CHAR] ;                    /* Buffer to store the border. */
+    char header[MAX_CHAR] ;                    /* Buffer to store the table entry contents. */
+    char entry[NUM_HANDS][MAX_CHAR] ;          /* Buffer to store the table entry contents. */
+    char c_div = '+' ;                         /* The corner divider to print. */
+    char v_div = '-' ;                         /* The vertical divider to print. */
+    char h_div = '|' ;                         /* The horizontal divider to print. */    
+    unsigned int i ;                           /* An iterator. */
+    unsigned int j ;                           /* An iterator. */
 
     buffer.str( "" ) ;
     buffer.clear() ;
     if( !defined ){
+      /* No data, simply return an empty string. */
       return buffer.str() ;
     }
-    buffer << "Left Hand:\t\t\t\t|Right Hand:\n" ;
-    buffer << "\n" ;
-    buffer << "Thumb  Flex:\t\t" << left.Thumb().Flex()  << "\t\t" ;
-    buffer << "|Thumb  Flex:\t\t" << right.Thumb().Flex()  << "\n" ;
-    buffer << "Index  Flex:\t\t" << left.Index().Flex()  << "\t\t" ;
-    buffer << "|Index  Flex:\t\t" << right.Index().Flex()  << "\n" ;
-    buffer << "Middle Flex:\t\t" << left.Middle().Flex()  << "\t\t" ;
-    buffer << "|Middle Flex:\t\t" << right.Middle().Flex()  << "\n" ;
-    buffer << "Ring   Flex:\t\t" << left.Ring().Flex() << "\t\t" ;
-    buffer << "|Ring   Flex:\t\t" << right.Ring().Flex() << "\n" ;
-    buffer << "Pinky  Flex:\t\t" << left.Pinky().Flex()  << "\t\t" ;
-    buffer << "|Pinky  Flex:\t\t" << right.Pinky().Flex()  << "\n" ;
-    buffer << "Thumb  Contact Tip:\t" << left.Thumb().ContactTip()  << "\t\t" ;
-    buffer << "|Thumb  Contact Tip:\t" << right.Thumb().ContactTip()  << "\n" ;
-    buffer << "Index  Contact Tip:\t" << left.Index().ContactTip()  << "\t\t" ;
-    buffer << "|Index  Contact Tip:\t" << right.Index().ContactTip()  << "\n" ;
-    buffer << "Index  Contact Mid:\t" << left.Index().ContactMid()  << "\t\t" ;
-    buffer << "|Index  Contact Mid:\t" << right.Index().ContactMid()  << "\n" ;
-    buffer << "Middle Contact Tip:\t" << left.Middle().ContactTip()  << "\t\t" ;
-    buffer << "|Middle Contact Tip:\t" << right.Middle().ContactTip()  << "\n" ;
-    buffer << "Middle Contact Mid:\t" << left.Middle().ContactMid()  << "\t\t" ;
-    buffer << "|Middle Contact Mid:\t" << right.Middle().ContactMid()  << "\n" ;
-    buffer << "Ring   Contact Tip:\t" << left.Ring().ContactTip() << "\t\t" ;
-    buffer << "|Ring   Contact Tip:\t" << right.Ring().ContactTip() << "\n" ;
-    buffer << "Ring   Contact Mid:\t" << left.Ring().ContactMid() << "\t\t" ;
-    buffer << "|Ring   Contact Mid:\t" << right.Ring().ContactMid() << "\n" ;
-    buffer << "Pinky  Contact Tip:\t" << left.Pinky().ContactTip()  << "\t\t" ;
-    buffer << "|Pinky  Contact Tip:\t" << right.Pinky().ContactTip()  << "\n" ;
-    buffer << "Pinky  Contact Mid:\t" << left.Pinky().ContactMid()  << "\t\t" ;
-    buffer << "|Pinky  Contact Mid:\t" << right.Pinky().ContactMid()  << "\n" ;
-    buffer << "Thumb-Index  Contact:\t" << left.TiFold().ContactTip()  << "\t\t" ;
-    buffer << "|Thumb-Index  Contact:\t" << right.TiFold().ContactTip()  << "\n" ;
-    buffer << "Index-Middle Contact:\t" << left.ImFold().ContactTip()  << "\t\t" ;
-    buffer << "|Index-Middle Contact:\t" << right.ImFold().ContactTip()  << "\n" ;
-    buffer << "Middle-Ring  Contact:\t" << left.MrFold().ContactTip()  << "\t\t" ;
-    buffer << "|Middle-Ring  Contact:\t" << right.MrFold().ContactTip()  << "\n" ;
-    buffer << "Ring-Pinky   Contact:\t" << left.RpFold().ContactTip()  << "\t\t" ;
-    buffer << "|Ring-Pinky   Contact:\t" << right.RpFold().ContactTip()  << "\n" ;
-    /* Print out the top accelerometers for now. */
-    for( i = 0 ; i < NUM_LSM303 ; i++ ){
-	buffer << "LSM303 Side:\t\t" << left.Lsm303Vals(i).Side() << "\t\t" ;
-	buffer << "|LSM303 Side:\t\t" << right.Lsm303Vals(i).Side() << "\n" ;
-	buffer << "LSM303 Accel:\t\t" << '(' ;
-        buffer << left.Lsm303Vals(i).AccelX() << ',' << left.Lsm303Vals(i).AccelY() << ',' << left.Lsm303Vals(i).AccelZ() << ")\t\t" ;
-	buffer << "|LSM303 Accel:\t\t" ;
-        buffer << '(' << right.Lsm303Vals(i).AccelX() << ',' << right.Lsm303Vals(i).AccelY() << ',' << right.Lsm303Vals(i).AccelZ() << ")\n" ;
-	buffer << "LSM303 Mag:\t\t" ;
-        buffer << '(' << left.Lsm303Vals(i).MagX() << ',' << left.Lsm303Vals(i).MagY() << ',' << left.Lsm303Vals(i).MagZ() << ")\t\t" ;
-	buffer << "|LSM303 Mag:\t\t" ;
-        buffer << '(' << right.Lsm303Vals(i).MagX() << ',' << right.Lsm303Vals(i).MagY() << ',' << right.Lsm303Vals(i).MagZ() << ")\n" ;
+    memset( header, '\0', sizeof(char) * MAX_CHAR ) ;
+    memset( border, '\0', sizeof(char) * MAX_CHAR ) ;
+    /* Collect the flex sensor data. */
+    for( i = 0 ; i < NUM_HANDS ; i++ ){
+        memset( entry[i], '\0', sizeof(char) * MAX_CHAR ) ;
+        sprintf( entry[i], "%c %-*s ", h_div, (int)strlen("Flex Location"), (hand_name[i]).c_str() ) ;
     }
-    for( i = 0 ; i < NUM_LSM9DOF ; i++ ){
-	buffer << "LSM9DOF Side:\t\t" << left.Lsm9dofVals(i).Side() << "\t\t" ;
-	buffer << "|LSM9DOF Side:\t\t" << right.Lsm9dofVals(i).Side() << "\n" ;
-	buffer << "LSM9DOF Accel:\t\t" ;
-        buffer << '(' << left.Lsm9dofVals(i).AccelX() << ',' << left.Lsm9dofVals(i).AccelY() << ',' << left.Lsm9dofVals(i).AccelZ() << ")\t\t" ; 
-	buffer << "|LSM9DOF Accel:\t\t" ;
-        buffer << '(' << right.Lsm9dofVals(i).AccelX() << ',' << right.Lsm9dofVals(i).AccelY() << ',' << right.Lsm9dofVals(i).AccelZ() << ")\n"; 
-	buffer << "LSM9DOF Mag:\t\t" ;
-        buffer << '(' << left.Lsm9dofVals(i).MagX() << ',' << left.Lsm9dofVals(i).MagY() << ',' << left.Lsm9dofVals(i).MagZ() << ")\t\t" ; 
-	buffer << "|LSM9DOF Mag:\t\t" ;
-        buffer << '(' << right.Lsm9dofVals(i).MagX() << ',' << right.Lsm9dofVals(i).MagY() << ',' << right.Lsm9dofVals(i).MagZ() << ")\n" ; 
-	buffer << "LSM9DOF Gyro:\t\t" ;
-        buffer << '(' << left.Lsm9dofVals(i).GyroX() << ',' << left.Lsm9dofVals(i).GyroY() << ',' << left.Lsm9dofVals(i).GyroZ() << ")\t\t" ; 
-	buffer << "|LSM9DOF Gyro:\t\t" ;
-        buffer << '(' << right.Lsm9dofVals(i).GyroX() << ',' << right.Lsm9dofVals(i).GyroY() << ',' << right.Lsm9dofVals(i).GyroZ() << ")\n" ; 
+    sprintf( header, "%c %s ", h_div, "Flex Location" ) ;
+    add_border( border, strlen("Flex Location") + 2, c_div, v_div ) ;
+    for( j = 0 ; j < NUM_FINGERS ; j++ ){
+        sprintf( header + strlen(header), "%c %-*s ", h_div, (int)strlen("xxx"), (finger_name[j]).c_str() ) ;
+        add_border( border, strlen(" xxx "), c_div, v_div ) ;
     }
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)left.Thumb().Flex() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)left.Index().Flex() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)left.Middle().Flex() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)left.Ring().Flex() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u %c\n", h_div, (int)strlen("xxx"), (unsigned int)left.Pinky().Flex(), h_div ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)right.Thumb().Flex() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)right.Index().Flex() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)right.Middle().Flex() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)right.Ring().Flex() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u %c\n", h_div, (int)strlen("xxx"), (unsigned int)right.Pinky().Flex(), h_div ) ;
+    sprintf( border + strlen(border), "%c\n", c_div ) ;
+    sprintf( header + strlen(header), "%c\n", h_div ) ;
+    buffer << border << header << border << entry[0] << entry[1] << border ;
+    /* Collect the contact sensor data. */
+    memset( header, '\0', sizeof(char) * MAX_CHAR ) ;
+    memset( border, '\0', sizeof(char) * MAX_CHAR ) ;
+    for( i = 0 ; i < NUM_HANDS ; i++ ){
+        memset( entry[i], '\0', sizeof(char) * MAX_CHAR ) ;
+        sprintf( entry[i], "%c %-*s ", h_div, (int)strlen("Contact Loc."), (hand_name[i]).c_str() ) ;
+    }
+    sprintf( header, "%c %s ", h_div, "Contact Loc." ) ;
+    add_border( border, strlen("Contact Loc.") + 2, c_div, v_div ) ;
+    for( j = 0 ; j < NUM_FINGERS ; j++ ){
+        sprintf( header + strlen(header), "%c %s tip ", h_div, (finger_name[j]).c_str() ) ;
+        add_border( border, strlen((finger_name[j]).c_str()) + strlen(" tip ") + 1, c_div, v_div ) ;
+        sprintf( header + strlen(header), "%c %s mid ", h_div, (finger_name[j]).c_str() ) ;
+        add_border( border, strlen((finger_name[j]).c_str()) + strlen(" mid ") + 1, c_div, v_div ) ;
+    }
+    /* Print out the table of interdigital fold contact values. */
+    for( j = 0 ; j < NUM_FOLDS ; j++ ){
+        sprintf( header + strlen(header), "%c %s ", h_div, (fold_name[j]).c_str() ) ;
+        add_border( border, strlen((fold_name[j]).c_str()) + 2, c_div, v_div ) ;
+    }
+    sprintf( border + strlen(border), "%c\n", c_div ) ;
+    sprintf( header + strlen(header), "%c\n", h_div ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" tip")), 
+             left.Thumb().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" tip")), 
+             left.Index().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" tip")), 
+             left.Middle().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" tip")), 
+             left.Ring().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[4]).c_str()) + strlen(" tip")), 
+             left.Pinky().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" mid")), 
+             left.Thumb().ContactMid() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" mid")), 
+             left.Index().ContactMid() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" mid")), 
+             left.Middle().ContactMid() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" mid")), 
+             left.Ring().ContactMid() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[4]).c_str()) + strlen(" mid")), 
+             left.Pinky().ContactMid() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen((fold_name[0]).c_str()), 
+             left.TiFold().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen((fold_name[1]).c_str()), 
+             left.ImFold().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen((fold_name[2]).c_str()), 
+             left.MrFold().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u %c\n", h_div, (int)strlen((fold_name[3]).c_str()), 
+             left.RpFold().ContactTip(), h_div ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" tip")), 
+             right.Thumb().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" tip")), 
+             right.Index().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" tip")), 
+             right.Middle().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" tip")), 
+             right.Ring().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[4]).c_str()) + strlen(" tip")), 
+             right.Pinky().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" mid")), 
+             right.Thumb().ContactMid() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" mid")), 
+             right.Index().ContactMid() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" mid")), 
+             right.Middle().ContactMid() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" mid")), 
+             right.Ring().ContactMid() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[4]).c_str()) + strlen(" mid")), 
+             right.Pinky().ContactMid() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen((fold_name[0]).c_str()), 
+             right.TiFold().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen((fold_name[1]).c_str()), 
+             right.ImFold().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen((fold_name[2]).c_str()), 
+             right.MrFold().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u %c\n", h_div, (int)strlen((fold_name[3]).c_str()), 
+             right.RpFold().ContactTip(), h_div ) ;
+    buffer << border << header << border << entry[0] << entry[1] << border ;
+    /* Print out the LSM303 accelerometers. */
+    memset( header, '\0', sizeof(char) * MAX_CHAR ) ;
+    memset( border, '\0', sizeof(char) * MAX_CHAR ) ;
+    for( i = 0 ; i < NUM_HANDS ; i++ ){
+        memset( entry[i], '\0', sizeof(char) * MAX_CHAR ) ;
+    }
+    for( j = 0 ; j < NUM_303_NAMES ; j++ ){
+        if( strcmp((lsm303_name[j]).c_str(), "LSM303 Loc.") == 0 ){
+  	    sprintf( header + strlen(header), "%c %-*s ", h_div, (int)strlen("right bottom"), (lsm303_name[j]).c_str() ) ;
+            add_border( border, strlen("right bottom") + 2, c_div, v_div ) ;
+        }
+        else{
+    	    sprintf( header + strlen(header), "%c %-*s ", h_div, (int)strlen("(+xxx.x, +xxx.x, +xxx.x)"), (lsm303_name[j]).c_str() ) ;
+            add_border( border, strlen("(+xxx.x, +xxx.x, +xxx.x)") + 2, c_div, v_div ) ;
+        }
+    }
+    sprintf( border + strlen(border), "%c\n", c_div ) ;
+    sprintf( header + strlen(header), "%c\n", h_div ) ;
+    for( j = 0 ; j < NUM_303 ; j++ ){
+        sprintf( entry[0] + strlen(entry[0]), "%c %-*s %-*s %c (%+06.1f, %+06.1f, %+06.1f) ", h_div, (int)strlen("right"), (hand_name[0]).c_str(), 
+                 (int)strlen("bottom"), (left.Lsm303Vals(j).Side()).c_str(), h_div, 
+                 left.Lsm303Vals(j).AccelX(), left.Lsm303Vals(j).AccelY(), left.Lsm303Vals(j).AccelZ() ) ;
+        sprintf( entry[0] + strlen(entry[0]), "%c (%+06.1f, %+06.1f, %+06.1f) %c\n", h_div,
+                 left.Lsm303Vals(j).MagX(), left.Lsm303Vals(j).MagY(), left.Lsm303Vals(j).MagZ(), h_div ) ;
+        sprintf( entry[1] + strlen(entry[1]), "%c %-*s %-*s %c (%+06.1f, %+06.1f, %+06.1f) ", h_div, (int)strlen("right"), (hand_name[1]).c_str(), 
+                 (int)strlen("bottom"), (right.Lsm303Vals(j).Side()).c_str(), h_div, 
+                 right.Lsm303Vals(j).AccelX(), right.Lsm303Vals(j).AccelY(), right.Lsm303Vals(j).AccelZ() ) ;
+        sprintf( entry[1] + strlen(entry[1]), "%c (%+06.1f, %+06.1f, %+06.1f) %c\n", h_div,
+                 right.Lsm303Vals(j).MagX(), right.Lsm303Vals(j).MagY(), right.Lsm303Vals(j).MagZ(), h_div ) ;
+    }
+    buffer << border << header << border << entry[0] << entry[1] << border ;    
+    /* Print out the LSM9DOF accelerometers. */
+    memset( header, '\0', sizeof(char) * MAX_CHAR ) ;
+    memset( border, '\0', sizeof(char) * MAX_CHAR ) ;
+    for( i = 0 ; i < NUM_HANDS ; i++ ){
+        memset( entry[i], '\0', sizeof(char) * MAX_CHAR ) ;
+    }
+    for( j = 0 ; j < NUM_9DOF_NAMES ; j++ ){
+        if( strcmp((lsm9dof_name[j]).c_str(), "LSM9DOF Loc.") == 0 ){
+  	    sprintf( header + strlen(header), "%c %-*s ", h_div, (int)strlen("right bottom"), (lsm9dof_name[j]).c_str() ) ;
+            add_border( border, strlen("right bottom") + 2, c_div, v_div ) ;
+        }
+        else{
+    	    sprintf( header + strlen(header), "%c %-*s ", h_div, (int)strlen("(+xxxxx.x, +xxxxx.x, +xxxxx.x)"), (lsm9dof_name[j]).c_str() ) ;
+            add_border( border, strlen("(+xxxxx.x, +xxxxx.x, +xxxxx.x)") + 2, c_div, v_div ) ;
+        }
+    }
+    sprintf( border + strlen(border), "%c\n", c_div ) ;
+    sprintf( header + strlen(header), "%c\n", h_div ) ;
+    for( j = 0 ; j < NUM_9DOF ; j++ ){
+        sprintf( entry[0] + strlen(entry[0]), "%c %-*s %-*s %c (%+08.1f, %+08.1f, %+08.1f) ", h_div, (int)strlen("right"), (hand_name[0]).c_str(), 
+                 (int)strlen("bottom"), (left.Lsm9dofVals(j).Side()).c_str(), h_div, 
+                 left.Lsm9dofVals(j).AccelX(), left.Lsm9dofVals(j).AccelY(), left.Lsm9dofVals(j).AccelZ() ) ;
+        sprintf( entry[0] + strlen(entry[0]), "%c (%+08.1f, %+08.1f, %+08.1f) ", h_div,
+                 left.Lsm9dofVals(j).MagX(), left.Lsm9dofVals(j).MagY(), left.Lsm9dofVals(j).MagZ() ) ;
+        sprintf( entry[0] + strlen(entry[0]), "%c (%+08.1f, %+08.1f, %+08.1f) %c\n", h_div,
+                 left.Lsm9dofVals(j).GyroX(), left.Lsm9dofVals(j).GyroY(), left.Lsm9dofVals(j).GyroZ(), h_div ) ;
+        sprintf( entry[1] + strlen(entry[1]), "%c %-*s %-*s %c (%+08.1f, %+08.1f, %+08.1f) ", h_div, (int)strlen("right"), (hand_name[1]).c_str(), 
+                 (int)strlen("bottom"), (right.Lsm9dofVals(j).Side()).c_str(), h_div, 
+                 right.Lsm9dofVals(j).AccelX(), right.Lsm9dofVals(j).AccelY(), right.Lsm9dofVals(j).AccelZ() ) ;
+        sprintf( entry[1] + strlen(entry[1]), "%c (%+08.1f, %+08.1f, %+08.1f) ", h_div,
+                 right.Lsm9dofVals(j).MagX(), right.Lsm9dofVals(j).MagY(), right.Lsm9dofVals(j).MagZ() ) ;
+        sprintf( entry[1] + strlen(entry[1]), "%c (%+08.1f, %+08.1f, %+08.1f) %c\n", h_div,
+                 right.Lsm9dofVals(j).GyroX(), right.Lsm9dofVals(j).GyroY(), right.Lsm9dofVals(j).GyroZ(), h_div ) ;
+    }
+    buffer << border << header << border << entry[0] << entry[1] << border ;    
 
     return buffer.str() ;
+
+}
+
+void add_border( char border[MAX_CHAR], int border_len, char c_div, char v_div ){
+  /* Function to add a border to a table. */
+
+  int i ; /* An iterator. */
+
+  /* Print the border. */
+  border[strlen(border)] = c_div ;
+  for( i = 0 ; i < border_len ; i++ ){
+    border[strlen(border)] = v_div ;
+  }
+
+  return ;
 
 }
