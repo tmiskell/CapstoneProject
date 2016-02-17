@@ -278,6 +278,20 @@ int main( int argc, char* argv[] ){
       nanosleep( &t1, &t2 ) ;
       right_9dof_gyro[i] = (double)atoi( buffer ) ; /* Currently there is only a right handed glove. */
     }
+    /* Get the amount of time required to perform a read. */
+    num_bytes = 4 ;
+    if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
+      /* I2C bus read error. */
+      strcpy( status, "disconnected" ) ;
+    }
+    fprintf( stdout, "Sensor read time %d ms,", (int)atoi(buffer) ) ;
+    /* Read the current status code. */
+    num_bytes = 1 ;
+    if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
+      /* I2C bus read error. */
+      strcpy( status, "disconnected" ) ;
+    }
+    fprintf( stdout, " status code: %c\n", buffer[0] ) ;
     /* Group the data. */
     group_data( hands, left_flex, right_flex, left_contact, right_contact, 
                 left_303_accel, left_303_mag, right_303_accel, right_303_mag,
