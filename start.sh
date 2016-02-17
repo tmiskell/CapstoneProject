@@ -19,8 +19,8 @@ IP_ADDR=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $
 #IP_ADDR=127.0.0.1
 # Configure the GPIO pins.
 echo "Configuring GPIO pins"
-gpio export 27 out
-echo 1 > /sys/class/gpio/gpio27/value
+#gpio export 27 out
+#echo 1 > /sys/class/gpio/gpio27/value
 sleep 1
 # Start I2C transfers.
 echo "Starting I2C transfers from sensors"

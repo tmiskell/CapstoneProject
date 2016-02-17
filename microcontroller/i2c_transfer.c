@@ -19,7 +19,7 @@
 #define NUM_HANDS 2                             /* Number of hands. */
 #define NUM_FINGERS 5                           /* Number of fingers per hand. */
 #define NUM_FOLDS 4                             /* Number of inter-digital folds per hand. */
-#define MAX_ADC 1023.0                          /* The maximum 10-bit ADC value. */
+#define MAX_ADC 1023                            /* The maximum 10-bit ADC value. */
 #define NUM_303 2                               /* Number of connected LSM303 accelerometers. */
 #define NUM_303_VALS 6                          /* Number of values per LSM303 accelerometer reading. */
 #define TOTAL_NUM_303 NUM_303 * NUM_303_VALS    /* Total number of LSM303 values. */
@@ -137,6 +137,7 @@ int main( int argc, char* argv[] ){
   char* gpio_f_name = "/sys/class/gpio/gpio27/value" ; /* File handle used to reset microcontroller. */
   unsigned int lb[NUM_FINGERS] ;            /* The lower bounds to use for calibrating the flex sensors. */
   unsigned int ub[NUM_FINGERS] ;            /* The upper bounds to use for calibrating the flex sensors. */
+  bool reset = false ;                      /* An indicator if the microcontroller should be reset. */
 
   fprintf( stdout, "Initializing\n" ) ;
   fprintf( stdout, "Applying calibration settings\n" ) ;
@@ -167,13 +168,16 @@ int main( int argc, char* argv[] ){
              left_303_accel, left_303_mag, right_303_accel, right_303_mag,
              left_9dof_accel, left_9dof_mag, left_9dof_gyro, right_9dof_accel, right_9dof_mag, right_9dof_gyro ) ;
   t1.tv_sec = 0 ;                  
-  /* Reset microcontroller. */
-  fprintf( stdout, "Reseting microcontroller.\n" ) ;
-  if( !reset_sensor(gpio_f_name) ){
-    perror( "*** Unable to reset sensor " ) ;
-  }
   /* Continually read current sensor data. */
   while( true ){
+    if( reset ){
+      /* Reset microcontroller. */
+      fprintf( stdout, "Reseting microcontroller.\n" ) ;
+      if( !reset_sensor(gpio_f_name) ){
+        perror( "*** Unable to reset sensor " ) ;
+      }
+      reset = false ;
+    }
     buffer_init( buffer ) ;
     strcpy( status, "connected" ) ;
     /* Reset microcontroller internal pointer. */
@@ -188,6 +192,7 @@ int main( int argc, char* argv[] ){
     nanosleep( &t1, &t2 ) ;
     /* Read flex sensors. */
     fprintf( stdout, "Reading flex sensors\n" ) ;
+    /* Allow sufficient time between reads. */
     t1.tv_nsec = 31250000L ;   
     num_bytes = 4 ;
     for( i = 0 ; i < (NUM_FINGERS - 1) ; i++ ){ /* Note the thumb currently doesn't have a flex sensor. */
@@ -198,6 +203,10 @@ int main( int argc, char* argv[] ){
       }
       nanosleep( &t1, &t2 ) ;
       right_flex[i] = (unsigned int)atoi( buffer ) ; /* Currently there is only a right handed glove. */
+      if( right_flex[i] > MAX_ADC ){
+	fprintf( stderr, "*** Flex sensor value %u exceeds %u, attempting to reset microcontroller.\n", right_flex[i], MAX_ADC ) ;
+	reset = true ;
+      }
     }
     /* Read contact sensors. */
     fprintf( stdout, "Reading contact sensors\n" ) ;
@@ -564,7 +573,7 @@ bool write_file( char f_name[MAX_CHAR], struct Hand hands[NUM_HANDS], char statu
       /* Write the next set of finger data. */
       fprintf( fp, "\t\t\t<%s>\n", finger_name[j] ) ;
       /* Express flex sensor values in range 0-100.*/
-      flex_adjust = (unsigned int)(((float)hands[i].fingers[j].flex / MAX_ADC) * 100.0) ;
+      flex_adjust = (unsigned int)(((float)hands[i].fingers[j].flex / (float)MAX_ADC) * 100.0) ;
       flex_round = round_flex( flex_adjust, lb[i], ub[i] ) ;
       fprintf( fp, "\t\t\t\t<flex>%u</flex>\n", flex_round ) ; 
       for( k = 0 ; k < NUM_FINGER_CONTACTS ; k++ ){

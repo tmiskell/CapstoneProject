@@ -133,16 +133,16 @@ string Gesture::AsString( ) {
         sprintf( header + strlen(header), "%c %-*s ", h_div, (int)strlen("xxx"), (finger_name[j]).c_str() ) ;
         add_border( border, strlen(" xxx "), c_div, v_div ) ;
     }
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)left.Thumb().Flex() ) ;
     sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)left.Index().Flex() ) ;
     sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)left.Middle().Flex() ) ;
     sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)left.Ring().Flex() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u %c\n", h_div, (int)strlen("xxx"), (unsigned int)left.Pinky().Flex(), h_div ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)right.Thumb().Flex() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)left.Pinky().Flex() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c %*u %c\n", h_div, (int)strlen("xxx"), (unsigned int)left.Thumb().Flex(), h_div ) ;
     sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)right.Index().Flex() ) ;
     sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)right.Middle().Flex() ) ;
     sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)right.Ring().Flex() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u %c\n", h_div, (int)strlen("xxx"), (unsigned int)right.Pinky().Flex(), h_div ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen("xxx"), (unsigned int)right.Pinky().Flex() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c %*u %c\n", h_div, (int)strlen("xxx"), (unsigned int)right.Thumb().Flex(), h_div ) ;
     sprintf( border + strlen(border), "%c\n", c_div ) ;
     sprintf( header + strlen(header), "%c\n", h_div ) ;
     buffer << border << header << border << entry[0] << entry[1] << border ;
@@ -158,6 +158,10 @@ string Gesture::AsString( ) {
     for( j = 0 ; j < NUM_FINGERS ; j++ ){
         sprintf( header + strlen(header), "%c %s tip ", h_div, (finger_name[j]).c_str() ) ;
         add_border( border, strlen((finger_name[j]).c_str()) + strlen(" tip ") + 1, c_div, v_div ) ;
+	if( finger_name[j].compare( "th" ) == 0 ){
+	    /* Currently the thumb only has a tip contact sensor. */
+  	    continue ;
+	}
         sprintf( header + strlen(header), "%c %s mid ", h_div, (finger_name[j]).c_str() ) ;
         add_border( border, strlen((finger_name[j]).c_str()) + strlen(" mid ") + 1, c_div, v_div ) ;
     }
@@ -168,61 +172,57 @@ string Gesture::AsString( ) {
     }
     sprintf( border + strlen(border), "%c\n", c_div ) ;
     sprintf( header + strlen(header), "%c\n", h_div ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" tip")), 
-             left.Thumb().ContactTip() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" tip")), 
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" tip ") + 1), 
              left.Index().ContactTip() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" tip")), 
-             left.Middle().ContactTip() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" tip")), 
-             left.Ring().ContactTip() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[4]).c_str()) + strlen(" tip")), 
-             left.Pinky().ContactTip() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" mid")), 
-             left.Thumb().ContactMid() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" mid")), 
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" mid ") + 1), 
              left.Index().ContactMid() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" mid")), 
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" tip ") + 1), 
+             left.Middle().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" mid ") + 1), 
              left.Middle().ContactMid() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" mid")), 
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" tip ") + 1), 
+             left.Ring().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" mid ") + 1), 
              left.Ring().ContactMid() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)(strlen((finger_name[4]).c_str()) + strlen(" mid")), 
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" tip ") + 1), 
+             left.Pinky().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" mid ") + 1), 
              left.Pinky().ContactMid() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen((fold_name[0]).c_str()), 
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((finger_name[4]).c_str()) + strlen(" tip ") + 1), 
+             left.Thumb().ContactTip() ) ;
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((fold_name[0]).c_str()) + 2), 
              left.TiFold().ContactTip() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen((fold_name[1]).c_str()), 
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((fold_name[1]).c_str()) + 2), 
              left.ImFold().ContactTip() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u ", h_div, (int)strlen((fold_name[2]).c_str()), 
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u", h_div, (int)(strlen((fold_name[2]).c_str()) + 2), 
              left.MrFold().ContactTip() ) ;
-    sprintf( entry[0] + strlen(entry[0]), "%c %*u %c\n", h_div, (int)strlen((fold_name[3]).c_str()), 
+    sprintf( entry[0] + strlen(entry[0]), "%c%*u%c\n", h_div, (int)(strlen((fold_name[3]).c_str()) + 2), 
              left.RpFold().ContactTip(), h_div ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" tip")), 
-             right.Thumb().ContactTip() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" tip")), 
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" tip ") + 1), 
              right.Index().ContactTip() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" tip")), 
-             right.Middle().ContactTip() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" tip")), 
-             right.Ring().ContactTip() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[4]).c_str()) + strlen(" tip")), 
-             right.Pinky().ContactTip() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" mid")), 
-             right.Thumb().ContactMid() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" mid")), 
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((finger_name[0]).c_str()) + strlen(" mid ") + 1), 
              right.Index().ContactMid() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" mid")), 
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" tip ") + 1), 
+             right.Middle().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((finger_name[1]).c_str()) + strlen(" mid ") + 1), 
              right.Middle().ContactMid() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" mid")), 
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" tip ") + 1), 
+             right.Ring().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((finger_name[2]).c_str()) + strlen(" mid ") + 1), 
              right.Ring().ContactMid() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)(strlen((finger_name[4]).c_str()) + strlen(" mid")), 
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" tip ") + 1), 
+             right.Pinky().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((finger_name[3]).c_str()) + strlen(" mid ") + 1), 
              right.Pinky().ContactMid() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen((fold_name[0]).c_str()), 
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((finger_name[4]).c_str()) + strlen(" tip ") + 1), 
+             right.Thumb().ContactTip() ) ;
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((fold_name[0]).c_str()) + 2), 
              right.TiFold().ContactTip() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen((fold_name[1]).c_str()), 
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((fold_name[1]).c_str()) + 2), 
              right.ImFold().ContactTip() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u ", h_div, (int)strlen((fold_name[2]).c_str()), 
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u", h_div, (int)(strlen((fold_name[2]).c_str()) + 2), 
              right.MrFold().ContactTip() ) ;
-    sprintf( entry[1] + strlen(entry[1]), "%c %*u %c\n", h_div, (int)strlen((fold_name[3]).c_str()), 
+    sprintf( entry[1] + strlen(entry[1]), "%c%*u%c\n", h_div, (int)(strlen((fold_name[3]).c_str()) + 2), 
              right.RpFold().ContactTip(), h_div ) ;
     buffer << border << header << border << entry[0] << entry[1] << border ;
     /* Print out the LSM303 accelerometers. */

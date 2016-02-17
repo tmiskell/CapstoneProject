@@ -87,6 +87,7 @@ int main( int argc, char* argv[] ) {
     Gesture nextGesture ;                                            /* The next gesture to be read in. */
     Hand nextHand[NUM_HANDS] ;                                       /* The next pair of hands to be read in. */
     const char* fName   = "../gesture_data/gesture_data_init.xml" ;  /* The XML file containing sensor data. */
+    const char* intfName = "../gesture_data/gesture_data_read.xml" ; /* The XML file containing sensor data to be read. */
     const char* newfName = "../gesture_data/gesture_data.complete" ; /* The parsed XML file containing sensor data. */
     const char* outfName = "../gesture_data/gesture_data.xml" ;      /* The XML file that was just read. */
     const char* dbName   = "gesture" ;                               /* The database name to use. */
@@ -115,7 +116,7 @@ int main( int argc, char* argv[] ) {
         exit( result ) ;
     }
     t1.tv_sec = 0 ;
-    t1.tv_nsec = 500000000L ;
+    t1.tv_nsec = 125000000L ;
     scrText.SetStatus( "Initialized\n" ) ;
     output_to_display( scrText, true ) ;
     /* Connect to the gesture database. */
@@ -136,7 +137,10 @@ int main( int argc, char* argv[] ) {
    	    output_to_display( scrText, true ) ;
             /* Add delay to make sure file has finished being written to before attempting to read. */
   	    nanosleep( &t1, &t2 ) ;
-            if( get_gesture( nextHand, fName, scrText, doc, sensorStatus, xmlVersion, convert ) ){
+            if( rename(fName, intfName) != 0 ){
+       	        scrText.SetStatus( "Unable to rename file:\t" + string(fName) + "\n" ) ;
+	    }
+            if( get_gesture( nextHand, intfName, scrText, doc, sensorStatus, xmlVersion, convert ) ){
                 /* Store the next gesture set of data. */
                 nextGesture = Gesture( nextHand[0], nextHand[1] ) ;     
                 /* Update display for the next set of sensor values. */
@@ -144,8 +148,8 @@ int main( int argc, char* argv[] ) {
                 /* Indicate file was successfully read. */
 		scrText.SetStatus( "Successfully read:\t" + string(fName) + "\n" ) ;
                 /* Rename the file so as not to re-read it. */
-                if( rename(fName, newfName) != 0 ){
-  	   	    scrText.SetStatus( "Unable to rename file:\t" + string(fName) + "\n" ) ;
+                if( rename(intfName, newfName) != 0 ){
+  	   	    scrText.SetStatus( "Unable to rename file:\t" + string(intfName) + "\n" ) ;
 		}
    	        output_to_display( scrText, true ) ;
 	    }
