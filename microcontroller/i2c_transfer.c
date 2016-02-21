@@ -30,7 +30,7 @@
 #define TOTAL_NUM_9DOF NUM_9DOF * NUM_9DOF_VALS /* Total bumber of LSM9DOF values. */
 #define SEP_NUM_9DOF TOTAL_NUM_9DOF / 3         /* Number of LSM9DOF values for a given type (accelerometer, magnetometer, or gyrometer). */
 #define NUM_9DOF_NAMES 4                        /* The number of LSM9DOF value names. */
-#define NUM_ARGS ((NUM_FINGERS * 2) + 1)        /* The number of command line arguments. */
+#define NUM_ARGS ((NUM_FINGERS * 2) + 1) + 2    /* The number of command line arguments. */
 /* Custom type definitions. */
 typedef enum{ false, true } bool ; /* Used to define boolean values. */
 struct Finger{  /* Structure to store finger related data. */
@@ -118,8 +118,10 @@ int main( int argc, char* argv[] ){
   unsigned int right_flex[NUM_FINGERS] ;    /* Array to store the right hand flex sensor data. */
   bool left_contact[TOTAL_NUM_CONTACTS] ;   /* Array to store the left hand contact sensor data. */
   bool right_contact[TOTAL_NUM_CONTACTS] ;  /* Array to store the right hand contact sensor data. */
-  struct timespec t1 ;                      /* Amount of time to wait. */
-  struct timespec t2 ;                      /* Remaining time if delay is interrupted. */
+  struct timespec update_t ;                /* Amount of time to wait during a microcontroller update. */
+  struct timespec update_t_rem ;            /* Remaining time if update delay is interrupted. */
+  struct timespec read_t ;                  /* Amount of time to wait between I2C read operations. */
+  struct timespec read_t_rem ;              /* Remaining time if I2C read delay is interrupted. */
   struct Hand hands[NUM_HANDS] ;            /* Array to store data for both hands. */
   char status[MAX_CHAR] ;                   /* Status of sensor, either connected or disconnected. */
   double left_303_accel[SEP_NUM_303] ;      /* LSM303 accelerometer data for the left hand. */
@@ -137,25 +139,45 @@ int main( int argc, char* argv[] ){
   char* gpio_f_name = "/sys/class/gpio/gpio27/value" ; /* File handle used to reset microcontroller. */
   unsigned int lb[NUM_FINGERS] ;            /* The lower bounds to use for calibrating the flex sensors. */
   unsigned int ub[NUM_FINGERS] ;            /* The upper bounds to use for calibrating the flex sensors. */
-  bool reset = false ;                      /* An indicator if the microcontroller should be reset. */
+  bool reset = true ;                       /* An indicator if the microcontroller should be reset. */
+  char* finger_name[NUM_FINGERS] = {"ind",  /* A list of names for the flex sensors. */
+                                    "mid", 
+                                    "ri", 
+                                    "pi",
+                                    "th"
+                                   } ;
 
   fprintf( stdout, "Initializing\n" ) ;
   fprintf( stdout, "Applying calibration settings\n" ) ;
   if( argc != NUM_ARGS ){
-    fprintf( stderr, "Usage: %s index_lb index_ub middle_lb middle_ub ring_lb ring_ub pinky_lb pinky_ub\n", argv[0] ) ;
+    fprintf( stderr, "Usage: %s in_lb in_ub mid_lb mid_ub ri_lb ri_ub pi_lb pi_ub update_delay_ms read_delay_ms\n", argv[0] ) ;
     return EXIT_FAILURE ;
   }
   j = 1 ;
+  /* Parse calibration settings. */
   for( i = 0 ; i < NUM_FINGERS ; i++ ){
     if( !valid_int(argv[j]) )
-      fprintf( stderr, "Invalid calibration setting: %s", argv[j] ) ;
+      fprintf( stderr, "*** Invalid calibration setting for flex sensor lower bound: %s ***\n", argv[j] ) ;
+    fprintf( stdout, "%s flex lower bound threshold set to: %s\n", finger_name[i], argv[j] ) ;
     lb[i] = atoi( argv[j++] ) ;
     if( !valid_int(argv[j]) )
-      fprintf( stderr, "Invalid calibration setting: %s", argv[j] ) ;
+      fprintf( stderr, "*** Invalid calibration setting for flex sensor upper bound: %s ***\n", argv[j] ) ;
+    fprintf( stdout, "%s flex upper bound threshold set to: %s\n", finger_name[i], argv[j] ) ;
     ub[i] = atoi( argv[j++] ) ;
     if( lb[i] == ub[i] )
-      fprintf( stderr, "Invalid calibration setting: Lower bound and upper bound should not be equal." ) ;
+      fprintf( stderr, "*** Invalid calibration setting: Lower bound and upper bound should not be equal. ***" ) ;
   }
+  /* Parse delay settings. */
+  if( !valid_int(argv[j]) )
+    fprintf( stderr, "*** Invalid calibration setting for update delay: %s ***\n", argv[j] ) ;
+  fprintf( stdout, "Update delay: %s ms\n", argv[j] ) ;
+  update_t.tv_sec = 0 ;
+  update_t.tv_nsec = (unsigned long int)(atoi( argv[j++] ) * 1000000 ) ;
+  if( !valid_int(argv[j]) )
+    fprintf( stderr, "*** Invalid calibration setting for I2C read delay: %s ***\n", argv[j] ) ;
+  fprintf( stdout, "I2C read delay: %s ms\n", argv[j] ) ;
+  read_t.tv_sec = 0 ;
+  read_t.tv_nsec = (unsigned long int)(atoi( argv[j++] ) * 1000000 ) ;
   /* Register keyboard interrupt handler. */
   signal( SIGINT, signal_handler ) ;
   /* Initialize status and command. */
@@ -167,15 +189,13 @@ int main( int argc, char* argv[] ){
   data_init( hands, left_flex, right_flex, left_contact, right_contact, 
              left_303_accel, left_303_mag, right_303_accel, right_303_mag,
              left_9dof_accel, left_9dof_mag, left_9dof_gyro, right_9dof_accel, right_9dof_mag, right_9dof_gyro ) ;
-  t1.tv_sec = 0 ;                  
   /* Continually read current sensor data. */
   while( true ){
     if( reset ){
       /* Reset microcontroller. */
       fprintf( stdout, "Reseting microcontroller.\n" ) ;
-      if( !reset_sensor(gpio_f_name) ){
+      if( !reset_sensor(gpio_f_name) )
         perror( "*** Unable to reset sensor " ) ;
-      }
       reset = false ;
     }
     buffer_init( buffer ) ;
@@ -183,17 +203,14 @@ int main( int argc, char* argv[] ){
     /* Reset microcontroller internal pointer. */
     cmd[0] = 0 ;
     num_bytes = 1 ;
-    if( !i2c_write(I2C_FILE, cmd, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
+    if( !i2c_write(I2C_FILE, cmd, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) )
       /* I2C bus write error. */
       strcpy( status, "disconnected" ) ;
-    }
     /* Allow microcontroller sufficient time to update values. */
-    t1.tv_nsec = 31250000L ;   
-    nanosleep( &t1, &t2 ) ;
+    nanosleep( &update_t, &update_t_rem ) ;
     /* Read flex sensors. */
     fprintf( stdout, "Reading flex sensors\n" ) ;
     /* Allow sufficient time between reads. */
-    t1.tv_nsec = 31250000L ;   
     num_bytes = 4 ;
     for( i = 0 ; i < (NUM_FINGERS - 1) ; i++ ){ /* Note the thumb currently doesn't have a flex sensor. */
       if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
@@ -201,7 +218,7 @@ int main( int argc, char* argv[] ){
         strcpy( status, "disconnected" ) ;
         break ;
       }
-      nanosleep( &t1, &t2 ) ;
+      nanosleep( &read_t, &read_t_rem ) ;
       right_flex[i] = (unsigned int)atoi( buffer ) ; /* Currently there is only a right handed glove. */
       if( right_flex[i] > MAX_ADC ){
 	fprintf( stderr, "*** Flex sensor value %u exceeds %u, attempting to reset microcontroller.\n", right_flex[i], MAX_ADC ) ;
@@ -218,15 +235,13 @@ int main( int argc, char* argv[] ){
         strcpy( status, "disconnected" ) ;
         break ;
       }
-      nanosleep( &t1, &t2 ) ;
+      nanosleep( &read_t, &read_t_rem ) ;
       right_contact[i] = (bool)atoi( buffer ) ;
-      /* Flip the value so that contact is true, and no contact is false. */
-      if( right_contact[i] == true ){
+      /* Invert the value so that contact is true, and no contact is false. */
+      if( right_contact[i] == true )
         right_contact[i] = false ;
-      }
-      else{
+      else
 	right_contact[i] = true ;
-      }
     }
     /* Read accelerometers. */
     fprintf( stdout, "Reading LSM303 accelerometers\n" ) ; 
@@ -237,7 +252,7 @@ int main( int argc, char* argv[] ){
         strcpy( status, "disconnected" ) ;
         break ;
       }
-      nanosleep( &t1, &t2 ) ;
+      nanosleep( &read_t, &read_t_rem ) ;
       right_303_accel[i] = (double)atoi( buffer ) ; /* Currently there is only a right handed glove. */
     }
     for( i = 0 ; i < SEP_NUM_303 ; i++ ){
@@ -246,7 +261,7 @@ int main( int argc, char* argv[] ){
         strcpy( status, "disconnected" ) ;
         break ;
       }
-      nanosleep( &t1, &t2 ) ;
+      nanosleep( &read_t, &read_t_rem ) ;
       right_303_mag[i] = (double)atoi( buffer ) ; /* Currently there is only a right handed glove. */
     }
     fprintf( stdout, "Reading LSM9DOF accelerometers\n" ) ; 
@@ -257,7 +272,7 @@ int main( int argc, char* argv[] ){
         strcpy( status, "disconnected" ) ;
         break ;
       }
-      nanosleep( &t1, &t2 ) ;
+      nanosleep( &read_t, &read_t_rem ) ;
       right_9dof_accel[i] = (double)atoi( buffer ) ; /* Currently there is only a right handed glove. */
     }
     for( i = 0 ; i < SEP_NUM_9DOF ; i++ ){
@@ -266,7 +281,7 @@ int main( int argc, char* argv[] ){
         strcpy( status, "disconnected" ) ;
         break ;
       }
-      nanosleep( &t1, &t2 ) ;
+      nanosleep( &read_t, &read_t_rem ) ;
       right_9dof_mag[i] = (double)atoi( buffer ) ; /* Currently there is only a right handed glove. */
     }
     for( i = 0 ; i < SEP_NUM_9DOF ; i++ ){
@@ -275,23 +290,9 @@ int main( int argc, char* argv[] ){
         strcpy( status, "disconnected" ) ;
         break ;
       }
-      nanosleep( &t1, &t2 ) ;
+      nanosleep( &read_t, &read_t_rem ) ;
       right_9dof_gyro[i] = (double)atoi( buffer ) ; /* Currently there is only a right handed glove. */
     }
-    /* Get the amount of time required to perform a read. */
-    num_bytes = 4 ;
-    if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
-      /* I2C bus read error. */
-      strcpy( status, "disconnected" ) ;
-    }
-    fprintf( stdout, "Sensor read time %d ms,", (int)atoi(buffer) ) ;
-    /* Read the current status code. */
-    num_bytes = 1 ;
-    if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
-      /* I2C bus read error. */
-      strcpy( status, "disconnected" ) ;
-    }
-    fprintf( stdout, " status code: %c\n", buffer[0] ) ;
     /* Group the data. */
     group_data( hands, left_flex, right_flex, left_contact, right_contact, 
                 left_303_accel, left_303_mag, right_303_accel, right_303_mag,
@@ -299,13 +300,11 @@ int main( int argc, char* argv[] ){
     print_values( hands ) ;
     /* Output current sensor data to file. */
     fprintf( stdout, "Writing sensor data to:\t%s\n", f_name ) ;
-    if( !write_file(f_name, hands, status, lb, ub) ){
+    if( !write_file(f_name, hands, status, lb, ub) )
       perror( "*** Error writing sensor data " ) ;
-    }
-    if( kb_flag ){
+    if( kb_flag )
       /* Keyboard interrupt pressed. Perform clean up. */
       break ;
-    }
   }
   fprintf( stdout, "\nExiting\n" ) ;
 
@@ -473,10 +472,9 @@ void store_data( struct Hand hands[NUM_HANDS], unsigned int flex[NUM_FINGERS], b
     for( k = 0 ; k < NUM_FINGER_CONTACTS ; k++ ){
       hands[i].fingers[j].contact[k] = contact[m] ; 
       m++ ;
-      if( j == (NUM_FINGERS - 1) ){
+      if( j == (NUM_FINGERS - 1) )
         /* Currently the thumb has only one contact sensor. */
 	break ;
-      }
     }
   }
   for( j = 0 ; j < NUM_FOLDS ; j++ ){

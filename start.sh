@@ -14,6 +14,8 @@ RING_LB=50
 RING_UB=60
 PINKY_LB=50
 PINKY_UB=60
+UPDATE_DELAY=15
+READ_DELAY=10
 # Setup the IP address for the server.
 IP_ADDR=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
 #IP_ADDR=127.0.0.1
@@ -24,7 +26,7 @@ echo "Configuring GPIO pins"
 sleep 1
 # Start I2C transfers.
 echo "Starting I2C transfers from sensors"
-$TRANSFER_DIR/i2c_transfer $THUMB_LB $THUMB_UB $INDEX_LB $INDEX_UB $MID_LB $MID_UB $RING_LB $RING_UB $PINKY_LB $PINKY_UB > $LOG_DIR/transfer.log 2> $LOG_DIR/transfer_error.log &
+$TRANSFER_DIR/i2c_transfer $THUMB_LB $THUMB_UB $INDEX_LB $INDEX_UB $MID_LB $MID_UB $RING_LB $RING_UB $PINKY_LB $PINKY_UB $UPDATE_DELAY $READ_DELAY > $LOG_DIR/transfer.log 2> $LOG_DIR/transfer_error.log &
 sleep 1
 # Start the web server.
 echo "Starting web server"
