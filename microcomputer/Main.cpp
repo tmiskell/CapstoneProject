@@ -116,7 +116,7 @@ int main( int argc, char* argv[] ) {
         exit( result ) ;
     }
     t1.tv_sec = 0 ;
-    t1.tv_nsec = 125000000L ;
+    t1.tv_nsec = 10000000L ;
     scrText.SetStatus( "Initialized\n" ) ;
     output_to_display( scrText, true ) ;
     /* Connect to the gesture database. */

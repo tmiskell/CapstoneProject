@@ -203,9 +203,11 @@ int main( int argc, char* argv[] ){
     /* Reset microcontroller internal pointer. */
     cmd[0] = 0 ;
     num_bytes = 1 ;
-    if( !i2c_write(I2C_FILE, cmd, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) )
+    if( !i2c_write(I2C_FILE, cmd, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
       /* I2C bus write error. */
       strcpy( status, "disconnected" ) ;
+      reset = true ;
+    }
     /* Allow microcontroller sufficient time to update values. */
     nanosleep( &update_t, &update_t_rem ) ;
     /* Read flex sensors. */
@@ -216,6 +218,7 @@ int main( int argc, char* argv[] ){
       if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
         /* I2C bus read error. */
         strcpy( status, "disconnected" ) ;
+        reset = true ;
         break ;
       }
       nanosleep( &read_t, &read_t_rem ) ;
@@ -233,6 +236,7 @@ int main( int argc, char* argv[] ){
       if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
         /* I2C bus read error. */
         strcpy( status, "disconnected" ) ;
+        reset = true ;
         break ;
       }
       nanosleep( &read_t, &read_t_rem ) ;
@@ -250,6 +254,7 @@ int main( int argc, char* argv[] ){
       if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
         /* I2C bus read error. */
         strcpy( status, "disconnected" ) ;
+        reset = true ;
         break ;
       }
       nanosleep( &read_t, &read_t_rem ) ;
@@ -259,6 +264,7 @@ int main( int argc, char* argv[] ){
       if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
         /* I2C bus read error. */
         strcpy( status, "disconnected" ) ;
+        reset = true ;
         break ;
       }
       nanosleep( &read_t, &read_t_rem ) ;
@@ -270,6 +276,7 @@ int main( int argc, char* argv[] ){
       if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
         /* I2C bus read error. */
         strcpy( status, "disconnected" ) ;
+        reset = true ;
         break ;
       }
       nanosleep( &read_t, &read_t_rem ) ;
@@ -279,6 +286,7 @@ int main( int argc, char* argv[] ){
       if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
         /* I2C bus read error. */
         strcpy( status, "disconnected" ) ;
+        reset = true ;
         break ;
       }
       nanosleep( &read_t, &read_t_rem ) ;
@@ -288,6 +296,7 @@ int main( int argc, char* argv[] ){
       if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
         /* I2C bus read error. */
         strcpy( status, "disconnected" ) ;
+        reset = true ;
         break ;
       }
       nanosleep( &read_t, &read_t_rem ) ;
