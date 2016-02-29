@@ -14,11 +14,11 @@ RING_LB=50
 RING_UB=60
 PINKY_LB=50
 PINKY_UB=60
-UPDATE_DELAY=50
-READ_DELAY=30
+UPDATE_DELAY=60
+READ_DELAY=40
 # Setup the IP address for the server.
-#IP_ADDR=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
-IP_ADDR=127.0.0.1
+IP_ADDR=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+#IP_ADDR=127.0.0.1
 # Configure the GPIO pins.
 echo "Configuring GPIO pins"
 gpio export 27 out

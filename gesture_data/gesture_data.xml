@@ -86,7 +86,7 @@
 			</thumb>
 			<index>
 				<flex>0</flex>
-				<contact-tip>1</contact-tip>
+				<contact-tip>0</contact-tip>
 				<contact-mid>0</contact-mid>
 			</index>
 			<middle>
@@ -117,47 +117,47 @@
 				<contact-tip>0</contact-tip>
 			</ring-pinky>
 			<lsm303 side="top">
-				<accel-x>1</accel-x>
-				<accel-y>-116</accel-y>
-				<accel-z>-44</accel-z>
-				<mag-x>-705</mag-x>
-				<mag-y>-48</mag-y>
-				<mag-z>35</mag-z>
+				<accel-x>72</accel-x>
+				<accel-y>-192</accel-y>
+				<accel-z>996</accel-z>
+				<mag-x>-109</mag-x>
+				<mag-y>56</mag-y>
+				<mag-z>-687</mag-z>
 			</lsm303>
 			<lsm303 side="bottom">
-				<accel-x>100</accel-x>
-				<accel-y>209</accel-y>
-				<accel-z>-102</accel-z>
-				<mag-x>151</mag-x>
-				<mag-y>23</mag-y>
-				<mag-z>48</mag-z>
+				<accel-x>168</accel-x>
+				<accel-y>-44</accel-y>
+				<accel-z>996</accel-z>
+				<mag-x>-113</mag-x>
+				<mag-y>141</mag-y>
+				<mag-z>-389</mag-z>
 			</lsm303>
 			<lsm9dof side="top">
-				<accel-x>6379</accel-x>
-				<accel-y>-144</accel-y>
-				<accel-z>68</accel-z>
-				<mag-x>948</mag-x>
-				<mag-y>95</mag-y>
-				<mag-z>-134</mag-z>
-				<gyro-x>16619</gyro-x>
-				<gyro-y>2478</gyro-y>
-				<gyro-z>4299</gyro-z>
+				<accel-x>-2538</accel-x>
+				<accel-y>-55</accel-y>
+				<accel-z>15787</accel-z>
+				<mag-x>-1870</mag-x>
+				<mag-y>7088</mag-y>
+				<mag-z>5544</mag-z>
+				<gyro-x>-102</gyro-x>
+				<gyro-y>58</gyro-y>
+				<gyro-z>-425</gyro-z>
 			</lsm9dof>
 			<lsm9dof side="bottom">
-				<accel-x>-439</accel-x>
-				<accel-y>236</accel-y>
-				<accel-z>136</accel-z>
-				<mag-x>-525</mag-x>
-				<mag-y>-4849</mag-y>
-				<mag-z>-188</mag-z>
-				<gyro-x>6681</gyro-x>
-				<gyro-y>63</gyro-y>
-				<gyro-z>298</gyro-z>
+				<accel-x>-4103</accel-x>
+				<accel-y>628</accel-y>
+				<accel-z>16670</accel-z>
+				<mag-x>-921</mag-x>
+				<mag-y>5527</mag-y>
+				<mag-z>6161</mag-z>
+				<gyro-x>51</gyro-x>
+				<gyro-y>335</gyro-y>
+				<gyro-z>-130</gyro-z>
 			</lsm9dof>
 		</hand>
 	</gesture>
-		<converted-text>                                                   </converted-text>
-	<status>disconnected</status>
+		<converted-text>E                                     </converted-text>
+	<status>connected</status>
 	<convert>false</convert>
 	<version>1.0</version>
 </gestures>
