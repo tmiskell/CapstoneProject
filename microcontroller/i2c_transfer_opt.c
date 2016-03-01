@@ -20,7 +20,7 @@
 #define NUM_FINGERS 5                           /* Number of fingers per hand. */
 #define NUM_FOLDS 4                             /* Number of inter-digital folds per hand. */
 #define MAX_ADC 1023                            /* The maximum 10-bit ADC value. */
-#define FLEX_BYTES 4
+#define FLEX_BYTES 2
 #define CONTACT_BYTES 2
 #define LSM303_BYTES 5
 #define NUM_303 2                               /* Number of connected LSM303 accelerometers. */
@@ -214,9 +214,9 @@ int main( int argc, char* argv[] ){
     /* Allow microcontroller sufficient time to update values. */
     nanosleep( &update_t, &update_t_rem ) ;
     /* Read flex sensors. */
-    fprintf( stdout, "Reading flex sensors\n" ) ;
+    fprintf( stdout, "Reading flex sensors and contact sensors\n" ) ;
     /* Allow sufficient time between reads. */
-    num_bytes = 4 * ( NUM_FINGERS - 1 ) ;
+    num_bytes = (FLEX_BYTES * ( NUM_FINGERS - 1 )) + CONTACT_BYTES ;
     memset( buffer, '\0', sizeof(char) * MAX_CHAR ) ;
     if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
       /* I2C bus read error. */
@@ -224,41 +224,26 @@ int main( int argc, char* argv[] ){
       reset = true ;
       break ;
     }
-    nanosleep( &read_t, &read_t_rem ) ;
-    char flex_buffer[FLEX_BYTES+1] ;            /* Buffer to store flex_sensor value. */
     for( i = 0 ; i < (NUM_FINGERS - 1) ; i++ ){ /* Note the thumb currently doesn't have a flex sensor. */
-      for( j = 0 ; j < 4 ; j++ ){
-        flex_buffer[j] = buffer[(i*4)+j] ;
-      }
-      flex_buffer[j] = '\0' ;
-      right_flex[i] = (unsigned int)atoi( flex_buffer ) ; /* Currently there is only a right handed glove. */
+      right_flex[i] = (unsigned int)((buffer[i*2] << 8) | buffer[(i*2)+1]) ; /* Currently there is only a right handed glove. */
       if( right_flex[i] > MAX_ADC ){
 	fprintf( stderr, "*** Flex sensor value %u exceeds %u, attempting to reset microcontroller.\n", right_flex[i], MAX_ADC ) ;
 	reset = true ;
       }
     }
     /* Read contact sensors. */
-    fprintf( stdout, "Reading contact sensors\n" ) ;
-    num_bytes = 2 ;
-    memset( buffer, '\0', sizeof(char) * MAX_CHAR ) ;
-    if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
-      /* I2C bus read error. */
-      strcpy( status, "disconnected" ) ;
-      reset = true ;
-      break ;
-    }
-    nanosleep( &read_t, &read_t_rem ) ;
     for( i = 0 ; i < TOTAL_NUM_CONTACTS ; i++ ){
       if( i < 8 )
-        right_contact[i] = (bool)((buffer[0] >> i) & 0x01 );
+        right_contact[i] = (bool)((buffer[FLEX_BYTES*(NUM_FINGERS-1)] >> i) & 0x01 );
       else
-        right_contact[i] = (bool)((buffer[1] >> (i % 8)) & 0x01 );
+        right_contact[i] = (bool)((buffer[(FLEX_BYTES*(NUM_FINGERS-1))+1] >> (i % 8)) & 0x01 );
       /* Invert the value so that contact is true, and no contact is false. */
       if( right_contact[i] == true )
         right_contact[i] = false ;
       else
 	right_contact[i] = true ;
     }
+    nanosleep( &read_t, &read_t_rem ) ;
     /* Read accelerometers. */
     fprintf( stdout, "Reading LSM303 accelerometers\n" ) ; 
     num_bytes = LSM303_BYTES * NUM_303_VALS ;
@@ -270,7 +255,6 @@ int main( int argc, char* argv[] ){
         reset = true ;
         break ;
       }
-      nanosleep( &read_t, &read_t_rem ) ;
       char lsm_303_buffer[LSM303_BYTES+1] ; /* Buffer to store LSM303 value. */
       for( j = 0 ; j < (NUM_303_VALS / 2) ; j++ ){
 	for( k = 0 ; k < LSM303_BYTES ; k++ )
@@ -284,6 +268,7 @@ int main( int argc, char* argv[] ){
 	lsm_303_buffer[k] = '\0' ;
         right_303_mag[(i*(NUM_303_VALS/2))+(j%(NUM_303_VALS/2))] = (double)atoi( lsm_303_buffer ) ; 
       }
+      nanosleep( &read_t, &read_t_rem ) ;
     }
     fprintf( stdout, "Reading LSM9DOF accelerometers\n" ) ; 
     for( i = 0 ; i < NUM_9DOF ; i++ ){
@@ -307,7 +292,6 @@ int main( int argc, char* argv[] ){
         reset = true ;
         break ;
       }
-      nanosleep( &read_t, &read_t_rem ) ;
       strcat( temp_buffer, buffer ) ;
       strcpy( buffer, temp_buffer ) ;
       char lsm_9dof_buffer[7] ;
@@ -329,6 +313,7 @@ int main( int argc, char* argv[] ){
 	lsm_9dof_buffer[k] = '\0' ;
         right_9dof_gyro[(i*(NUM_9DOF_VALS/3))+(j%(NUM_9DOF_VALS/3))] = (double)atoi( lsm_9dof_buffer ) ;
       }
+      nanosleep( &read_t, &read_t_rem ) ;
     }
     /* Group the data. */
     group_data( hands, left_flex, right_flex, left_contact, right_contact, 
