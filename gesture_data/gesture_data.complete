@@ -117,42 +117,42 @@
 				<contact-tip>false</contact-tip>
 			</ring-pinky>
 			<lsm303 side="top">
-				<accel-x>76.000000</accel-x>
-				<accel-y>-192.000000</accel-y>
-				<accel-z>992.000000</accel-z>
-				<mag-x>120.000000</mag-x>
-				<mag-y>110.000000</mag-y>
-				<mag-z>-929.000000</mag-z>
+				<accel-x>-540.000000</accel-x>
+				<accel-y>124.000000</accel-y>
+				<accel-z>844.000000</accel-z>
+				<mag-x>493.000000</mag-x>
+				<mag-y>-124.000000</mag-y>
+				<mag-z>-423.000000</mag-z>
 			</lsm303>
 			<lsm303 side="bottom">
-				<accel-x>268.000000</accel-x>
-				<accel-y>-228.000000</accel-y>
-				<accel-z>940.000000</accel-z>
-				<mag-x>55.000000</mag-x>
-				<mag-y>356.000000</mag-y>
-				<mag-z>-629.000000</mag-z>
+				<accel-x>-192.000000</accel-x>
+				<accel-y>180.000000</accel-y>
+				<accel-z>948.000000</accel-z>
+				<mag-x>432.000000</mag-x>
+				<mag-y>58.000000</mag-y>
+				<mag-z>-295.000000</mag-z>
 			</lsm303>
 			<lsm9dof side="top">
-				<accel-x>-5553.000000</accel-x>
-				<accel-y>2564.000000</accel-y>
-				<accel-z>15265.000000</accel-z>
-				<mag-x>3350.000000</mag-x>
-				<mag-y>6538.000000</mag-y>
-				<mag-z>7734.000000</mag-z>
-				<gyro-x>-80.000000</gyro-x>
-				<gyro-y>30.000000</gyro-y>
-				<gyro-z>-460.000000</gyro-z>
+				<accel-x>-6925.000000</accel-x>
+				<accel-y>613.000000</accel-y>
+				<accel-z>15817.000000</accel-z>
+				<mag-x>3179.000000</mag-x>
+				<mag-y>6172.000000</mag-y>
+				<mag-z>4122.000000</mag-z>
+				<gyro-x>-704.000000</gyro-x>
+				<gyro-y>-6.000000</gyro-y>
+				<gyro-z>-317.000000</gyro-z>
 			</lsm9dof>
 			<lsm9dof side="bottom">
-				<accel-x>-3578.000000</accel-x>
-				<accel-y>392.000000</accel-y>
-				<accel-z>16704.000000</accel-z>
-				<mag-x>2689.000000</mag-x>
-				<mag-y>6250.000000</mag-y>
-				<mag-z>8667.000000</mag-z>
-				<gyro-x>62.000000</gyro-x>
-				<gyro-y>319.000000</gyro-y>
-				<gyro-z>-97.000000</gyro-z>
+				<accel-x>-2566.000000</accel-x>
+				<accel-y>-4723.000000</accel-y>
+				<accel-z>15006.000000</accel-z>
+				<mag-x>1894.000000</mag-x>
+				<mag-y>9456.000000</mag-y>
+				<mag-z>3749.000000</mag-z>
+				<gyro-x>-86.000000</gyro-x>
+				<gyro-y>357.000000</gyro-y>
+				<gyro-z>-326.000000</gyro-z>
 			</lsm9dof>
 		</hand>
 	</gesture>
