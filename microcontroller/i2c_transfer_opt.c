@@ -95,7 +95,7 @@ void group_data( struct Hand hands[NUM_HANDS], unsigned int left_flex[NUM_FINGER
                  double right_9dof_accel[SEP_NUM_9DOF], double right_9dof_mag[SEP_NUM_9DOF], double right_9dof_gyro[SEP_NUM_9DOF] ) ;
 void print_values( struct Hand hands[NUM_HANDS] ) ;
 bool reset_sensor( char* f_name ) ;
-unsigned int round_flex( unsigned int x, unsigned int lb, unsigned int ub ) ;
+double adjust_flex( unsigned int x, unsigned int lb, unsigned int ub ) ;
 void print_table( char border[MAX_CHAR], char header[MAX_CHAR], char entry[NUM_HANDS][MAX_CHAR] ) ;
 void add_border( char border[MAX_CHAR], int border_len, char c_div, char v_div ) ;
 void signal_handler( int sig ) ;
@@ -141,8 +141,8 @@ int main( int argc, char* argv[] ){
   char* un = getenv( "USER" ) ;             /* The current user name. */
   char f_name[MAX_CHAR] ;                   /* File to store data. */
   char* gpio_f_name = "/sys/class/gpio/gpio27/value" ; /* File handle used to reset microcontroller. */
-  unsigned int lb[NUM_FINGERS] ;            /* The lower bounds to use for calibrating the flex sensors. */
-  unsigned int ub[NUM_FINGERS] ;            /* The upper bounds to use for calibrating the flex sensors. */
+  unsigned int lb[NUM_FINGERS] ;            /* The lower bounds to use for calibrating the flex sensors. Ranges from 0-1023. */
+  unsigned int ub[NUM_FINGERS] ;            /* The upper bounds to use for calibrating the flex sensors. Ranges from 0-1023.*/
   bool reset = true ;                       /* An indicator if the microcontroller should be reset. */
   char* finger_name[NUM_FINGERS] = {"ind",  /* A list of names for the flex sensors. */
                                     "mid", 
@@ -154,7 +154,7 @@ int main( int argc, char* argv[] ){
   fprintf( stdout, "Initializing\n" ) ;
   fprintf( stdout, "Applying calibration settings\n" ) ;
   if( argc != NUM_ARGS ){
-    fprintf( stderr, "Usage: %s in_lb in_ub mid_lb mid_ub ri_lb ri_ub pi_lb pi_ub update_delay_ms read_delay_ms\n", argv[0] ) ;
+    fprintf( stderr, "Usage: %s in_lb in_ub mid_lb mid_ub ri_lb ri_ub pi_lb pi_ub th_lb th_ub update_delay_ms read_delay_ms\n", argv[0] ) ;
     return EXIT_FAILURE ;
   }
   j = 1 ;
@@ -586,7 +586,6 @@ bool write_file( char f_name[MAX_CHAR], struct Hand hands[NUM_HANDS], char statu
   unsigned int j ;  /* An iterator. */
   unsigned int k ;  /* An iterator. */
   unsigned int flex_adjust ; /* The adjusted flex sensor value, in the range 0 - 100. */
-  unsigned int flex_round ;  /* The flex sensor value rounded to one of three values: 0, 50, 100.*/
 
   fp = fopen( f_name, "w" ) ;
   if( fp == NULL ){
@@ -607,9 +606,8 @@ bool write_file( char f_name[MAX_CHAR], struct Hand hands[NUM_HANDS], char statu
       /* Write the next set of finger data. */
       fprintf( fp, "\t\t\t<%s>\n", finger_name[j] ) ;
       /* Express flex sensor values in range 0-100.*/
-      flex_adjust = (unsigned int)(((float)hands[i].fingers[j].flex / (float)MAX_ADC) * 100.0) ;
-      flex_round = round_flex( flex_adjust, lb[i], ub[i] ) ;
-      fprintf( fp, "\t\t\t\t<flex>%u</flex>\n", flex_round ) ; 
+      flex_adjust = adjust_flex( hands[i].fingers[j].flex, lb[j], ub[j] ) ;
+      fprintf( fp, "\t\t\t\t<flex>%u</flex>\n", flex_adjust ) ; 
       for( k = 0 ; k < NUM_FINGER_CONTACTS ; k++ ){
 	if( (strcmp(finger_name[j], "thumb") == 0) && (k == (NUM_FINGER_CONTACTS - 1)) ){
 	  /* Thumb only has a tip contact sensor. */
@@ -889,22 +887,40 @@ void print_values( struct Hand hands[NUM_HANDS] ){
 
 }
 
-unsigned int round_flex( unsigned int x, unsigned int lb, unsigned int ub ){
-  /* Function to round input flex sensor values. */
+double adjust_flex( unsigned int x, unsigned int lb, unsigned int ub ){
+  /* Function to adjust flex sensor values from a 0-1024 scale to a 0-100 quantized scale. */
 
-  const unsigned int MIN_VAL = 0 ;
-  const unsigned int MID_VAL = 50 ;
-  const unsigned int MAX_VAL = 100 ;
+  const unsigned int MIN_VAL = 0 ;       /* Minimum adjusted value. */
+  const unsigned int MAX_VAL = 100 ;     /* Maximum adjusted value. */
+  const unsigned int NUM_STEPS = 10 ;    /* Resolution. */
+  unsigned int i ;                       /* An iterator. */
+  double dx = ((double)ub - (double)lb) / (double)(NUM_STEPS - 2) ; /* X increment. */
+  double dy = (double)MAX_VAL / (double)NUM_STEPS ;                 /* Y increment. */
+  double y ;                                                        /* Adjusted flex sensor value. */
 
-  if( x < lb ){
-    return MIN_VAL ;
+  if( x == 0 ){
+    y = (double)MIN_VAL ;   
   }
-  else if( x > ub ){
-    return MAX_VAL ;
-  } 
+  else if( x == MAX_ADC ){
+    y = (double)MAX_VAL - dy ;   
+  }
+  else if( x < lb ){
+    y = (double)MIN_VAL ;   
+  }
+  else if( x >= ub ){
+    y = (double)MAX_VAL - dy ;   
+  }
   else{
-    return MID_VAL ;
+    /* MIN_VAL and MAX_VAL account for two out of the total number of steps.
+       Therefore start at 1 and go to NUM_STEPS - 1. */
+    for( i = 1 ; i < (NUM_STEPS - 1) ; i++ ){
+      if( (double)x < ((double)lb + ((double)i * dx)) ){
+        y = ((double)i * dy) ;
+        break ;
+      }
+    }  
   }
+  return y ;
 
 }
 
