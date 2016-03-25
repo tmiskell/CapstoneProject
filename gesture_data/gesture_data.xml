@@ -125,12 +125,12 @@
 				<mag-z>-498</mag-z>
 			</lsm303>
 			<lsm303 side="bottom">
-				<accel-x>-4</accel-x>
-				<accel-y>344</accel-y>
-				<accel-z>924</accel-z>
-				<mag-x>280</mag-x>
-				<mag-y>-49</mag-y>
-				<mag-z>-314</mag-z>
+				<accel-x>-12</accel-x>
+				<accel-y>348</accel-y>
+				<accel-z>916</accel-z>
+				<mag-x>314</mag-x>
+				<mag-y>-44</mag-y>
+				<mag-z>-287</mag-z>
 			</lsm303>
 			<lsm9dof side="top">
 				<accel-x>-9081</accel-x>
@@ -145,14 +145,14 @@
 			</lsm9dof>
 			<lsm9dof side="bottom">
 				<accel-x>-962</accel-x>
-				<accel-y>-5801</accel-y>
-				<accel-z>14641</accel-z>
-				<mag-x>1499</mag-x>
-				<mag-y>9556</mag-y>
-				<mag-z>3430</mag-z>
-				<gyro-x>66</gyro-x>
-				<gyro-y>153</gyro-y>
-				<gyro-z>-456</gyro-z>
+				<accel-y>-5849</accel-y>
+				<accel-z>14768</accel-z>
+				<mag-x>1530</mag-x>
+				<mag-y>9559</mag-y>
+				<mag-z>3425</mag-z>
+				<gyro-x>87</gyro-x>
+				<gyro-y>109</gyro-y>
+				<gyro-z>-479</gyro-z>
 			</lsm9dof>
 		</hand>
 	</gesture>
