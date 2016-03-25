@@ -85,7 +85,7 @@
 				<contact-tip>0</contact-tip>
 			</thumb>
 			<index>
-				<flex>50</flex>
+				<flex>30</flex>
 				<contact-tip>1</contact-tip>
 				<contact-mid>0</contact-mid>
 			</index>
@@ -117,46 +117,46 @@
 				<contact-tip>0</contact-tip>
 			</ring-pinky>
 			<lsm303 side="top">
-				<accel-x>200</accel-x>
-				<accel-y>272</accel-y>
-				<accel-z>916</accel-z>
-				<mag-x>-205</mag-x>
-				<mag-y>-300</mag-y>
-				<mag-z>-270</mag-z>
+				<accel-x>-252</accel-x>
+				<accel-y>404</accel-y>
+				<accel-z>888</accel-z>
+				<mag-x>251</mag-x>
+				<mag-y>-294</mag-y>
+				<mag-z>-547</mag-z>
 			</lsm303>
 			<lsm303 side="bottom">
-				<accel-x>0</accel-x>
-				<accel-y>0</accel-y>
-				<accel-z>0</accel-z>
-				<mag-x>0</mag-x>
-				<mag-y>0</mag-y>
-				<mag-z>0</mag-z>
+				<accel-x>120</accel-x>
+				<accel-y>500</accel-y>
+				<accel-z>828</accel-z>
+				<mag-x>266</mag-x>
+				<mag-y>-182</mag-y>
+				<mag-z>-315</mag-z>
 			</lsm303>
 			<lsm9dof side="top">
-				<accel-x>-1887</accel-x>
-				<accel-y>-3504</accel-y>
-				<accel-z>15353</accel-z>
-				<mag-x>-2477</mag-x>
-				<mag-y>5321</mag-y>
-				<mag-z>5948</mag-z>
-				<gyro-x>-57</gyro-x>
-				<gyro-y>240</gyro-y>
-				<gyro-z>-493</gyro-z>
+				<accel-x>-8377</accel-x>
+				<accel-y>3658</accel-y>
+				<accel-z>14898</accel-z>
+				<mag-x>2709</mag-x>
+				<mag-y>5086</mag-y>
+				<mag-z>4913</mag-z>
+				<gyro-x>-15</gyro-x>
+				<gyro-y>369</gyro-y>
+				<gyro-z>-313</gyro-z>
 			</lsm9dof>
 			<lsm9dof side="bottom">
-				<accel-x>0</accel-x>
-				<accel-y>0</accel-y>
-				<accel-z>0</accel-z>
-				<mag-x>0</mag-x>
-				<mag-y>0</mag-y>
-				<mag-z>0</mag-z>
-				<gyro-x>0</gyro-x>
-				<gyro-y>0</gyro-y>
-				<gyro-z>0</gyro-z>
+				<accel-x>-237</accel-x>
+				<accel-y>-3745</accel-y>
+				<accel-z>15315</accel-z>
+				<mag-x>1453</mag-x>
+				<mag-y>8422</mag-y>
+				<mag-z>4193</mag-z>
+				<gyro-x>-66</gyro-x>
+				<gyro-y>68</gyro-y>
+				<gyro-z>-411</gyro-z>
 			</lsm9dof>
 		</hand>
 	</gesture>
-		<converted-text>                        </converted-text>
+		<converted-text></converted-text>
 	<status>connected</status>
 	<convert>false</convert>
 	<version>1.0</version>

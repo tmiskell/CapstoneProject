@@ -123,54 +123,54 @@ INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 50, 50, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
-		204, 168, 940, -216, -228, -316, 0, 0, 0, 0, 0, 0, 
-		-698, -5301, 14715, -2596, 6295, 5631, -286, 108, -674, 0, 0, 0, 0, 0, 0, 0, 0, 0, "1");
+	VALUES("right", 0, 30, 60, 80, 80, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-452, 472, 764, 481, -308, -458, 32, 504, 848, 320, -157, -261, 
+		-9827, 4646, 13578, 3527, 4639, 4014, 191, 404, -278, 1390, -3165, 15131, 871, 8770, 4570, 311, 384, -508, "1");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		452, 88, 856, -336, -183, -239, 0, 0, 0, 0, 0, 0, 
-		1849, -4111, 14964, -3341, 5868, 5584, 134, 365, -524, 0, 0, 0, 0, 0, 0, 0, 0, 0, "2");
+	VALUES("right", 0, 20, 10, 60, 60, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-264, 576, 776, 426, -459, -523, 112, 500, 828, 291, -202, -287, 
+		-7319, 6490, 14249, 2636, 3792, 4949, -82, 427, -188, 2632, -2107, 14976, 373, 8539, 5225, 91, 181, -369, "2");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		316, 272, 880, -270, -266, -264, 0, 0, 0, 0, 0, 0, 
-		2261, -2248, 14924, -3675, 5170, 5342, 33, 77, -601, 0, 0, 0, 0, 0, 0, 0, 0, 0, "3");
+	VALUES("right", 0, 0, 10, 70, 60, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
+		-528, 404, 788, 525, -290, -445, -40, 532, 820, 367, -155, -257, 
+		-12436, 4111, 11839, 4186, 5126, 3055, 401, 408, -115, 481, -3830, 15725, 1908, 8633, 3986, 135, 169, -503, "3");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		500, 252, 792, -353, -267, -174, 0, 0, 0, 0, 0, 0, 
-		2663, -2324, 15135, -3775, 4700, 5246, -208, 635, -167, 0, 0, 0, 0, 0, 0, 0, 0, 0, "4");
+	VALUES("right", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+		-204, 88, 996, 209, -138, -530, 184, 308, 916, 235, -78, -363, 
+		-1434, 232, 16858, 418, 6062, 5740, -171, 618, -262, 670, -4354, 15055, 1578, 9423, 4768, -89, 152, -426, "4");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		328, 148, 888, -221, -212, -275, 0, 0, 0, 0, 0, 0, 
-		-1309, -1940, 15730, -2066, 5467, 5205, 192, 423, 223, 0, 0, 0, 0, 0, 0, 0, 0, 0, "5");
+	VALUES("right", 0, 0, 90, 90, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-128, 12, 1012, 191, -90, -562, 144, 256, 924, 251, -59, -354, 
+		-2916, -1907, 16475, 684, 7016, 5402, 135, 339, -282, -526, -4971, 14887, 1874, 9815, 4503, 192, 230, -516, "5");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
-		-88, 432, 868, -14, -250, -317, 0, 0, 0, 0, 0, 0, 
-		-7817, -2705, 14511, -77, 6234, 5395, 146, 21, -613, 0, 0, 0, 0, 0, 0, 0, 0, 0, "6");
+	VALUES("right", 0, 0, 0, 20, 50, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+		-120, 488, 860, 217, -383, -562, 152, 492, 840, 256, -185, -329, 
+		-7951, 5119, 14560, 2967, 4336, 4621, 127, 432, -293, 799, -3565, 15299, 1613, 9054, 4839, 10, 133, -457, "6");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
@@ -178,35 +178,35 @@ INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
 	VALUES("right", 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
-		492, 392, 724, -328, -223, -178, 0, 0, 0, 0, 0, 0, 
-		-1108, -755, 15720, -2748, 5486, 5042, 39, -35, -452, 0, 0, 0, 0, 0, 0, 0, 0, 0, "7");
+		-300, 504, 820, 335, -372, -523, 24, 528, 828, 348, -188, -277, 
+		-9568, 5186, 13731, 3185, 4636, 4551, -11, 451, -349, -322, -4197, 15149, 1839, 8241, 3646, -88, 2, -454, "7");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		428, 496, 708, -295, -261, -181, 0, 0, 0, 0, 0, 0, 
-		-2707, 783, 15683, -1981, 5201, 5144, 203, 96, -361, 0, 0, 0, 0, 0, 0, 0, 0, 0, "8");
+	VALUES("right", 0, 0, 40, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-248, 508, 840, 278, -350, -526, 92, 528, 816, 302, -201, -286, 
+		-9295, 5201, 13803, 3241, 4579, 4448, 14, 395, -280, 49, -3207, 15302, 1148, 8257, 4144, 9, 161, -434, "8");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 50, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		200, 272, 916, -205, -300, -270, 0, 0, 0, 0, 0, 0, 
-		-1887, -3504, 15353, -2477, 5321, 5948, -57, 240, -493, 0, 0, 0, 0, 0, 0, 0, 0, 0, "9");
+	VALUES("right", 0, 30, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-252, 404, 888, 251, -294, -547, 120, 500, 828, 266, -182, -315, 
+		-8377, 3658, 14898, 2709, 5086, 4913, -15, 369, -313, -237, -3745, 15315, 1453, 8422, 4193, -66, 68, -411, "9");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 
-		136, 152, 944, -4096, -278, -285, 0, 0, 0, 0, 0, 0, 
-		6489, -7018, 12073, -5102, 6071, 4678, 13, 28, -514, 0, 0, 0, 0, 0, 0, 0, 0, 0, "A");
+	VALUES("right", 0, 90, 90, 90, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 
+		-452, 284, 856, 452, -147, -483, -24, 368, 908, 320, -66, -301, 
+		-8702, 2186, 14981, 2808, 5899, 4591, -18, 201, -234, -242, -3097, 15402, 971, 8990, 4827, -20, 37, -350, "A");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
@@ -214,35 +214,35 @@ INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
 	VALUES("right", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 
-		352, 100, 896, -4096, -248, -242, 0, 0, 0, 0, 0, 0, 
-		5119, -7419, 12301, -5332, 6174, 5315, -67, -225, -453, 0, 0, 0, 0, 0, 0, 0, 0, 0, "B");
+		-244, 196, 964, 249, -167, -566, -32, 300, 928, 318, -40, -345, 
+		-8009, 1302, 15147, 2533, 6216, 4907, 57, 281, -240, -948, -3140, 15378, 1385, 9251, 5125, 35, 61, -440, "B");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 50, 50, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 
-		212, 312, 888, -4096, -344, -248, 0, 0, 0, 0, 0, 0, 
-		5439, -7009, 12177, -5370, 6134, 4956, 123, 192, -414, 0, 0, 0, 0, 0, 0, 0, 0, 0, "C");
+	VALUES("right", 0, 40, 50, 60, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 
+		-184, 628, 756, 268, -453, -531, -8, 504, 836, 304, -168, -331, 
+		-7354, 8594, 12942, 2470, 3055, 4857, 209, 358, -289, -222, -1657, 15627, 1814, 8778, 5184, 69, 180, -411, "C");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 50, 50, 50, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 
-		124, 312, 916, -4096, -330, -279, 0, 0, 0, 0, 0, 0, 
-		4361, -7083, 12551, -5064, 6459, 5179, 214, 223, -517, 0, 0, 0, 0, 0, 0, 0, 0, 0, "D");
+	VALUES("right", 0, 10, 60, 80, 70, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-356, 576, 744, 412, -396, -484, -108, 476, 816, 359, -141, -307, 
+		-10050, 6128, 12716, 3664, 4320, 4062, -4, 629, -201, -1579, -2261, 15539, 2468, 9044, 4705, 55, 154, -270, "D");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 50, 50, 50, 100, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
-		252, 292, 912, -4096, -334, -267, 0, 0, 0, 0, 0, 0, 
-		5416, -6760, 12295, -5109, 5938, 4978, 152, 114, -470, 0, 0, 0, 0, 0, 0, 0, 0, 0, "E");
+	VALUES("right", 0, 80, 80, 90, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 
+		-400, 664, 628, 426, -418, -439, -72, 540, 808, 345, -171, -289, 
+		-9791, 8683, 11523, 3427, 3236, 3846, 64, 437, -269, -556, -1465, 15759, 1796, 8157, 4613, 25, 209, -400, "E");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
@@ -250,230 +250,230 @@ INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
 	VALUES("right", 0, 50, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		372, 244, 868, -4096, -319, -220, 0, 0, 0, 0, 0, 0, 
-		4488, -6770, 12845, -5012, 5994, 5269, 84, 66, -486, 0, 0, 0, 0, 0, 0, 0, 0, 0, "F");
+		-340, 568, 768, 347, -391, -545, -104, 472, 844, 365, -117, -307, 
+		-10352, 7037, 12201, 3647, 3950, 3802, 89, 390, -291, -1120, -2423, 15562, 1845, 8532, 4100, 59, 208, -474, "F");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 
-		-720, -148, 624, -4096, -120, -327, 0, 0, 0, 0, 0, 0, 
-		-9456, -10131, 9335, 702, 9183, 5528, 4, -99, -322, 0, 0, 0, 0, 0, 0, 0, 0, 0, "G");
+	VALUES("right", 0, 30, 60, 80, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 
+		-964, 40, 312, 581, 22, -127, -700, 160, 644, 583, 145, -32, 
+		-16672, -1370, 5670, 4656, 7159, -295, 202, 262, -271, -11747, -5504, 11186, 4581, 9502, 1171, 77, -14, -523, "G");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 
-		-680, -108, 628, -4096, -129, -4096, 0, 0, 0, 0, 0, 0, 
-		-6614, -10555, 10400, -747, 9161, 5661, 115, 131, -471, 0, 0, 0, 0, 0, 0, 0, 0, 0, "H");
+	VALUES("right", 0, 10, 10, 70, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-876, 156, 544, 612, -42, -278, -596, 212, 712, 573, 100, -74, 
+		-16101, -1074, 7350, 4716, 7158, 783, -43, 454, -346, -9911, -5652, 12427, 4193, 9540, 2002, 5, 134, -469, "H");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 100, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-		264, 336, 880, -4096, -351, -236, 0, 0, 0, 0, 0, 0, 
-		5897, -5464, 12864, -5037, 5346, 4956, 203, -99, -185, 0, 0, 0, 0, 0, 0, 0, 0, 0, "I");
+	VALUES("right", 0, 50, 40, 50, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
+		-356, 716, 608, 464, -427, -378, 60, 608, 760, 280, -220, -300, 
+		-8401, 10190, 10863, 3048, 2515, 3948, 132, 232, -103, -1244, -1557, 15475, 1334, 7947, 4905, 96, 56, -379, "I");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 100, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-		-108, 792, 588, -26, -529, -91, 0, 0, 0, 0, 0, 0, 
-		-9077, 1722, 14136, 136, 3940, 5362, 223, 87, -658, 0, 0, 0, 0, 0, 0, 0, 0, 0, "J1");
+	VALUES("right", 0, 60, 50, 60, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
+		-564, 628, 544, 460, -372, -377, -168, 596, 756, 413, -189, -211, 
+		-11256, 8649, 10046, 3508, 3536, 3806, 133, 383, -292, -2772, -2955, 15451, 2044, 8065, 4028, 61, 116, -411, "J1");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 50, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		-664, 476, 480, 303, -406, -252, 0, 0, 0, 0, 0, 0, 
-		-14939, -1318, 9342, 2926, 5995, 4807, -12, 120, -606, 0, 0, 0, 0, 0, 0, 0, 0, 0, "J2");
+	VALUES("right", 0, 60, 50, 60, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
+		-920, 100, 416, 518, 1, -186, -692, 308, 592, 585, 47, -5, 
+		-16739, 399, 5549, 4213, 7397, 668, 61, 303, -204, -11342, -5098, 11729, 3987, 8747, 1735, 27, 34, -480, "J2");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 50, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		-852, 216, 376, 483, -287, -228, 0, 0, 0, 0, 0, 0, 
-		-18215, -2406, 1618, 4987, 6842, 2650, 151, 34, -462, 0, 0, 0, 0, 0, 0, 0, 0, 0, "J3");
+	VALUES("right", 0, 60, 40, 50, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
+		-948, -264, -276, 301, 111, 293, -972, -120, -52, 524, 259, 403, 
+		-15889, -2674, -7300, 1821, 7089, -4920, 89, 367, -238, -17832, -2921, 2530, 5051, 7571, -2422, 56, 123, -396, "J3");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 100, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		408, 436, 776, -4096, -381, -161, 0, 0, 0, 0, 0, 0, 
-		6276, -1754, 13725, -5074, 4012, 4706, 124, 174, -476, 0, 0, 0, 0, 0, 0, 0, 0, 0, "K");
+	VALUES("right", 0, 10, 10, 70, 70, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 
+		-424, 688, 632, 442, -428, -424, -36, 576, 784, 327, -177, -306, 
+		-9629, 7794, 12432, 3368, 3532, 4024, -76, 302, -342, -82, -1058, 15594, 1435, 8287, 4935, -9, 100, -477, "K");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 50, 50, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
-		260, 404, 852, -4096, -368, -232, 0, 0, 0, 0, 0, 0, 
-		5974, -3242, 13355, -4758, 4693, 4805, 281, 182, -509, 0, 0, 0, 0, 0, 0, 0, 0, 0, "L");
+	VALUES("right", 0, 20, 90, 90, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
+		-480, 632, 620, 472, -368, -425, -52, 608, 788, 349, -173, -274, 
+		-9638, 8608, 11611, 3243, 3450, 4067, 121, 405, -331, -66, -2014, 15610, 1126, 8491, 4702, 71, 235, -481, "L");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 50, 50, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-		480, 356, 776, -4096, -310, -162, 0, 0, 0, 0, 0, 0, 
-		4367, -2006, 14172, -4584, 4345, 4525, 125, 205, -516, 0, 0, 0, 0, 0, 0, 0, 0, 0, "M");
+	VALUES("right", 0, 90, 60, 70, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
+		-356, 472, 812, 413, -293, -442, 40, 452, 860, 302, -131, -321, 
+		-9939, 4802, 13661, 3398, 4750, 4404, 78, 490, -231, -517, -1058, 15729, 1485, 8066, 4995, 58, 85, -431, "M");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 50, 50, 50, 100, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
-		292, 376, 852, -4096, -308, -234, 0, 0, 0, 0, 0, 0, 
-		2984, -3011, 14841, -4160, 4919, 4753, 139, 12, -480, 0, 0, 0, 0, 0, 0, 0, 0, 0, "N");
+	VALUES("right", 0, 70, 70, 80, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
+		-388, 400, 832, 425, -279, -460, 0, 416, 900, 313, -100, -326, 
+		-9488, 4416, 13891, 3181, 4898, 4570, -28, 660, -227, -555, -2651, 15486, 1540, 8643, 4794, 96, 509, -275, "N");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 50, 50, 50, 50, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		68, 524, 812, -4096, -399, -213, 0, 0, 0, 0, 0, 0, 
-		2029, -4253, 14638, -4103, 5246, 5017, 130, 112, -285, 0, 0, 0, 0, 0, 0, 0, 0, 0, "O");
+	VALUES("right", 0, 50, 60, 70, 50, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 
+		-420, 664, 620, 458, -507, -360, -136, 584, 772, 428, -205, -226, 
+		-10558, 8956, 10913, 3807, 2833, 3149, 185, 605, -456, -2115, -1338, 15947, 2764, 7919, 4121, 113, 556, -437, "O");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 50, 50, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		560, 176, 780, -4096, -237, -157, 0, 0, 0, 0, 0, 0, 
-		3098, -6043, 13803, -3960, 5743, 4982, 87, 77, -531, 0, 0, 0, 0, 0, 0, 0, 0, 0, "P");
+	VALUES("right", 0, 0, 40, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 
+		-84, 68, 1008, 206, -99, -564, -72, 188, 960, 380, -38, -311, 
+		-7904, -24, 15465, 2593, 6368, 4777, 75, 267, -182, -2580, -3215, 15487, 2405, 8517, 4790, 38, -55, -501, "P");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-		256, 140, 916, -4096, -225, -4096, 0, 0, 0, 0, 0, 0, 
-		-7339, -1260, 14759, -226, 5212, 6044, 189, -244, -127, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Q");
+	VALUES("right", 0, 20, 50, 60, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 
+		-152, -512, 868, 345, 225, -399, -84, 40, 964, 382, -86, -273, 
+		-6139, -10373, 11927, 2240, 9258, 2218, 182, 412, -207, -7890, -2945, 14460, 3667, 7445, 3464, 100, 168, -458, "Q");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 50, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		188, 272, 924, -190, -156, -338, 0, 0, 0, 0, 0, 0, 
-		-4086, -1916, 15568, -1301, 5729, 5506, 49, 148, -555, 0, 0, 0, 0, 0, 0, 0, 0, 0, "R");
+	VALUES("right", 0, 0, 10, 60, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
+		-160, 480, 908, 339, -367, -580, 144, 428, 876, 245, -120, -332, 
+		-8317, 4312, 14743, 3074, 4491, 4554, -167, 173, -216, 2812, -4056, 14552, 539, 9282, 4852, 240, 130, -384, "R");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 100, 50, 50, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 
-		-160, 288, 892, 66, -396, -480, 0, 0, 0, 0, 0, 0, 
-		-6030, -2829, 14779, 777, 5824, 4593, 113, 155, -395, 0, 0, 0, 0, 0, 0, 0, 0, 0, "S");
+	VALUES("right", 0, 60, 60, 80, 80, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
+		-244, 668, 724, 341, -442, -460, 200, 544, 800, 231, -190, -295, 
+		-8401, 8446, 12541, 2941, 3116, 4196, 40, 394, -264, 3607, -2452, 14670, 38, 8424, 4977, 32, 160, -410, "S");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 50, 50, 50, 100, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
-		128, 444, 880, -161, -450, -395, 0, 0, 0, 0, 0, 0, 
-		-5421, 267, 15334, 635, 5921, 4752, 191, 121, -566, 0, 0, 0, 0, 0, 0, 0, 0, 0, "T");
+	VALUES("right", 0, 40, 50, 60, 80, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 
+		-180, 580, 804, 326, -444, -513, 272, 464, 812, 184, -181, -317, 
+		-7384, 6854, 13978, 2752, 3415, 4573, 85, 302, -277, 3425, -2291, 14733, -106, 8573, 5241, -41, -26, -423, "T");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-		100, 200, 940, -83, -19, -465, 0, 0, 0, 0, 0, 0, 
-		-4598, -3711, 15166, -350, 5889, 5399, 45, 107, -555, 0, 0, 0, 0, 0, 0, 0, 0, 0, "U");
+	VALUES("right", 0, 0, 10, 60, 70, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
+		-192, 580, 792, 377, -432, -565, 192, 484, 824, 253, -177, -311, 
+		-6982, 6129, 14199, 2485, 3938, 5179, 18, 383, -300, 3371, -2391, 14748, 268, 8955, 5175, -49, 122, -410, "U");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 50, 50, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		324, 260, 856, -314, -244, -276, 0, 0, 0, 0, 0, 0, 
-		-1172, -2427, 15301, -2966, 6559, 5655, 266, 703, -583, 0, 0, 0, 0, 0, 0, 0, 0, 0, "V");
+	VALUES("right", 0, 10, 10, 60, 60, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-332, 604, 716, 425, -478, -513, 40, 508, 816, 319, -180, -277, 
+		-7337, 6561, 14439, 2413, 3756, 5125, -156, 230, -100, 1948, -2542, 15275, 1246, 8849, 4853, 166, 205, -318, "V");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		404, 556, 688, -303, -343, -127, 0, 0, 0, 0, 0, 0, 
-		-1757, -1373, 15573, -2986, 5532, 5527, 49, 26, -476, 0, 0, 0, 0, 0, 0, 0, 0, 0, "W");
+	VALUES("right", 0, 0, 0, 0, 60, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-176, 616, 772, 267, -492, -575, 100, 528, 812, 300, -206, -288, 
+		-8589, 7607, 13328, 3101, 3205, 4450, 123, 382, -307, 2196, -1836, 15397, 1040, 8531, 5160, -60, 263, -484, "W");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		112, 328, 916, -100, -243, -291, 0, 0, 0, 0, 0, 0, 
-		-1189, -2333, 15773, -2323, 5583, 5631, -149, 1, -406, 0, 0, 0, 0, 0, 0, 0, 0, 0, "X");
+	VALUES("right", 0, 40, 60, 80, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-380, 488, 780, 462, -326, -515, 96, 484, 856, 269, -166, -296, 
+		-9521, 4242, 13530, 3580, 4732, 4060, -61, 268, -244, 1860, -2451, 14793, 499, 8693, 5052, 55, 104, -316, "X");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 50, 50, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-		72, 592, 780, -148, -414, -273, 0, 0, 0, 0, 0, 0, 
-		-3564, 728, 15723, -1369, 4891, 5704, 179, 132, -560, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Y");
+	VALUES("right", 0, 60, 50, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
+		-388, 520, 788, 466, -258, -483, 108, 572, 780, 279, -183, -274, 
+		-7427, 7040, 13769, 2476, 3989, 4942, 322, 201, -167, 1734, -1892, 15275, 354, 8307, 4870, 19, -66, -462, "Y");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 50, 50, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
-		136, 568, 788, -216, -392, -223, 0, 0, 0, 0, 0, 0, 
-		-4317, 1348, 15520, -1699, 4657, 5543, -20, -17, -548, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Z1");
+	VALUES("right", 0, 10, 80, 80, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-368, 548, 772, 454, -386, -440, 48, 572, 792, 350, -253, -279, 
+		-8778, 6362, 13561, 3107, 3815, 4546, 100, 378, -174, 41, -1023, 15700, 1425, 7777, 5616, 29, 102, -397, "Z1");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 50, 50, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		-20, 648, 720, -34, -489, -251, 0, 0, 0, 0, 0, 0, 
-		-7933, 2640, 14466, 551, 5049, 4636, 113, -15, -690, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Z2");
+	VALUES("right", 0, 10, 80, 80, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-500, 504, 728, 482, -317, -451, -72, 556, 812, 365, -217, -270, 
+		-10157, 5491, 13109, 3515, 4454, 3877, 57, 344, -266, -1444, -2406, 15663, 2021, 8462, 5019, 28, 146, -446, "Z2");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 50, 50, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		60, 412, 884, -206, -316, -330, 0, 0, 0, 0, 0, 0, 
-		-5635, -1131, 15238, -1019, 6383, 6741, 830, 721, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Z3");
+	VALUES("right", 0, 0, 80, 80, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-448, 208, 884, 470, -166, -446, 48, 336, 920, 310, -96, -325, 
+		-8188, 555, 15271, 2915, 6148, 4392, 134, 366, -261, -244, -5635, 14719, 1841, 9251, 4557, 66, 27, -457, "Z3");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 50, 50, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		64, 436, 852, -118, -395, -308, 0, 0, 0, 0, 0, 0, 
-		-5960, 699, 15414, -717, 5237, 5705, 140, 178, -415, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Z4");
+	VALUES("right", 0, 10, 80, 80, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-452, 220, 892, 446, -119, -499, -12, 348, 916, 314, -44, -287, 
+		-9092, 1064, 14845, 2493, 6499, 4920, 116, 331, -234, -962, -5849, 14768, 1530, 9559, 3425, 87, 109, -479, "Z4");
