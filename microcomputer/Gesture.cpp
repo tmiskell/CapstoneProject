@@ -237,22 +237,22 @@ string Gesture::AsString( ) {
             add_border( border, strlen("right bottom") + 2, c_div, v_div ) ;
         }
         else{
-    	    sprintf( header + strlen(header), "%c %-*s ", h_div, (int)strlen("(+xxx.x, +xxx.x, +xxx.x)"), (lsm303_name[j]).c_str() ) ;
-            add_border( border, strlen("(+xxx.x, +xxx.x, +xxx.x)") + 2, c_div, v_div ) ;
+    	    sprintf( header + strlen(header), "%c %-*s ", h_div, (int)strlen("(+xxxx.x, +xxxx.x, +xxxx.x)"), (lsm303_name[j]).c_str() ) ;
+            add_border( border, strlen("(+xxxx.x, +xxxx.x, +xxxx.x)") + 2, c_div, v_div ) ;
         }
     }
     sprintf( border + strlen(border), "%c\n", c_div ) ;
     sprintf( header + strlen(header), "%c\n", h_div ) ;
     for( j = 0 ; j < NUM_303 ; j++ ){
-        sprintf( entry[0] + strlen(entry[0]), "%c %-*s %-*s %c (%+06.1f, %+06.1f, %+06.1f) ", h_div, (int)strlen("right"), (hand_name[0]).c_str(), 
+        sprintf( entry[0] + strlen(entry[0]), "%c %-*s %-*s %c (%+07.1f, %+07.1f, %+07.1f) ", h_div, (int)strlen("right"), (hand_name[0]).c_str(), 
                  (int)strlen("bottom"), (left.Lsm303Vals(j).Side()).c_str(), h_div, 
                  left.Lsm303Vals(j).AccelX(), left.Lsm303Vals(j).AccelY(), left.Lsm303Vals(j).AccelZ() ) ;
-        sprintf( entry[0] + strlen(entry[0]), "%c (%+06.1f, %+06.1f, %+06.1f) %c\n", h_div,
+        sprintf( entry[0] + strlen(entry[0]), "%c (%+07.1f, %+07.1f, %+07.1f) %c\n", h_div,
                  left.Lsm303Vals(j).MagX(), left.Lsm303Vals(j).MagY(), left.Lsm303Vals(j).MagZ(), h_div ) ;
-        sprintf( entry[1] + strlen(entry[1]), "%c %-*s %-*s %c (%+06.1f, %+06.1f, %+06.1f) ", h_div, (int)strlen("right"), (hand_name[1]).c_str(), 
+        sprintf( entry[1] + strlen(entry[1]), "%c %-*s %-*s %c (%+07.1f, %+07.1f, %+07.1f) ", h_div, (int)strlen("right"), (hand_name[1]).c_str(), 
                  (int)strlen("bottom"), (right.Lsm303Vals(j).Side()).c_str(), h_div, 
                  right.Lsm303Vals(j).AccelX(), right.Lsm303Vals(j).AccelY(), right.Lsm303Vals(j).AccelZ() ) ;
-        sprintf( entry[1] + strlen(entry[1]), "%c (%+06.1f, %+06.1f, %+06.1f) %c\n", h_div,
+        sprintf( entry[1] + strlen(entry[1]), "%c (%+07.1f, %+07.1f, %+07.1f) %c\n", h_div,
                  right.Lsm303Vals(j).MagX(), right.Lsm303Vals(j).MagY(), right.Lsm303Vals(j).MagZ(), h_div ) ;
     }
     buffer << border << header << border << entry[0] << entry[1] << border ;    
