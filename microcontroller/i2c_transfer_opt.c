@@ -892,7 +892,7 @@ double adjust_flex( unsigned int x, unsigned int lb, unsigned int ub ){
 
   const unsigned int MIN_VAL = 0 ;       /* Minimum adjusted value. */
   const unsigned int MAX_VAL = 100 ;     /* Maximum adjusted value. */
-  const unsigned int NUM_STEPS = 10 ;    /* Resolution. */
+  const unsigned int NUM_STEPS = 20 ;    /* Resolution. */
   unsigned int i ;                       /* An iterator. */
   double dx = ((double)ub - (double)lb) / (double)(NUM_STEPS - 2) ; /* X increment. */
   double dy = (double)MAX_VAL / (double)NUM_STEPS ;                 /* Y increment. */

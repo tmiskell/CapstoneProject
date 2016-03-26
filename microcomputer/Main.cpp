@@ -48,6 +48,7 @@
 #define NUM_HANDS        2  /* Number of hands. */
 #define NUM_FINGERS      5  /* The number of fingers on a hand. */
 #define NUM_FOLDS        4  /* The number of interdigital folds on a hand. */
+#define FLEX_TOL         5  /* The tolerance to use when matching flex sensor values. */
 
 using namespace std ;
 using namespace sql ;
@@ -345,14 +346,14 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         st = db->createStatement() ; 
         /* Construct the query. Assume only that the right hand is used for now. */
         buffer << "SELECT gest FROM gesture_tbl WHERE hand = \"right\"" ;
-        add_to_query( query, buffer, " AND in_flex = " ) ;
-        buffer << nextGesture.Right().Index().Flex() ;
-        add_to_query( query, buffer, " AND mi_flex = " ) ;
-        buffer << nextGesture.Right().Middle().Flex() ;
-        add_to_query( query, buffer, " AND ri_flex = " ) ;
-        buffer << nextGesture.Right().Ring().Flex() ;
-        add_to_query( query, buffer, " AND pi_flex = " ) ;
-        buffer << nextGesture.Right().Pinky().Flex() ;
+        add_to_query( query, buffer, " AND ABS(in_flex - " ) ;
+        buffer << nextGesture.Right().Index().Flex() << ") <= " << FLEX_TOL ;
+        add_to_query( query, buffer, " AND ABS(mi_flex - " ) ;
+        buffer << nextGesture.Right().Middle().Flex() << ") <= " << FLEX_TOL ;
+        add_to_query( query, buffer, " AND ABS(ri_flex - " ) ;
+        buffer << nextGesture.Right().Ring().Flex() << ") <= " << FLEX_TOL ;
+        add_to_query( query, buffer, " AND ABS(pi_flex - " ) ;
+        buffer << nextGesture.Right().Pinky().Flex() << ") <= " << FLEX_TOL ;
         add_to_query( query, buffer, " AND th_con_t = " ) ;
         buffer << nextGesture.Right().Thumb().ContactTip() ;
         add_to_query( query, buffer, " AND in_con_t = " ) ;
