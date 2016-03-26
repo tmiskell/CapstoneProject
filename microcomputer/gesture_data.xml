@@ -4,30 +4,30 @@
 	<gesture>
 		<hand side="left">
 			<thumb>
-				<flex>24</flex>
+				<flex>9</flex>
 				<contact>true</contact>
 			</thumb>
 			<index>
-				<flex>15</flex>
+				<flex>1</flex>
 				<contact>true</contact>
 			</index>
 			<middle>
-				<flex>32</flex>
+				<flex>28</flex>
 				<contact>false</contact>
 			</middle>
 			<ring>
-				<flex>25</flex>
+				<flex>13</flex>
 				<contact>false</contact>
 			</ring>
 			<pinky>
-				<flex>0</flex>
-				<contact>false</contact>
+				<flex>31</flex>
+				<contact>true</contact>
 			</pinky>
 			<thumb-index>
-				<contact>true</contact>
+				<contact>false</contact>
 			</thumb-index>
 			<index-middle>
-				<contact>true</contact>
+				<contact>false</contact>
 			</index-middle>
 			<middle-ring>
 				<contact>false</contact>
@@ -38,36 +38,36 @@
 		</hand>
 		<hand side="right">
 			<thumb>
-				<flex>10</flex>
-				<contact>true</contact>
+				<flex>12</flex>
+				<contact>false</contact>
 			</thumb>
 			<index>
-				<flex>14</flex>
-				<contact>false</contact>
+				<flex>49</flex>
+				<contact>true</contact>
 			</index>
 			<middle>
-				<flex>25</flex>
+				<flex>8</flex>
 				<contact>false</contact>
 			</middle>
 			<ring>
-				<flex>42</flex>
+				<flex>35</flex>
 				<contact>true</contact>
 			</ring>
 			<pinky>
-				<flex>34</flex>
+				<flex>38</flex>
 				<contact>true</contact>
 			</pinky>
 			<thumb-index>
 				<contact>true</contact>
 			</thumb-index>
 			<index-middle>
-				<contact>false</contact>
+				<contact>true</contact>
 			</index-middle>
 			<middle-ring>
 				<contact>true</contact>
 			</middle-ring>
 			<ring-pinky>
-				<contact>false</contact>
+				<contact>true</contact>
 			</ring-pinky>
 		</hand>
 	</gesture>

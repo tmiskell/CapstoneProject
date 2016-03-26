@@ -441,10 +441,8 @@ bool get_gesture( Hand nextHand[NUM_HANDS], const char* fName, ScreenText &scrTe
     }
     xml_node<>* hand = gesture->first_node("hand") ;
     for( i = 0 ; i < NUM_HANDS ; i++ ){
-        if( hand == NULL ) {
-            cout << "No hand" << endl;
+        if( hand == NULL )
             return false ;
-        }
         /* Initialize the hand, fingers, and inter-digital folds. */
         nextHand[i].LsmInit() ;
         Finger nextFinger[NUM_FINGERS] ;    /* The next set of fingers to be read in. */

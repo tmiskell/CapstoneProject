@@ -39,7 +39,6 @@ public:
   void do_work(ExampleWindow *caller);
 
   void get_data(string* text_done, Glib::ustring* message) const;
-  string get_data_2();
   void set_data(string text_done);
   void stop_work();
   bool has_stopped() const;
