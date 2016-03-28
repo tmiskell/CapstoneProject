@@ -49,6 +49,10 @@
 #define NUM_FINGERS      5  /* The number of fingers on a hand. */
 #define NUM_FOLDS        4  /* The number of interdigital folds on a hand. */
 #define FLEX_TOL         5  /* The tolerance to use when matching flex sensor values. */
+#define LSM303_TOL     100  /* The tolerance to use when matching LSM303 sensor values. */
+#define LSM9DOF_TOL    100  /* The tolerance to use when matching LSM9DOF sensor values. */
+#define NUM_J_MOTION     2  /* The number of intermediate gestures that involve the letter J. */
+#define NUM_Z_MOTION     3  /* The number of intermediate gestures that involve the letter Z. */
 
 using namespace std ;
 using namespace sql ;
@@ -60,9 +64,10 @@ bool load_gesture_database( Driver* driver, Connection* &db, const char* dbURL, 
 bool get_gesture( Hand nextHand[NUM_HANDS], const char* fName, ScreenText &scrText, xml_document<> &doc,
                   string &sensorStatus, string &xmlVersion, string &convert ) ;
 bool output_xml( const char* outfName, string &text, Gesture &nextGesture, string &sensorStatus, string &xmlVersion ) ;
-bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText ) ;
+bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ) ;
 bool text_to_speech( string text, string ttsScript, const char* tfName ) ;
 void add_to_query( string &query, ostringstream &buffer, string stmt ) ;
+bool motion_gesture( string &text, const string motion[], const string completed_motion, const unsigned int num_motion, const string motion_text ) ;
 void output_to_display( ScreenText scrText, bool eraseScr ) ;
 bool clean_up( Connection* db ) ;
 bool file_exists( const char* fName ) ;
@@ -108,6 +113,14 @@ int main( int argc, char* argv[] ) {
     string convert = "false" ;                                       /* Used to track whether gesture conversion should be performed. */
     struct timespec t1 ;                                             /* The amount of time to sleep in nanoseconds. */
     struct timespec t2 ;                                             /* The time residual. */
+    bool motion = false ;                                            /* An indicator if the current gesture involves motion. */
+    const string completed_j = "J1J2J3" ;                            /* A completed J gesture. */
+    const string completed_z = "Z1Z2Z3Z4" ;                          /* A completed Z gesture. */
+    const string j_motion[NUM_J_MOTION] = { "J1",           /* Array of intermediate gestures that involve the letter J. */
+                                            "J2" } ;
+    const string z_motion[NUM_Z_MOTION] = { "Z1",           /* Array of intermediate gestures that involve the letter Z. */
+                                            "Z2",
+                                            "Z3" } ;
 
     /* Perform initialization. */
     if( !init( scrText ) ){
@@ -117,7 +130,7 @@ int main( int argc, char* argv[] ) {
         exit( result ) ;
     }
     t1.tv_sec = 0 ;
-    t1.tv_nsec = 25000000L ;
+    t1.tv_nsec = 20000000L ;
     scrText.SetStatus( "Initialized\n" ) ;
     output_to_display( scrText, true ) ;
     /* Connect to the gesture database. */
@@ -160,7 +173,9 @@ int main( int argc, char* argv[] ) {
 		continue ;
 	    }
             /* Convert the gesture to text. */
-            if( gesture_to_text(nextGesture, db, text, scrText) ){
+            if( gesture_to_text(nextGesture, db, text, scrText, motion) ){
+	        motion = motion_gesture( text, j_motion, completed_j, NUM_J_MOTION, "J" ) ;
+  	        motion = motion_gesture( text, z_motion, completed_z, NUM_Z_MOTION, "Z" ) ;
                 /* Output the text to display */
   	        scrText.SetGestureConv( text + "\n" ) ;
                 output_to_display( scrText, true ) ;
@@ -186,8 +201,9 @@ int main( int argc, char* argv[] ) {
 	        scrText.SetStatus( "*** Unable to convert text to speech. Attempting to continue ***\n" ) ;
 	    }
 	    output_to_display( scrText, true) ;
-            /* Reset text string for next gesture input. */
+            /* Reset text string for next gesture input. Reset motion flag. */
 	    text = "" ;
+            motion = false ;
             /* Indicate that the gesture has been converted. */
             convert = "false" ;
             /* Update XML file. */
@@ -334,7 +350,7 @@ bool load_gesture_database( Driver* driver, Connection* &db, const char* dbURL, 
 
 -----------------------------------------------------------------------------------*/
 
-bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText ){
+bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ){
 
     ResultSet* rSet ;                       /* The result set returned by the SQL query. */
     Statement* st   ;                       /* SQL statement. */
@@ -372,51 +388,57 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         buffer << nextGesture.Right().MrFold().ContactTip() ;
         add_to_query( query, buffer, " AND rp_con_t = " ) ;
         buffer << nextGesture.Right().RpFold().ContactTip() ;
-	/* Additional elements eventually to be added to query. */
-	/* add_to_query( query, buffer, " AND in_con_m = " ) ;
-           buffer << nextGesture.Right().Index.ContactMid() ;
-           add_to_query( query, buffer, " AND mi_con_m = " ) ;
-           buffer << nextGesture.Right().Middle.ContactMid() ;
-           add_to_query( query, buffer, " AND ri_con_m = " ) ;
-           buffer << nextGesture.Right().Ring.ContactMid() ;
-           add_to_query( query, buffer, " AND pi_con_m = " ) ;
-           buffer << nextGesture.Right().Pinky.ContactMid() ;
-           unsigned int i ;                        // An iterator.
+	add_to_query( query, buffer, " AND in_con_m = " ) ;
+        buffer << nextGesture.Right().Index().ContactMid() ;
+        add_to_query( query, buffer, " AND mi_con_m = " ) ;
+        buffer << nextGesture.Right().Middle().ContactMid() ;
+        add_to_query( query, buffer, " AND ri_con_m = " ) ;
+        buffer << nextGesture.Right().Ring().ContactMid() ;
+        add_to_query( query, buffer, " AND pi_con_m = " ) ;
+        buffer << nextGesture.Right().Pinky().ContactMid() ;
+	if( motion ){
+	   /* Gesture involves motion, include accelerometer values in query. */
+  	   unsigned int i ; /* An iterator. */
+           ostringstream accel_num ;
            for( i = 0 ; i < NUM_LSM303 ; i ++ ) {              
-               add_to_query( query, buffer, " AND accel_303_" + string(itoa(i)) + "_x = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).AccelX() ;
-               add_to_query( query, buffer, " AND accel_303_" + string(itoa(i)) + "_y = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).AccelY() ;
-               add_to_query( query, buffer, " AND accel_303_" + string(itoa(i)) + "_z = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).AccelZ() ;
-               add_to_query( query, buffer, " AND mag_303_" + string(itoa(i)) + "_x = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).MagX() ;
-               add_to_query( query, buffer, " AND mag_303_" + string(itoa(i)) + "_y = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).MagY() ;
-               add_to_query( query, buffer, " AND mag_303_" + string(itoa(i)) + "_z = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).MagZ() ;
+	       accel_num.clear() ;
+	       accel_num << i ;
+               add_to_query( query, buffer, " AND ABS(accel_303_" + accel_num.str() + "_x - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).AccelX() << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, " AND ABS(accel_303_" + accel_num.str() + "_y - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).AccelY() << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, " AND ABS(accel_303_" + accel_num.str() + "_z - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).AccelZ() << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_x - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).MagX() << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_y - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).MagY() << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_z - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).MagZ() << ") <= " << LSM303_TOL ;
            }
            for( i = 0 ; i < NUM_LSM9DOF ; i ++ ) {
-               add_to_query( query, buffer, " AND accel_9dof_" + string(itoa(i)) + "_x = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).AccelX() ;
-               add_to_query( query, buffer, " AND accel_9dof_" + string(itoa(i)) + "_y = " ) ; 
-               buffer << nextGesture.Right().Lsm9dofVals(i).AccelY() ;
-               add_to_query( query, buffer, " AND accel_9dof_" + string(itoa(i)) + "_z = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).AccelZ() ;
-               add_to_query( query, buffer, " AND accel_9dof_" + string(itoa(i)) + "_x = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).MagX() ;
-               add_to_query( query, buffer, " AND mag_9dof_" + string(itoa(i)) + "_y = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).MagY() ;
-               add_to_query( query, buffer, " AND mag_9dof_" + string(itoa(i)) + "_z = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).MagZ() ;
-               add_to_query( query, buffer, " AND gyro_9dof_" + string(itoa(i)) + "_x = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).GyroX() ;
-               add_to_query( query, buffer, " AND gyro_9dof_" + string(itoa(i)) + "_y = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).GyroY() ;
-               add_to_query( query, buffer, " AND gyro_9dof_" + string(itoa(i)) + "_z = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).GyroZ() ;                      
+	       accel_num.clear() ;
+	       accel_num << i ;
+               add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_x - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).AccelX() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_y - " ) ; 
+               buffer << nextGesture.Right().Lsm9dofVals(i).AccelY() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_z - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).AccelZ() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_x - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).MagX() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_9dof_" + accel_num.str() + "_y - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).MagY() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_9dof_" + accel_num.str() + "_z - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).MagZ() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_x - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).GyroX() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_y - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).GyroY() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_z - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).GyroZ() << ") <= " << LSM9DOF_TOL ;                      
            } 
-	 */
+	}
         add_to_query( query, buffer, ";" ) ;
 	/* Perform the query. */
         rSet = st->executeQuery( query ) ;
@@ -972,5 +994,38 @@ void add_to_query( string &query, ostringstream &buffer, string stmt ){
     buffer.clear() ;
 
     return ;
+
+}
+
+bool motion_gesture( string &text, const string partial_motion[], const string completed_motion, const unsigned int num_motion, const string motion_text ){
+    /* Function to add to replace any completed motions with the appropriate gesture or determine if there is an intermediate gesture
+       was detected, in which case the accelerometers should be used when performing the next match. */
+
+    unsigned int i ;                                                 /* An iterator. */
+    unsigned int start ;                                             /* Used to track position of intermediate motions within a gesture, such as J and Z. */
+    bool motion = false ;                                            /* An indicator if the current gesture involves motion. */
+
+    /* Replace any completed motions with the appropriate gesture. */
+    if( text.find(completed_motion) != std::string::npos ){
+        text.resize( text.size() - completed_motion.size() ) ;
+        text += motion_text ;
+    }
+    /* Determine if current gesture involves motion */
+    for( i = 0 ; i < num_motion ; i++ ){
+        start = text.find(partial_motion[i]) ;
+        if( start != std::string::npos ){
+            /* Check that itermediate motion falls in a valid position and thus was recently detected. */
+            if( (text.length() - start) == ((2*(num_motion - 1 - i)) + 1) ){
+                motion = true ; 
+	        break ;
+	    }
+            else{
+                /* Clear out part of the incomplete motion. */
+  	        text.erase( start, partial_motion[i].length() ) ;
+    	    }
+        }
+    }
+
+    return motion ;
 
 }
