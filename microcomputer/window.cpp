@@ -114,7 +114,6 @@ void ExampleWindow::on_reset_button_clicked()
   {
     m_Worker.stop_work();
     usleep(10);
-    std::cout << "Can't start a worker thread while another one is running." << std::endl;
     m_Worker.set_data("");
   }
     // Start a new worker thread.
@@ -128,7 +127,6 @@ if (m_WorkerThread)
   {
     m_Worker.stop_work();
     usleep(10);
-    std::cout << "Can't start a worker thread while another one is running." << std::endl;
     m_Worker.set_data("");
   }
     system ("festival --tts speech.txt");
