@@ -1,7 +1,4 @@
 export GESTURE_DIR=gesture_data
-export CONVERT_DIR=microcomputer
-export TRANSFER_DIR=microcontroller
-export LOG_DIR=log
 echo "Stopping web server"
 PID=$(pgrep server.py)
 kill $PID
@@ -12,3 +9,5 @@ kill $PID
 sleep 1
 echo "Cleaning up GPIO pin configuration"
 gpio unexportall
+echo "Cleaning up XML files"
+rm -v $GESTURE_DIR/gesture_data_init.xml
