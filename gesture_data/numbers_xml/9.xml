@@ -85,7 +85,7 @@
 				<contact-tip>0</contact-tip>
 			</thumb>
 			<index>
-				<flex>30</flex>
+				<flex>45</flex>
 				<contact-tip>1</contact-tip>
 				<contact-mid>0</contact-mid>
 			</index>
@@ -117,46 +117,46 @@
 				<contact-tip>0</contact-tip>
 			</ring-pinky>
 			<lsm303 side="top">
-				<accel-x>-252</accel-x>
-				<accel-y>404</accel-y>
-				<accel-z>888</accel-z>
-				<mag-x>251</mag-x>
-				<mag-y>-294</mag-y>
-				<mag-z>-547</mag-z>
+				<accel-x>-676</accel-x>
+				<accel-y>520</accel-y>
+				<accel-z>520</accel-z>
+				<mag-x>634</mag-x>
+				<mag-y>-172</mag-y>
+				<mag-z>-222</mag-z>
 			</lsm303>
 			<lsm303 side="bottom">
-				<accel-x>120</accel-x>
-				<accel-y>500</accel-y>
-				<accel-z>828</accel-z>
-				<mag-x>266</mag-x>
-				<mag-y>-182</mag-y>
-				<mag-z>-315</mag-z>
+				<accel-x>-548</accel-x>
+				<accel-y>368</accel-y>
+				<accel-z>704</accel-z>
+				<mag-x>585</mag-x>
+				<mag-y>-84</mag-y>
+				<mag-z>-92</mag-z>
 			</lsm303>
 			<lsm9dof side="top">
-				<accel-x>-8377</accel-x>
-				<accel-y>3658</accel-y>
-				<accel-z>14898</accel-z>
-				<mag-x>2709</mag-x>
-				<mag-y>5086</mag-y>
-				<mag-z>4913</mag-z>
-				<gyro-x>-15</gyro-x>
-				<gyro-y>369</gyro-y>
-				<gyro-z>-313</gyro-z>
+				<accel-x>-14906</accel-x>
+				<accel-y>5177</accel-y>
+				<accel-z>7946</accel-z>
+				<mag-x>4872</mag-x>
+				<mag-y>5140</mag-y>
+				<mag-z>1230</mag-z>
+				<gyro-x>112</gyro-x>
+				<gyro-y>390</gyro-y>
+				<gyro-z>-261</gyro-z>
 			</lsm9dof>
 			<lsm9dof side="bottom">
-				<accel-x>-237</accel-x>
-				<accel-y>-3745</accel-y>
-				<accel-z>15315</accel-z>
-				<mag-x>1453</mag-x>
-				<mag-y>8422</mag-y>
-				<mag-z>4193</mag-z>
-				<gyro-x>-66</gyro-x>
-				<gyro-y>68</gyro-y>
-				<gyro-z>-411</gyro-z>
+				<accel-x>-8649</accel-x>
+				<accel-y>-3057</accel-y>
+				<accel-z>13971</accel-z>
+				<mag-x>3734</mag-x>
+				<mag-y>8227</mag-y>
+				<mag-z>3144</mag-z>
+				<gyro-x>34</gyro-x>
+				<gyro-y>164</gyro-y>
+				<gyro-z>-414</gyro-z>
 			</lsm9dof>
 		</hand>
 	</gesture>
-		<converted-text></converted-text>
+		<converted-text>FFFFFFFFFFFFFFFF</converted-text>
 	<status>connected</status>
 	<convert>false</convert>
 	<version>1.0</version>

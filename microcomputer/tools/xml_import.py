@@ -140,12 +140,12 @@ def add_header( lines ):
     return lines
 
 def add_body( data, lines ):
-    """ Adds the body of content to the output file. """
+    """ Adds the body of the content to the output file. """
 
     for i in range( len(data) ):
         # Write the next set of data.
         lines.append( "INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,\n" )
-        lines.append( "\t\tth_con_t, in_con_t, mi_con_t, ri_con_t, pi_con_t, ti_con_t, im_con_t, mr_con_t, rp_con_t, in_con_m, mi_con_m, ri_con_m, pi_con_m,\n" )
+        lines.append( "\t\tth_con_t, in_con_t, in_con_m, mi_con_t, mi_con_m, ri_con_t, ri_con_m, pi_con_t, pi_con_m, ti_con_t, im_con_t, mr_con_t, rp_con_t,\n" )
         lines.append( "\t\taccel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,\n" )
         lines.append( "\t\taccel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,\n" )
         lines.append( "\t\taccel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,\n" )
@@ -216,6 +216,8 @@ def input_data( alpha_dir, num_dir ):
             if "<flex>" in lines[j]:
                 flex.append( lines[j].split('>')[1].split('<')[0] )
             elif "<contact-" in lines[j]:
+                # Reads in contact sensors in the following order:
+                # th_con_t, in_con_t, in_con_m, mi_con_t, mi_con_m, ri_con_t, ri_con_m, pi_con_t, pi_con_m, ti_con_t, im_con_t, mr_con_t, rp_con_t
                 contact.append( lines[j].split('>')[1].split('<')[0] )
             j += 1
         while not "<lsm9dof side=\"" in lines[j]:

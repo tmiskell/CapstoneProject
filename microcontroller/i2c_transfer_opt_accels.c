@@ -22,13 +22,13 @@
 #define MAX_ADC 1023                            /* The maximum 10-bit ADC value. */
 #define FLEX_BYTES 2
 #define CONTACT_BYTES 2
-#define LSM303_BYTES 5
+#define LSM303_BYTES 2
 #define NUM_303 2                               /* Number of connected LSM303 accelerometers. */
 #define NUM_303_VALS 6                          /* Number of values per LSM303 accelerometer reading. */
 #define TOTAL_NUM_303 NUM_303 * NUM_303_VALS    /* Total number of LSM303 values. */
 #define SEP_NUM_303 TOTAL_NUM_303 / 2           /* Number of LSM303 values for a given type (accelerometer or magnetometer). */
 #define NUM_303_NAMES 3                         /* The number of LSM303 value names. */
-#define LSM9DOF_BYTES 6
+#define LSM9DOF_BYTES 2
 #define NUM_9DOF 2                              /* Number of connected LSM9DOF accelerometers. */
 #define NUM_9DOF_VALS 9                         /* Number of values per LSM9DOF accelerometer reading. */
 #define TOTAL_NUM_9DOF NUM_9DOF * NUM_9DOF_VALS /* Total number of LSM9DOF values. */
@@ -111,7 +111,6 @@ int main( int argc, char* argv[] ){
   char cmd[MAX_CHAR] ;                      /* The next command to send to the microcontroller. */
   unsigned int i ;                          /* An iterator. */
   unsigned int j ;                          /* An iterator. */
-  unsigned int k ;                          /* An iterator. */
   bool open_file = true ;                   /* An indicator if a file should be opened. */
   bool close_file = true ;                  /* An indicator if a file should be closed. */
   int oflags = O_RDWR ;                     /* Flags to use when opening a file. */
@@ -255,26 +254,19 @@ int main( int argc, char* argv[] ){
         reset = true ;
         break ;
       }
-      char lsm_303_buffer[LSM303_BYTES+1] ; /* Buffer to store LSM303 value. */
+      /* Currently there is a right handed glove. */
       for( j = 0 ; j < (NUM_303_VALS / 2) ; j++ ){
-	for( k = 0 ; k < LSM303_BYTES ; k++ )
-	  lsm_303_buffer[k] = buffer[(j*LSM303_BYTES)+k] ;
-	lsm_303_buffer[k] = '\0' ;
-        right_303_accel[(i*(NUM_303_VALS/2))+j] = (double)atoi( lsm_303_buffer ) ; /* Currently there is only a right handed glove. */
+        right_303_accel[(i*(NUM_303_VALS/2))+j] = (double)((signed short)((buffer[j*2] << 8) | (buffer[(j*2)+1]))) ; 
       }
       for( ; j < NUM_303_VALS ; j++ ){
-	for( k = 0 ; k < LSM303_BYTES ; k++ )
-	  lsm_303_buffer[k] = buffer[(j*LSM303_BYTES)+k] ;
-	lsm_303_buffer[k] = '\0' ;
-        right_303_mag[(i*(NUM_303_VALS/2))+(j%(NUM_303_VALS/2))] = (double)atoi( lsm_303_buffer ) ; 
+        right_303_mag[(i*(NUM_303_VALS/2))+(j%(NUM_303_VALS/2))] = (double)((signed short)((buffer[j*2] << 8) | (buffer[(j*2)+1]))) ;
       }
       nanosleep( &read_t, &read_t_rem ) ;
     }
     fprintf( stdout, "Reading LSM9DOF accelerometers\n" ) ; 
+    num_bytes = LSM9DOF_BYTES * NUM_9DOF_VALS ;
     for( i = 0 ; i < NUM_9DOF ; i++ ){
-      num_bytes = LSM9DOF_BYTES * 5 ;
       memset( buffer, '\0', sizeof(char) * MAX_CHAR ) ;
-      /* Read first half of block of data. */
       if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
         /* I2C bus read error. */
         strcpy( status, "disconnected" ) ;
@@ -282,36 +274,15 @@ int main( int argc, char* argv[] ){
         break ;
       }
       nanosleep( &read_t, &read_t_rem ) ;
-      char temp_buffer[MAX_CHAR] ;
-      strcpy( temp_buffer, buffer ) ;
-      num_bytes = LSM9DOF_BYTES * 4 ;
-      /* Read second half of block of data. */
-      if( !i2c_read(I2C_FILE, buffer, num_bytes, ATMEGA_ADDR, &fd, open_file, close_file, oflags, mode) ){
-        /* I2C bus read error. */
-        strcpy( status, "disconnected" ) ;
-        reset = true ;
-        break ;
-      }
-      strcat( temp_buffer, buffer ) ;
-      strcpy( buffer, temp_buffer ) ;
-      char lsm_9dof_buffer[7] ;
       for( j = 0 ; j < (NUM_9DOF_VALS / 3) ; j++ ){
-	for( k = 0 ; k < LSM9DOF_BYTES ; k++ )
-	  lsm_9dof_buffer[k] = buffer[(j*LSM9DOF_BYTES)+k] ;
-	lsm_9dof_buffer[k] = '\0' ;
-        right_9dof_accel[(i*(NUM_9DOF_VALS/3))+j] = (double)atoi( lsm_9dof_buffer ) ; /* Currently there is only a right handed glove. */
+        /* Currently there is only a right handed glove. */
+        right_9dof_accel[(i*(NUM_9DOF_VALS/3))+j] = (double)((signed short)((buffer[j*2] << 8) | (buffer[(j*2)+1]))) ; 
       }
       for( ; j < ((NUM_9DOF_VALS * 2) / 3) ; j++ ){
-	for( k = 0 ; k < LSM9DOF_BYTES ; k++ )
-	  lsm_9dof_buffer[k] = buffer[(j*LSM9DOF_BYTES)+k] ;
-	lsm_9dof_buffer[k] = '\0' ;
-        right_9dof_mag[(i*(NUM_9DOF_VALS/3))+(j%(NUM_9DOF_VALS/3))] = (double)atoi( lsm_9dof_buffer ) ; 
+        right_9dof_mag[(i*(NUM_9DOF_VALS/3))+(j%(NUM_9DOF_VALS/3))] = (double)((signed short)((buffer[j*2] << 8) | (buffer[(j*2)+1]))) ; 
       }
       for( ; j < NUM_9DOF_VALS ; j++ ){
-	for( k = 0 ; k < LSM9DOF_BYTES ; k++ )
-	  lsm_9dof_buffer[k] = buffer[(j*LSM9DOF_BYTES)+k] ;
-	lsm_9dof_buffer[k] = '\0' ;
-        right_9dof_gyro[(i*(NUM_9DOF_VALS/3))+(j%(NUM_9DOF_VALS/3))] = (double)atoi( lsm_9dof_buffer ) ;
+        right_9dof_gyro[(i*(NUM_9DOF_VALS/3))+(j%(NUM_9DOF_VALS/3))] = (double)((signed short)((buffer[j*2] << 8) | (buffer[(j*2)+1]))) ; 
       }
       nanosleep( &read_t, &read_t_rem ) ;
     }

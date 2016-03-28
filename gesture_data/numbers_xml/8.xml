@@ -90,7 +90,7 @@
 				<contact-mid>0</contact-mid>
 			</index>
 			<middle>
-				<flex>40</flex>
+				<flex>60</flex>
 				<contact-tip>1</contact-tip>
 				<contact-mid>0</contact-mid>
 			</middle>
@@ -117,42 +117,42 @@
 				<contact-tip>0</contact-tip>
 			</ring-pinky>
 			<lsm303 side="top">
-				<accel-x>-248</accel-x>
-				<accel-y>508</accel-y>
-				<accel-z>840</accel-z>
-				<mag-x>278</mag-x>
-				<mag-y>-350</mag-y>
-				<mag-z>-526</mag-z>
+				<accel-x>-636</accel-x>
+				<accel-y>576</accel-y>
+				<accel-z>512</accel-z>
+				<mag-x>555</mag-x>
+				<mag-y>-245</mag-y>
+				<mag-z>-186</mag-z>
 			</lsm303>
 			<lsm303 side="bottom">
-				<accel-x>92</accel-x>
-				<accel-y>528</accel-y>
-				<accel-z>816</accel-z>
-				<mag-x>302</mag-x>
-				<mag-y>-201</mag-y>
-				<mag-z>-286</mag-z>
+				<accel-x>-500</accel-x>
+				<accel-y>404</accel-y>
+				<accel-z>740</accel-z>
+				<mag-x>564</mag-x>
+				<mag-y>-105</mag-y>
+				<mag-z>-114</mag-z>
 			</lsm303>
 			<lsm9dof side="top">
-				<accel-x>-9295</accel-x>
-				<accel-y>5201</accel-y>
-				<accel-z>13803</accel-z>
-				<mag-x>3241</mag-x>
-				<mag-y>4579</mag-y>
-				<mag-z>4448</mag-z>
-				<gyro-x>14</gyro-x>
-				<gyro-y>395</gyro-y>
-				<gyro-z>-280</gyro-z>
+				<accel-x>-14640</accel-x>
+				<accel-y>6086</accel-y>
+				<accel-z>8086</accel-z>
+				<mag-x>4846</mag-x>
+				<mag-y>4929</mag-y>
+				<mag-z>1437</mag-z>
+				<gyro-x>390</gyro-x>
+				<gyro-y>540</gyro-y>
+				<gyro-z>-406</gyro-z>
 			</lsm9dof>
 			<lsm9dof side="bottom">
-				<accel-x>49</accel-x>
-				<accel-y>-3207</accel-y>
-				<accel-z>15302</accel-z>
-				<mag-x>1148</mag-x>
-				<mag-y>8257</mag-y>
-				<mag-z>4144</mag-z>
-				<gyro-x>9</gyro-x>
-				<gyro-y>161</gyro-y>
-				<gyro-z>-434</gyro-z>
+				<accel-x>-7618</accel-x>
+				<accel-y>-3134</accel-y>
+				<accel-z>14419</accel-z>
+				<mag-x>3530</mag-x>
+				<mag-y>8335</mag-y>
+				<mag-z>3495</mag-z>
+				<gyro-x>92</gyro-x>
+				<gyro-y>333</gyro-y>
+				<gyro-z>-540</gyro-z>
 			</lsm9dof>
 		</hand>
 	</gesture>
