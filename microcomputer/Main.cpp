@@ -67,7 +67,8 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
 bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ) ;
 bool text_to_speech( string text, string ttsScript, const char* tfName ) ;
 void add_to_query( string &query, ostringstream &buffer, string stmt ) ;
-bool motion_gesture( string &text, const string motion[], const string completed_motion, const unsigned int num_motion, const string motion_text ) ;
+bool motion_gesture( string &text, const string motion[], const string invalid_motion, 
+                     const string completed_motion, const unsigned int num_motion, const string motion_text ) ;
 void output_to_display( ScreenText scrText, bool eraseScr ) ;
 bool clean_up( Connection* db ) ;
 bool file_exists( const char* fName ) ;
@@ -116,11 +117,13 @@ int main( int argc, char* argv[] ) {
     bool motion = false ;                                            /* An indicator if the current gesture involves motion. */
     const string completed_j = "J1J2J3" ;                            /* A completed J gesture. */
     const string completed_z = "Z1Z2Z3Z4" ;                          /* A completed Z gesture. */
-    const string j_motion[NUM_J_MOTION] = { "J1",           /* Array of intermediate gestures that involve the letter J. */
-                                            "J2" } ;
-    const string z_motion[NUM_Z_MOTION] = { "Z1",           /* Array of intermediate gestures that involve the letter Z. */
-                                            "Z2",
-                                            "Z3" } ;
+    const string invalid_j = "J3" ;
+    const string invalid_z = "Z4" ;
+    const string j_motion[NUM_J_MOTION] = { "J1J2",                  /* Array of intermediate gestures that involve the letter J. */
+                                            "J1" } ;
+    const string z_motion[NUM_Z_MOTION] = { "Z1Z2Z3",                /* Array of intermediate gestures that involve the letter Z. */
+                                            "Z1Z2",
+                                            "Z1" } ;
 
     /* Perform initialization. */
     if( !init( scrText ) ){
@@ -174,8 +177,11 @@ int main( int argc, char* argv[] ) {
 	    }
             /* Convert the gesture to text. */
             if( gesture_to_text(nextGesture, db, text, scrText, motion) ){
-	        motion = motion_gesture( text, j_motion, completed_j, NUM_J_MOTION, "J" ) ;
-  	        motion = motion_gesture( text, z_motion, completed_z, NUM_Z_MOTION, "Z" ) ;
+  	        motion = false ;
+  	        if( motion_gesture( text, j_motion, invalid_j, completed_j, NUM_J_MOTION, "J" ) || 
+                    motion_gesture( text, z_motion, invalid_z, completed_z, NUM_Z_MOTION, "Z" ) ){
+  	  	    motion = true ;
+  	        }
                 /* Output the text to display */
   	        scrText.SetGestureConv( text + "\n" ) ;
                 output_to_display( scrText, true ) ;
@@ -352,7 +358,7 @@ bool load_gesture_database( Driver* driver, Connection* &db, const char* dbURL, 
 
 bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ){
 
-    ResultSet* rSet ;                       /* The result set returned by the SQL query. */
+    ResultSet* r_set ;                       /* The result set returned by the SQL query. */
     Statement* st   ;                       /* SQL statement. */
     string query ;                          /* SQL query. */
     ostringstream buffer ;                  /* Buffer used to convert numerical values to strings. */
@@ -363,13 +369,13 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         /* Construct the query. Assume only that the right hand is used for now. */
         buffer << "SELECT gest FROM gesture_tbl WHERE hand = \"right\"" ;
         add_to_query( query, buffer, " AND ABS(in_flex - " ) ;
-        buffer << nextGesture.Right().Index().Flex() << ") <= " << FLEX_TOL ;
+        buffer << nextGesture.Right().Index().Flex()  << ") <= " << FLEX_TOL ;
         add_to_query( query, buffer, " AND ABS(mi_flex - " ) ;
         buffer << nextGesture.Right().Middle().Flex() << ") <= " << FLEX_TOL ;
         add_to_query( query, buffer, " AND ABS(ri_flex - " ) ;
-        buffer << nextGesture.Right().Ring().Flex() << ") <= " << FLEX_TOL ;
+        buffer << nextGesture.Right().Ring().Flex()   << ") <= " << FLEX_TOL ;
         add_to_query( query, buffer, " AND ABS(pi_flex - " ) ;
-        buffer << nextGesture.Right().Pinky().Flex() << ") <= " << FLEX_TOL ;
+        buffer << nextGesture.Right().Pinky().Flex()  << ") <= " << FLEX_TOL ;
         add_to_query( query, buffer, " AND th_con_t = " ) ;
         buffer << nextGesture.Right().Thumb().ContactTip() ;
         add_to_query( query, buffer, " AND in_con_t = " ) ;
@@ -396,11 +402,13 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         buffer << nextGesture.Right().Ring().ContactMid() ;
         add_to_query( query, buffer, " AND pi_con_m = " ) ;
         buffer << nextGesture.Right().Pinky().ContactMid() ;
+        add_to_query( query, buffer, "" ) ;
 	if( motion ){
 	   /* Gesture involves motion, include accelerometer values in query. */
   	   unsigned int i ; /* An iterator. */
            ostringstream accel_num ;
            for( i = 0 ; i < NUM_LSM303 ; i ++ ) {              
+  	       accel_num.str( "" ) ;
 	       accel_num.clear() ;
 	       accel_num << i ;
                add_to_query( query, buffer, " AND ABS(accel_303_" + accel_num.str() + "_x - " ) ;
@@ -410,13 +418,15 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
                add_to_query( query, buffer, " AND ABS(accel_303_" + accel_num.str() + "_z - " ) ;
                buffer << nextGesture.Right().Lsm303Vals(i).AccelZ() << ") <= " << LSM303_TOL ;
                add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_x - " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).MagX() << ") <= " << LSM303_TOL ;
+               buffer << nextGesture.Right().Lsm303Vals(i).MagX()   << ") <= " << LSM303_TOL ;
                add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_y - " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).MagY() << ") <= " << LSM303_TOL ;
+               buffer << nextGesture.Right().Lsm303Vals(i).MagY()   << ") <= " << LSM303_TOL ;
                add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_z - " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).MagZ() << ") <= " << LSM303_TOL ;
+               buffer << nextGesture.Right().Lsm303Vals(i).MagZ()   << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, "" ) ;
            }
            for( i = 0 ; i < NUM_LSM9DOF ; i ++ ) {
+  	       accel_num.str( "" ) ;
 	       accel_num.clear() ;
 	       accel_num << i ;
                add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_x - " ) ;
@@ -425,7 +435,7 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
                buffer << nextGesture.Right().Lsm9dofVals(i).AccelY() << ") <= " << LSM9DOF_TOL ;
                add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_z - " ) ;
                buffer << nextGesture.Right().Lsm9dofVals(i).AccelZ() << ") <= " << LSM9DOF_TOL ;
-               add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_x - " ) ;
+               add_to_query( query, buffer, " AND ABS(mag_9dof_" + accel_num.str() + "_x - " ) ;
                buffer << nextGesture.Right().Lsm9dofVals(i).MagX() << ") <= " << LSM9DOF_TOL ;
                add_to_query( query, buffer, " AND ABS(mag_9dof_" + accel_num.str() + "_y - " ) ;
                buffer << nextGesture.Right().Lsm9dofVals(i).MagY() << ") <= " << LSM9DOF_TOL ;
@@ -436,18 +446,19 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
                add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_y - " ) ;
                buffer << nextGesture.Right().Lsm9dofVals(i).GyroY() << ") <= " << LSM9DOF_TOL ;
                add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_z - " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).GyroZ() << ") <= " << LSM9DOF_TOL ;                      
+               buffer << nextGesture.Right().Lsm9dofVals(i).GyroZ() << ") <= " << LSM9DOF_TOL ;  
+               add_to_query( query, buffer, "" ) ;                    
            } 
 	}
-        add_to_query( query, buffer, ";" ) ;
+        query += " ORDER BY gest ASC;" ;
 	/* Perform the query. */
-        rSet = st->executeQuery( query ) ;
-        if( rSet->rowsCount() > 0 ){
+        r_set = st->executeQuery( query ) ;
+        if( r_set->rowsCount() > 0 ){
             /* Assume for now that the first element is correct.
                However, we should be refining the query in a do while loop 
                if there are multiple matches until there is a single match. */
-   	    rSet->next() ;
-    	    text += rSet->getString( "gest" ) ;
+   	    r_set->next() ;
+    	    text += r_set->getString( "gest" ) ;
 	}
     } catch( SQLException &e ){
         /* Database connection error. */
@@ -456,7 +467,7 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
 	return false ;
     }
     /* Clean up results. */ 
-    delete rSet ;
+    delete r_set ;
     delete st ;
 
     return true ;
@@ -855,11 +866,25 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
 	    }
 	    /* Get the flex sensor node. */ 
             outputFile << "\t\t\t\t<flex>" << nextFinger.Flex() << "</flex>\n" ;
-	    /* Get the contact sensor node. */ 
-            outputFile << "\t\t\t\t<contact-tip>" << nextFinger.ContactTip() << "</contact-tip>\n" ;
+	    /* Get the contact sensor node. Convert 0 and 1 to boolean values. */ 
+            outputFile << "\t\t\t\t<contact-tip>" ;
+            if( nextFinger.ContactTip() == 0 ){
+	        outputFile << "false" ;
+	    }
+	    else{
+	        outputFile << "true" ;
+	    } 
+            outputFile << "</contact-tip>\n" ;
 	    if( fingerName[j].compare("thumb") != 0 ){
-	        /* Currently the thumb only has a tip contact sensor. */
-                outputFile << "\t\t\t\t<contact-mid>" << nextFinger.ContactMid() << "</contact-mid>\n" ;
+  	        /* Currently the thumb only has a tip contact sensor. Convert 0 and 1 to boolean values. */
+	        outputFile << "\t\t\t\t<contact-mid>" ;
+  	        if( nextFinger.ContactMid() == 0 ){
+  	            outputFile << "false" ;
+	        }
+	        else{
+  	            outputFile << "true" ;
+	        }
+                outputFile << "</contact-mid>\n" ;
 	    }
             outputFile << "\t\t\t</" << fingerName[j] << ">\n" ;
         }
@@ -887,8 +912,15 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
                 outputFile << "\t\t\t</" << foldName[j] << ">\n" ;
   	        continue ;
 	    }
-            /* Get the next contact sensor node. */
-            outputFile << "\t\t\t\t<contact-tip>" << nextFold.ContactTip() << "</contact-tip>\n" ;
+            /* Get the next contact sensor node. Convert 0 and 1 to boolean values. */
+            outputFile << "\t\t\t\t<contact-tip>" ;
+            if( nextFold.ContactTip() == 0 ){
+  	        outputFile << "false" ;
+	    } 
+	    else{
+  	        outputFile << "true" ;
+	    }
+            outputFile << "</contact-tip>\n" ;
             outputFile << "\t\t\t</" << foldName[j] << ">\n" ;
 	}        
 	/* Get the LSM303 accelerometer values. */
@@ -997,7 +1029,8 @@ void add_to_query( string &query, ostringstream &buffer, string stmt ){
 
 }
 
-bool motion_gesture( string &text, const string partial_motion[], const string completed_motion, const unsigned int num_motion, const string motion_text ){
+bool motion_gesture( string &text, const string partial_motion[], const string invalid_motion, 
+                     const string completed_motion, const unsigned int num_motion, const string motion_text ){
     /* Function to add to replace any completed motions with the appropriate gesture or determine if there is an intermediate gesture
        was detected, in which case the accelerometers should be used when performing the next match. */
 
@@ -1010,14 +1043,20 @@ bool motion_gesture( string &text, const string partial_motion[], const string c
         text.resize( text.size() - completed_motion.size() ) ;
         text += motion_text ;
     }
+    start = text.find( invalid_motion ) ;
+    if( start != std::string::npos ){
+        /* Invalid motion detected. */
+        text.erase( start, invalid_motion.length() ) ;
+	return motion ;
+    }
     /* Determine if current gesture involves motion */
     for( i = 0 ; i < num_motion ; i++ ){
-        start = text.find(partial_motion[i]) ;
+        start = text.find( partial_motion[i] ) ;
         if( start != std::string::npos ){
             /* Check that itermediate motion falls in a valid position and thus was recently detected. */
-            if( (text.length() - start) == ((2*(num_motion - 1 - i)) + 1) ){
+            if( (text.length() - start) == (2 * (num_motion - i)) ){
                 motion = true ; 
-	        break ;
+		break ;
 	    }
             else{
                 /* Clear out part of the incomplete motion. */
