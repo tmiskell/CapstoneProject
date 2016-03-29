@@ -844,7 +844,7 @@ bool motion_gesture( string &text, const string partial_motion[], const string i
         text += motion_text ;
     }
     start = text.find( invalid_motion ) ;
-    if( start != std::string::npos ){
+    if( start != -1 ){
         /* Invalid motion detected. */
         text.erase( start, invalid_motion.length() ) ;
 	return motion ;
@@ -852,7 +852,7 @@ bool motion_gesture( string &text, const string partial_motion[], const string i
     /* Determine if current gesture involves motion */
     for( i = 0 ; i < num_motion ; i++ ){
         start = text.find( partial_motion[i] ) ;
-        if( start != std::string::npos ){
+        if( start != -1 ){
             /* Check that itermediate motion falls in a valid position and thus was recently detected. */
             if( (text.length() - start) == (2 * (num_motion - i)) ){
                 motion = true ; 
