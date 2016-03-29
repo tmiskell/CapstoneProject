@@ -835,7 +835,7 @@ bool motion_gesture( string &text, const string partial_motion[], const string i
        was detected, in which case the accelerometers should be used when performing the next match. */
 
     unsigned int i ;                                                 /* An iterator. */
-    unsigned int start ;                                             /* Used to track position of intermediate motions within a gesture, such as J and Z. */
+    int start ;                                             /* Used to track position of intermediate motions within a gesture, such as J and Z. */
     bool motion = false ;                                            /* An indicator if the current gesture involves motion. */
 
     /* Replace any completed motions with the appropriate gesture. */
