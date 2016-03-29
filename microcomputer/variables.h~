@@ -27,6 +27,11 @@ extern xml_document<> doc ;                                          /* The cont
 extern string convert;                                               /*Used to track whether gesture conversion should be performed.*/
 extern struct timespec t1 ;                                            /* The amount of time to sleep in nanoseconds. */
 extern struct timespec t2 ;                                            /* The time residual. */
+extern bool motion;                                            /* An indicator if the current gesture involves motion. */
+extern const string completed_j;                            /* A completed J gesture. */
+extern const string completed_z;                          /* A completed Z gesture. */
+extern const string j_motion[NUM_J_MOTION];
+extern const string z_motion[NUM_Z_MOTION];
 
 class ExampleWindow;
 

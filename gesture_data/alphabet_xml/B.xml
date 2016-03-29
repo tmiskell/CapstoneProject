@@ -6,39 +6,39 @@
 		<hand side="left">
 			<thumb>
 				<flex>0</flex>
-				<contact-tip>0</contact-tip>
+				<contact-tip>false</contact-tip>
 			</thumb>
 			<index>
 				<flex>0</flex>
-				<contact-tip>0</contact-tip>
-				<contact-mid>0</contact-mid>
+				<contact-tip>false</contact-tip>
+				<contact-mid>false</contact-mid>
 			</index>
 			<middle>
 				<flex>0</flex>
-				<contact-tip>0</contact-tip>
-				<contact-mid>0</contact-mid>
+				<contact-tip>false</contact-tip>
+				<contact-mid>false</contact-mid>
 			</middle>
 			<ring>
 				<flex>0</flex>
-				<contact-tip>0</contact-tip>
-				<contact-mid>0</contact-mid>
+				<contact-tip>false</contact-tip>
+				<contact-mid>false</contact-mid>
 			</ring>
 			<pinky>
 				<flex>0</flex>
-				<contact-tip>0</contact-tip>
-				<contact-mid>0</contact-mid>
+				<contact-tip>false</contact-tip>
+				<contact-mid>false</contact-mid>
 			</pinky>
 			<thumb-index>
-				<contact-tip>0</contact-tip>
+				<contact-tip>false</contact-tip>
 			</thumb-index>
 			<index-middle>
-				<contact-tip>0</contact-tip>
+				<contact-tip>false</contact-tip>
 			</index-middle>
 			<middle-ring>
-				<contact-tip>0</contact-tip>
+				<contact-tip>false</contact-tip>
 			</middle-ring>
 			<ring-pinky>
-				<contact-tip>0</contact-tip>
+				<contact-tip>false</contact-tip>
 			</ring-pinky>
 			<lsm303 side="top">
 				<accel-x>0</accel-x>
@@ -82,39 +82,39 @@
 		<hand side="right">
 			<thumb>
 				<flex>0</flex>
-				<contact-tip>0</contact-tip>
+				<contact-tip>false</contact-tip>
 			</thumb>
 			<index>
 				<flex>0</flex>
-				<contact-tip>0</contact-tip>
-				<contact-mid>0</contact-mid>
+				<contact-tip>false</contact-tip>
+				<contact-mid>false</contact-mid>
 			</index>
 			<middle>
 				<flex>0</flex>
-				<contact-tip>0</contact-tip>
-				<contact-mid>0</contact-mid>
+				<contact-tip>false</contact-tip>
+				<contact-mid>false</contact-mid>
 			</middle>
 			<ring>
 				<flex>0</flex>
-				<contact-tip>0</contact-tip>
-				<contact-mid>0</contact-mid>
+				<contact-tip>false</contact-tip>
+				<contact-mid>false</contact-mid>
 			</ring>
 			<pinky>
 				<flex>0</flex>
-				<contact-tip>0</contact-tip>
-				<contact-mid>0</contact-mid>
+				<contact-tip>false</contact-tip>
+				<contact-mid>false</contact-mid>
 			</pinky>
 			<thumb-index>
-				<contact-tip>0</contact-tip>
+				<contact-tip>false</contact-tip>
 			</thumb-index>
 			<index-middle>
-				<contact-tip>1</contact-tip>
+				<contact-tip>true</contact-tip>
 			</index-middle>
 			<middle-ring>
-				<contact-tip>1</contact-tip>
+				<contact-tip>true</contact-tip>
 			</middle-ring>
 			<ring-pinky>
-				<contact-tip>1</contact-tip>
+				<contact-tip>true</contact-tip>
 			</ring-pinky>
 			<lsm303 side="top">
 				<accel-x>-692</accel-x>

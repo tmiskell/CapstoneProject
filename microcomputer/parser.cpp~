@@ -195,11 +195,13 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         buffer << nextGesture.Right().Ring().ContactMid() ;
         add_to_query( query, buffer, " AND pi_con_m = " ) ;
         buffer << nextGesture.Right().Pinky().ContactMid() ;
+	add_to_query( query, buffer, "" ) ;
 	if( motion ){
 	   /* Gesture involves motion, include accelerometer values in query. */
   	   unsigned int i ; /* An iterator. */
            ostringstream accel_num ;
-           for( i = 0 ; i < NUM_LSM303 ; i ++ ) {              
+           for( i = 0 ; i < NUM_LSM303 ; i ++ ) {
+	       accel_num.str( "" ) ;              
                accel_num.clear() ;
 	       accel_num << i ;
                add_to_query( query, buffer, " AND ABS(accel_303_" + accel_num.str() + "_x - " ) ;
@@ -214,9 +216,11 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
                buffer << nextGesture.Right().Lsm303Vals(i).MagY() << ") <= " << LSM303_TOL ;
                add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_z - " ) ;
                buffer << nextGesture.Right().Lsm303Vals(i).MagZ() << ") <= " << LSM303_TOL ;
+		add_to_query( query, buffer, "" ) ;
             
            }
            for( i = 0 ; i < NUM_LSM9DOF ; i ++ ) {
+		accel_num.str( "" ) ;
                accel_num.clear() ;
 	       accel_num << i ;
                add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_x - " ) ;
@@ -225,7 +229,7 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
                buffer << nextGesture.Right().Lsm9dofVals(i).AccelY() << ") <= " << LSM9DOF_TOL ;
                add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_z - " ) ;
                buffer << nextGesture.Right().Lsm9dofVals(i).AccelZ() << ") <= " << LSM9DOF_TOL ;
-               add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_x - " ) ;
+               add_to_query( query, buffer, " AND ABS(mag_9dof_" + accel_num.str() + "_x - " ) ;
                buffer << nextGesture.Right().Lsm9dofVals(i).MagX() << ") <= " << LSM9DOF_TOL ;
                add_to_query( query, buffer, " AND ABS(mag_9dof_" + accel_num.str() + "_y - " ) ;
                buffer << nextGesture.Right().Lsm9dofVals(i).MagY() << ") <= " << LSM9DOF_TOL ;
@@ -236,10 +240,11 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
                add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_y - " ) ;
                buffer << nextGesture.Right().Lsm9dofVals(i).GyroY() << ") <= " << LSM9DOF_TOL ;
                add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_z - " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).GyroZ() << ") <= " << LSM9DOF_TOL ;                      
+               buffer << nextGesture.Right().Lsm9dofVals(i).GyroZ() << ") <= " << LSM9DOF_TOL ;
+		add_to_query( query, buffer, "" ) ;                      
            } 
 	 }
-        add_to_query( query, buffer, ";" ) ;
+        query += " ORDER BY gest ASC;" ;
 	/* Perform the query. */
         rSet = st->executeQuery( query ) ;
         if( rSet->rowsCount() > 0 ){
@@ -661,11 +666,25 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
 	    }
 	    /* Get the flex sensor node. */ 
             outputFile << "\t\t\t\t<flex>" << nextFinger.Flex() << "</flex>\n" ;
-	    /* Get the contact sensor node. */ 
-            outputFile << "\t\t\t\t<contact-tip>" << nextFinger.ContactTip() << "</contact-tip>\n" ;
+	    /* Get the contact sensor node. Convert 0 and 1 to boolean values. */ 
+            outputFile << "\t\t\t\t<contact-tip>" ;
+            if( nextFinger.ContactTip() == 0 ){
+	        outputFile << "false" ;
+	    }
+	    else{
+	        outputFile << "true" ;
+	    } 
+            outputFile << "</contact-tip>\n" ;
 	    if( fingerName[j].compare("thumb") != 0 ){
-	        /* Currently the thumb only has a tip contact sensor. */
-                outputFile << "\t\t\t\t<contact-mid>" << nextFinger.ContactMid() << "</contact-mid>\n" ;
+                /* Currently the thumb only has a tip contact sensor. Convert 0 and 1 to boolean values. */
+	        outputFile << "\t\t\t\t<contact-mid>" ;
+  	        if( nextFinger.ContactMid() == 0 ){
+  	            outputFile << "false" ;
+	        }
+	        else{
+  	            outputFile << "true" ;
+	        }
+                outputFile << "</contact-mid>\n" ;
 	    }
             outputFile << "\t\t\t</" << fingerName[j] << ">\n" ;
         }
@@ -693,8 +712,15 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
                 outputFile << "\t\t\t</" << foldName[j] << ">\n" ;
   	        continue ;
 	    }
-            /* Get the next contact sensor node. */
-            outputFile << "\t\t\t\t<contact-tip>" << nextFold.ContactTip() << "</contact-tip>\n" ;
+            /* Get the next contact sensor node. Convert 0 and 1 to boolean values. */
+            outputFile << "\t\t\t\t<contact-tip>" ;
+            if( nextFold.ContactTip() == 0 ){
+  	        outputFile << "false" ;
+	    } 
+	    else{
+  	        outputFile << "true" ;
+	    }
+            outputFile << "</contact-tip>\n" ;
             outputFile << "\t\t\t</" << foldName[j] << ">\n" ;
 	}        
 	/* Get the LSM303 accelerometer values. */
@@ -820,7 +846,7 @@ bool motion_gesture( string &text, const string partial_motion[], const string c
     for( i = 0 ; i < num_motion ; i++ ){
 	cout << "\nTest" << endl;
         start = text.find(partial_motion[i]) ;
-	cout << "Start: " << start << " " << std::string::npos << endl;
+	cout << "Start: " << start << " " << std::string::npos << " " << text << endl;
         if( start != std::string::npos ){
             /* Check that itermediate motion falls in a valid position and thus was recently detected. */
             if( (text.length() - start) == ((2*(num_motion - 1 - i)) + 1) ){

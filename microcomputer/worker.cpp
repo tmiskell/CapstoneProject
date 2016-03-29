@@ -94,10 +94,11 @@ void ExampleWorker::do_work(ExampleWindow* caller)
 	    }
             /* Convert the gesture to text. */
             if( gesture_to_text(nextGesture, db, m_text_done, scrText, motion)  ){
-		if (m_text_done != "") {
-			motion = motion_gesture( m_text_done, j_motion, completed_j, NUM_J_MOTION, "J" ) ;
-  	        	motion = motion_gesture( m_text_done, z_motion, completed_z, NUM_Z_MOTION, "Z" ) ;
-		}
+		motion = false ;
+  	        if( motion_gesture( m_text_done, j_motion, invalid_j, completed_j, NUM_J_MOTION, "J" ) || 
+                    motion_gesture( m_text_done, z_motion, invalid_z, completed_z, NUM_Z_MOTION, "Z" ) ){
+  	  	    motion = true ;
+  	        }
                 /* Output the text to display */
   	        scrText.SetGestureConv( m_text_done + "\n" ) ;
             	lock.release();
