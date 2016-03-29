@@ -149,7 +149,7 @@ bool load_gesture_database( Driver* driver, Connection* &db, const char* dbURL, 
 
 -----------------------------------------------------------------------------------*/
 
-bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText ){
+bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ){
 
     ResultSet* rSet ;                       /* The result set returned by the SQL query. */
     Statement* st   ;                       /* SQL statement. */
@@ -187,52 +187,64 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         buffer << nextGesture.Right().MrFold().ContactTip() ;
         add_to_query( query, buffer, " AND rp_con_t = " ) ;
         buffer << nextGesture.Right().RpFold().ContactTip() ;
-	/* Additional elements eventually to be added to query. */
-	/* add_to_query( query, buffer, " AND in_con_m = " ) ;
-           buffer << nextGesture.Right().Index.ContactMid() ;
-           add_to_query( query, buffer, " AND mi_con_m = " ) ;
-           buffer << nextGesture.Right().Middle.ContactMid() ;
-           add_to_query( query, buffer, " AND ri_con_m = " ) ;
-           buffer << nextGesture.Right().Ring.ContactMid() ;
-           add_to_query( query, buffer, " AND pi_con_m = " ) ;
-           buffer << nextGesture.Right().Pinky.ContactMid() ;
-           unsigned int i ;                        // An iterator.
-           for( i = 0 ; i < NUM_LSM303 ; i ++ ) {              
-               add_to_query( query, buffer, " AND accel_303_" + string(itoa(i)) + "_x = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).AccelX() ;
-               add_to_query( query, buffer, " AND accel_303_" + string(itoa(i)) + "_y = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).AccelY() ;
-               add_to_query( query, buffer, " AND accel_303_" + string(itoa(i)) + "_z = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).AccelZ() ;
-               add_to_query( query, buffer, " AND mag_303_" + string(itoa(i)) + "_x = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).MagX() ;
-               add_to_query( query, buffer, " AND mag_303_" + string(itoa(i)) + "_y = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).MagY() ;
-               add_to_query( query, buffer, " AND mag_303_" + string(itoa(i)) + "_z = " ) ;
-               buffer << nextGesture.Right().Lsm303Vals(i).MagZ() ;
+	add_to_query( query, buffer, " AND in_con_m = " ) ;
+        buffer << nextGesture.Right().Index().ContactMid() ;
+        add_to_query( query, buffer, " AND mi_con_m = " ) ;
+        buffer << nextGesture.Right().Middle().ContactMid() ;
+        add_to_query( query, buffer, " AND ri_con_m = " ) ;
+        buffer << nextGesture.Right().Ring().ContactMid() ;
+        add_to_query( query, buffer, " AND pi_con_m = " ) ;
+        buffer << nextGesture.Right().Pinky().ContactMid() ;
+	add_to_query( query, buffer, "" ) ;
+	if( motion ){
+	   /* Gesture involves motion, include accelerometer values in query. */
+  	   unsigned int i ; /* An iterator. */
+           ostringstream accel_num ;
+           for( i = 0 ; i < NUM_LSM303 ; i ++ ) {
+	       accel_num.str( "" ) ;              
+               accel_num.clear() ;
+	       accel_num << i ;
+               add_to_query( query, buffer, " AND ABS(accel_303_" + accel_num.str() + "_x - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).AccelX() << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, " AND ABS(accel_303_" + accel_num.str() + "_y - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).AccelY() << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, " AND ABS(accel_303_" + accel_num.str() + "_z - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).AccelZ() << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_x - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).MagX() << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_y - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).MagY() << ") <= " << LSM303_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_z - " ) ;
+               buffer << nextGesture.Right().Lsm303Vals(i).MagZ() << ") <= " << LSM303_TOL ;
+		add_to_query( query, buffer, "" ) ;
+            
            }
            for( i = 0 ; i < NUM_LSM9DOF ; i ++ ) {
-               add_to_query( query, buffer, " AND accel_9dof_" + string(itoa(i)) + "_x = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).AccelX() ;
-               add_to_query( query, buffer, " AND accel_9dof_" + string(itoa(i)) + "_y = " ) ; 
-               buffer << nextGesture.Right().Lsm9dofVals(i).AccelY() ;
-               add_to_query( query, buffer, " AND accel_9dof_" + string(itoa(i)) + "_z = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).AccelZ() ;
-               add_to_query( query, buffer, " AND accel_9dof_" + string(itoa(i)) + "_x = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).MagX() ;
-               add_to_query( query, buffer, " AND mag_9dof_" + string(itoa(i)) + "_y = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).MagY() ;
-               add_to_query( query, buffer, " AND mag_9dof_" + string(itoa(i)) + "_z = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).MagZ() ;
-               add_to_query( query, buffer, " AND gyro_9dof_" + string(itoa(i)) + "_x = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).GyroX() ;
-               add_to_query( query, buffer, " AND gyro_9dof_" + string(itoa(i)) + "_y = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).GyroY() ;
-               add_to_query( query, buffer, " AND gyro_9dof_" + string(itoa(i)) + "_z = " ) ;
-               buffer << nextGesture.Right().Lsm9dofVals(i).GyroZ() ;                      
+		accel_num.str( "" ) ;
+               accel_num.clear() ;
+	       accel_num << i ;
+               add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_x - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).AccelX() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_y - " ) ; 
+               buffer << nextGesture.Right().Lsm9dofVals(i).AccelY() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_z - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).AccelZ() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_9dof_" + accel_num.str() + "_x - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).MagX() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_9dof_" + accel_num.str() + "_y - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).MagY() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(mag_9dof_" + accel_num.str() + "_z - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).MagZ() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_x - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).GyroX() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_y - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).GyroY() << ") <= " << LSM9DOF_TOL ;
+               add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_z - " ) ;
+               buffer << nextGesture.Right().Lsm9dofVals(i).GyroZ() << ") <= " << LSM9DOF_TOL ;
+		add_to_query( query, buffer, "" ) ;                      
            } 
-	 */
-        add_to_query( query, buffer, ";" ) ;
+	 }
+        query += " ORDER BY gest ASC;" ;
 	/* Perform the query. */
         rSet = st->executeQuery( query ) ;
         if( rSet->rowsCount() > 0 ){
@@ -654,11 +666,25 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
 	    }
 	    /* Get the flex sensor node. */ 
             outputFile << "\t\t\t\t<flex>" << nextFinger.Flex() << "</flex>\n" ;
-	    /* Get the contact sensor node. */ 
-            outputFile << "\t\t\t\t<contact-tip>" << nextFinger.ContactTip() << "</contact-tip>\n" ;
+	    /* Get the contact sensor node. Convert 0 and 1 to boolean values. */ 
+            outputFile << "\t\t\t\t<contact-tip>" ;
+            if( nextFinger.ContactTip() == 0 ){
+	        outputFile << "false" ;
+	    }
+	    else{
+	        outputFile << "true" ;
+	    } 
+            outputFile << "</contact-tip>\n" ;
 	    if( fingerName[j].compare("thumb") != 0 ){
-	        /* Currently the thumb only has a tip contact sensor. */
-                outputFile << "\t\t\t\t<contact-mid>" << nextFinger.ContactMid() << "</contact-mid>\n" ;
+                /* Currently the thumb only has a tip contact sensor. Convert 0 and 1 to boolean values. */
+	        outputFile << "\t\t\t\t<contact-mid>" ;
+  	        if( nextFinger.ContactMid() == 0 ){
+  	            outputFile << "false" ;
+	        }
+	        else{
+  	            outputFile << "true" ;
+	        }
+                outputFile << "</contact-mid>\n" ;
 	    }
             outputFile << "\t\t\t</" << fingerName[j] << ">\n" ;
         }
@@ -686,8 +712,15 @@ bool output_xml( const char* outfName, string &text, Gesture &nextGesture, strin
                 outputFile << "\t\t\t</" << foldName[j] << ">\n" ;
   	        continue ;
 	    }
-            /* Get the next contact sensor node. */
-            outputFile << "\t\t\t\t<contact-tip>" << nextFold.ContactTip() << "</contact-tip>\n" ;
+            /* Get the next contact sensor node. Convert 0 and 1 to boolean values. */
+            outputFile << "\t\t\t\t<contact-tip>" ;
+            if( nextFold.ContactTip() == 0 ){
+  	        outputFile << "false" ;
+	    } 
+	    else{
+  	        outputFile << "true" ;
+	    }
+            outputFile << "</contact-tip>\n" ;
             outputFile << "\t\t\t</" << foldName[j] << ">\n" ;
 	}        
 	/* Get the LSM303 accelerometer values. */
@@ -793,5 +826,45 @@ void add_to_query( string &query, ostringstream &buffer, string stmt ){
     buffer.clear() ;
 
     return ;
+
+}
+
+bool motion_gesture( string &text, const string partial_motion[], const string invalid_motion, 
+                     const string completed_motion, const unsigned int num_motion, const string motion_text ){
+    /* Function to add to replace any completed motions with the appropriate gesture or determine if there is an intermediate gesture
+       was detected, in which case the accelerometers should be used when performing the next match. */
+
+    unsigned int i ;                                                 /* An iterator. */
+    unsigned int start ;                                             /* Used to track position of intermediate motions within a gesture, such as J and Z. */
+    bool motion = false ;                                            /* An indicator if the current gesture involves motion. */
+
+    /* Replace any completed motions with the appropriate gesture. */
+    if( text.find(completed_motion) != std::string::npos ){
+        text.resize( text.size() - completed_motion.size() ) ;
+        text += motion_text ;
+    }
+    start = text.find( invalid_motion ) ;
+    if( start != std::string::npos ){
+        /* Invalid motion detected. */
+        text.erase( start, invalid_motion.length() ) ;
+	return motion ;
+    }
+    /* Determine if current gesture involves motion */
+    for( i = 0 ; i < num_motion ; i++ ){
+        start = text.find( partial_motion[i] ) ;
+        if( start != std::string::npos ){
+            /* Check that itermediate motion falls in a valid position and thus was recently detected. */
+            if( (text.length() - start) == (2 * (num_motion - i)) ){
+                motion = true ; 
+		break ;
+	    }
+            else{
+                /* Clear out part of the incomplete motion. */
+  	        text.erase( start, partial_motion[i].length() ) ;
+    	    }
+        }
+    }
+
+    return motion ;
 
 }

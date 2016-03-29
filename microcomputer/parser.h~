@@ -52,8 +52,7 @@ bool get_gesture( Hand nextHand[NUM_HANDS], const char* fName, ScreenText &scrTe
 bool output_xml( const char* outfName, string &text, Gesture &nextGesture, string &sensorStatus, string &xmlVersion ) ;
 bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ) ;
 bool text_to_speech( string text, string ttsScript, const char* tfName ) ;
-bool motion_gesture( string &text, const string motion[], const string invalid_motion, 
-                     const string completed_motion, const unsigned int num_motion, const string motion_text ) ;
+bool motion_gesture( string &text, const string motion[], const string completed_motion, const unsigned int num_motion, const string motion_text ) ;
 void add_to_query( string &query, ostringstream &buffer, string stmt ) ;
 void output_to_display( ScreenText scrText, bool eraseScr ) ;
 bool clean_up( Connection* db ) ;

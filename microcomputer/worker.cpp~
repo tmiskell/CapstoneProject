@@ -93,7 +93,11 @@ void ExampleWorker::do_work(ExampleWindow* caller)
 		continue ;
 	    }
             /* Convert the gesture to text. */
-            if( gesture_to_text(nextGesture, db, m_text_done, scrText) ){
+            if( gesture_to_text(nextGesture, db, m_text_done, scrText, motion)  ){
+		if (m_text_done != "") {
+			motion = motion_gesture( m_text_done, j_motion, completed_j, NUM_J_MOTION, "J" ) ;
+  	        	motion = motion_gesture( m_text_done, z_motion, completed_z, NUM_Z_MOTION, "Z" ) ;
+		}
                 /* Output the text to display */
   	        scrText.SetGestureConv( m_text_done + "\n" ) ;
             	lock.release();
@@ -112,27 +116,6 @@ void ExampleWorker::do_work(ExampleWindow* caller)
   	        scrText.SetStatus( "Error while writing:\t" + string(outfName) + "\n" ) ;
 	    }
    	    output_to_display( scrText, true ) ;
-	}
-	
-	/* Check if user wants to output the gesture. */
-        if( convert.compare("true") == 0 ){
-            /* User signaled end of conversion. Convert the text to speech */ 
-            if( !text_to_speech( m_text_done, ttsScript, tfName ) ){
-  	        /* Text to speech error. */
-	        scrText.SetStatus( "*** Unable to convert text to speech. Attempting to continue ***\n" ) ;
-	    }
-	    output_to_display( scrText, true) ;
-            /* Reset text string for next gesture input. */
-	    m_text_done = "" ;
-            /* Indicate that the gesture has been converted. */
-            convert = "false" ;
-            /* Update XML file. */
-            if( !output_xml(outfName, m_text_done, nextGesture, sensorStatus, xmlVersion) ){
-  	        scrText.SetStatus( "Error while writing:\t" + string(outfName) + "\n" ) ;
-	    }
-            /* Indicate gesture was successfully converted. */
-            scrText.SetStatus( "Successfully converted gesture\n" ) ;
-            scrText.SetGestureData( "\n" ) ;
 	}
 
     }
