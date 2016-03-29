@@ -12,7 +12,71 @@
                                                                                  
 ************************************************************************************/
 
+<<<<<<< HEAD:microcomputer/parser.cpp.orig
 #include "parser.h"
+=======
+/* Standard includes. */
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <string>
+#include <string.h>
+#include <signal.h>
+#include <ncurses.h>
+#include <time.h>
+/* XML parsing includes. */
+#include "includes/rapidxml.hpp"
+#include "includes/rapidxml_utils.hpp"
+/* MySQL includes. */
+#include "mysql_driver.h"
+#include "mysql_connection.h"
+#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/statement.h>
+/* Festival includes. */
+//#include <festival/src/include/festival.h>
+/* Custom includes. */
+#include "Gesture.h"
+#include "ScreenText.h"
+/* Custom definitions. */
+#define NUM_LSM303       2  /* Number of attached LSM303 accelerometers. */
+#define NUM_LSM9DOF      2  /* Number of attached LSM9DOF accelerometers. */
+#define NUM_LSM303_VALS  6  /* Number of LSM303 values. */
+#define NUM_LSM9DOF_VALS 9  /* Number of LSM9DOF values. */
+#define NUM_HANDS        2  /* Number of hands. */
+#define NUM_FINGERS      5  /* The number of fingers on a hand. */
+#define NUM_FOLDS        4  /* The number of interdigital folds on a hand. */
+#define FLEX_TOL         5  /* The tolerance to use when matching flex sensor values. */
+#define LSM303_TOL     100  /* The tolerance to use when matching LSM303 sensor values. */
+#define LSM9DOF_TOL    100  /* The tolerance to use when matching LSM9DOF sensor values. */
+#define NUM_J_MOTION     2  /* The number of intermediate gestures that involve the letter J. */
+#define NUM_Z_MOTION     3  /* The number of intermediate gestures that involve the letter Z. */
+
+using namespace std ;
+using namespace sql ;
+using namespace rapidxml ;
+
+bool init( ScreenText &scrText ) ;
+bool load_gesture_database( Driver* driver, Connection* &db, const char* dbURL, const char* un, const char* pw, const char* dbName, 
+                            ScreenText &scrText ) ;
+bool get_gesture( Hand nextHand[NUM_HANDS], const char* fName, ScreenText &scrText, xml_document<> &doc,
+                  string &sensorStatus, string &xmlVersion, string &convert ) ;
+bool output_xml( const char* outfName, string &text, Gesture &nextGesture, string &sensorStatus, string &xmlVersion ) ;
+bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ) ;
+bool text_to_speech( string text, string ttsScript, const char* tfName ) ;
+void add_to_query( string &query, ostringstream &buffer, string stmt ) ;
+bool motion_gesture( string &text, const string motion[], const string completed_motion, const unsigned int num_motion, const string motion_text ) ;
+void output_to_display( ScreenText scrText, bool eraseScr ) ;
+bool clean_up( Connection* db ) ;
+bool file_exists( const char* fName ) ;
+void signal_handler( int sig ) ;
+void print_error( SQLException e, ScreenText &scrText ) ;
+>>>>>>> upstream/working:microcomputer/Main.cpp
 
 volatile sig_atomic_t kbFlag = 0 ; // Keyboard interrupt flag.
 
@@ -28,6 +92,150 @@ volatile sig_atomic_t kbFlag = 0 ; // Keyboard interrupt flag.
     
 -----------------------------------------------------------------------------------*/
 
+<<<<<<< HEAD:microcomputer/parser.cpp
+=======
+int main( int argc, char* argv[] ) {
+
+    Gesture nextGesture ;                                            /* The next gesture to be read in. */
+    Hand nextHand[NUM_HANDS] ;                                       /* The next pair of hands to be read in. */
+    const char* fName   = "../gesture_data/gesture_data_init.xml" ;  /* The XML file containing sensor data. */
+    const char* intfName = "../gesture_data/gesture_data_read.xml" ; /* The XML file containing sensor data to be read. */
+    const char* newfName = "../gesture_data/gesture_data.complete" ; /* The parsed XML file containing sensor data. */
+    const char* outfName = "../gesture_data/gesture_data.xml" ;      /* The XML file that was just read. */
+    const char* dbName   = "gesture" ;                               /* The database name to use. */
+    string text ;                                                    /* The current gesture converted to a text string. */
+    int result = EXIT_SUCCESS ;                                      /* Indicates whether program terminated successfully. */ 
+    Driver* driver = NULL ;                                          /* The SQL driver. */
+    Connection* db = NULL ;                                          /* The connection to the database. */
+    const char* dbURL = "tcp://127.0.0.1:3306" ;                     /* The database location. */
+    const char* un = "sign2speech" ;                                 /* The database username. */
+    const char* pw = "sign2speech" ;                                 /* The database password. */
+    string ttsScript = "festival" ;                                  /* Location of the text to speech script. */
+    string xmlVersion ;                                              /* The XML version. */
+    string sensorStatus ;                                            /* An indicator of the sensor status. */
+    const char* tfName = "speech.txt" ;                              /* Name of the file to write to. */
+    ScreenText scrText ;                                             /* The collection of text to display on the screen. */
+    xml_document<> doc ;                                             /* The contents of the most recent XML document. */
+    string convert = "false" ;                                       /* Used to track whether gesture conversion should be performed. */
+    struct timespec t1 ;                                             /* The amount of time to sleep in nanoseconds. */
+    struct timespec t2 ;                                             /* The time residual. */
+    bool motion = false ;                                            /* An indicator if the current gesture involves motion. */
+    const string completed_j = "J1J2J3" ;                            /* A completed J gesture. */
+    const string completed_z = "Z1Z2Z3Z4" ;                          /* A completed Z gesture. */
+    const string j_motion[NUM_J_MOTION] = { "J1",           /* Array of intermediate gestures that involve the letter J. */
+                                            "J2" } ;
+    const string z_motion[NUM_Z_MOTION] = { "Z1",           /* Array of intermediate gestures that involve the letter Z. */
+                                            "Z2",
+                                            "Z3" } ;
+
+    /* Perform initialization. */
+    if( !init( scrText ) ){
+        scrText.SetStatus( "*** Error during initialization ***\n" ) ;
+	output_to_display( scrText, true ) ;
+        result = EXIT_FAILURE ;
+        exit( result ) ;
+    }
+    t1.tv_sec = 0 ;
+    t1.tv_nsec = 20000000L ;
+    scrText.SetStatus( "Initialized\n" ) ;
+    output_to_display( scrText, true ) ;
+    /* Connect to the gesture database. */
+    if( !load_gesture_database( driver, db, dbURL, un, pw, dbName, scrText ) ){
+        scrText.SetStatus( "*** Error connecting to database ***\n" ) ;
+	output_to_display( scrText, true ) ;
+        result = EXIT_FAILURE ;
+        exit( result ) ;    
+    }
+    scrText.SetStatus( "Loaded gesture database\n" ) ;
+    output_to_display( scrText, true ) ;
+    /* Start sign to speech conversion. */
+    while( true ){
+        /* Check if sensor data is available. */
+        if( file_exists(fName) ){
+	    /* Collect next set of data and store it as a gesture. */ 
+  	    scrText.SetStatus( "Reading:\t" + string(fName) + "\n" ) ;
+   	    output_to_display( scrText, true ) ;
+            /* Add delay to make sure file has finished being written to before attempting to read. */
+  	    nanosleep( &t1, &t2 ) ;
+            if( rename(fName, intfName) != 0 ){
+       	        scrText.SetStatus( "Unable to rename file:\t" + string(fName) + "\n" ) ;
+	    }
+            if( get_gesture( nextHand, intfName, scrText, doc, sensorStatus, xmlVersion, convert ) ){
+                /* Store the next gesture set of data. */
+                nextGesture = Gesture( nextHand[0], nextHand[1] ) ;     
+                /* Update display for the next set of sensor values. */
+  	        scrText.SetGestureData( nextGesture.AsString() ) ;
+                /* Indicate file was successfully read. */
+		scrText.SetStatus( "Successfully read:\t" + string(fName) + "\n" ) ;
+                /* Rename the file so as not to re-read it. */
+                if( rename(intfName, newfName) != 0 ){
+  	   	    scrText.SetStatus( "Unable to rename file:\t" + string(intfName) + "\n" ) ;
+		}
+   	        output_to_display( scrText, true ) ;
+	    }
+	    else{
+  	        scrText.SetStatus( "*** Error reading file. Attempting to continue ***\n" ) ;
+        	output_to_display( scrText, true ) ;
+		continue ;
+	    }
+            /* Convert the gesture to text. */
+            if( gesture_to_text(nextGesture, db, text, scrText, motion) ){
+	        motion = motion_gesture( text, j_motion, completed_j, NUM_J_MOTION, "J" ) ;
+  	        motion = motion_gesture( text, z_motion, completed_z, NUM_Z_MOTION, "Z" ) ;
+                /* Output the text to display */
+  	        scrText.SetGestureConv( text + "\n" ) ;
+                output_to_display( scrText, true ) ;
+	    }
+	    else{
+	        /* Gesture to text error. */
+	        scrText.SetStatus( "*** Unable to convert gesture to text. Attempting to continue ***\n" ) ;
+                output_to_display( scrText, true ) ;
+		continue ;
+	    }
+  	    scrText.SetStatus( "Wrote:\t" + string(outfName) + "\n" ) ;
+            /* Update XML file. */
+            if( !output_xml(outfName, text, nextGesture, sensorStatus, xmlVersion) ){
+  	        scrText.SetStatus( "Error while writing:\t" + string(outfName) + "\n" ) ;
+	    }
+   	    output_to_display( scrText, true ) ;
+	}
+        /* Check if user wants to output the gesture. */
+        if( convert.compare("true") == 0 ){
+            /* User signaled end of conversion. Convert the text to speech */ 
+            if( !text_to_speech( text, ttsScript, tfName ) ){
+  	        /* Text to speech error. */
+	        scrText.SetStatus( "*** Unable to convert text to speech. Attempting to continue ***\n" ) ;
+	    }
+	    output_to_display( scrText, true) ;
+            /* Reset text string for next gesture input. Reset motion flag. */
+	    text = "" ;
+            motion = false ;
+            /* Indicate that the gesture has been converted. */
+            convert = "false" ;
+            /* Update XML file. */
+            if( !output_xml(outfName, text, nextGesture, sensorStatus, xmlVersion) ){
+  	        scrText.SetStatus( "Error while writing:\t" + string(outfName) + "\n" ) ;
+	    }
+            /* Indicate gesture was successfully converted. */
+            scrText.SetStatus( "Successfully converted gesture\n" ) ;
+            scrText.SetGestureData( "\n" ) ;
+	}
+        if( kbFlag ){
+  	    /* Keyboard interrupt pressed. Perform clean up. */
+	    break ;
+        }
+    }
+    /* Perform clean up and then exit. */
+    if( !clean_up(db) ){
+        result = EXIT_FAILURE ;
+    }
+    scrText.SetStatus( "\nExiting\n" ) ;
+    output_to_display( scrText, true ) ;
+
+    return result ;
+  			
+}
+>>>>>>> upstream/master:microcomputer/Main.cpp
 
 /*----------print_error--------------------------------------------------------------
 
@@ -161,14 +369,14 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
         st = db->createStatement() ; 
         /* Construct the query. Assume only that the right hand is used for now. */
         buffer << "SELECT gest FROM gesture_tbl WHERE hand = \"right\"" ;
-        add_to_query( query, buffer, " AND in_flex = " ) ;
-        buffer << nextGesture.Right().Index().Flex() ;
-        add_to_query( query, buffer, " AND mi_flex = " ) ;
-        buffer << nextGesture.Right().Middle().Flex() ;
-        add_to_query( query, buffer, " AND ri_flex = " ) ;
-        buffer << nextGesture.Right().Ring().Flex() ;
-        add_to_query( query, buffer, " AND pi_flex = " ) ;
-        buffer << nextGesture.Right().Pinky().Flex() ;
+        add_to_query( query, buffer, " AND ABS(in_flex - " ) ;
+        buffer << nextGesture.Right().Index().Flex() << ") <= " << FLEX_TOL ;
+        add_to_query( query, buffer, " AND ABS(mi_flex - " ) ;
+        buffer << nextGesture.Right().Middle().Flex() << ") <= " << FLEX_TOL ;
+        add_to_query( query, buffer, " AND ABS(ri_flex - " ) ;
+        buffer << nextGesture.Right().Ring().Flex() << ") <= " << FLEX_TOL ;
+        add_to_query( query, buffer, " AND ABS(pi_flex - " ) ;
+        buffer << nextGesture.Right().Pinky().Flex() << ") <= " << FLEX_TOL ;
         add_to_query( query, buffer, " AND th_con_t = " ) ;
         buffer << nextGesture.Right().Thumb().ContactTip() ;
         add_to_query( query, buffer, " AND in_con_t = " ) ;
@@ -200,7 +408,7 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
   	   unsigned int i ; /* An iterator. */
            ostringstream accel_num ;
            for( i = 0 ; i < NUM_LSM303 ; i ++ ) {              
-               accel_num.clear() ;
+	       accel_num.clear() ;
 	       accel_num << i ;
                add_to_query( query, buffer, " AND ABS(accel_303_" + accel_num.str() + "_x - " ) ;
                buffer << nextGesture.Right().Lsm303Vals(i).AccelX() << ") <= " << LSM303_TOL ;
@@ -214,10 +422,9 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
                buffer << nextGesture.Right().Lsm303Vals(i).MagY() << ") <= " << LSM303_TOL ;
                add_to_query( query, buffer, " AND ABS(mag_303_" + accel_num.str() + "_z - " ) ;
                buffer << nextGesture.Right().Lsm303Vals(i).MagZ() << ") <= " << LSM303_TOL ;
-            
            }
            for( i = 0 ; i < NUM_LSM9DOF ; i ++ ) {
-               accel_num.clear() ;
+	       accel_num.clear() ;
 	       accel_num << i ;
                add_to_query( query, buffer, " AND ABS(accel_9dof_" + accel_num.str() + "_x - " ) ;
                buffer << nextGesture.Right().Lsm9dofVals(i).AccelX() << ") <= " << LSM9DOF_TOL ;
@@ -238,7 +445,7 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
                add_to_query( query, buffer, " AND ABS(gyro_9dof_" + accel_num.str() + "_z - " ) ;
                buffer << nextGesture.Right().Lsm9dofVals(i).GyroZ() << ") <= " << LSM9DOF_TOL ;                      
            } 
-	 }
+	}
         add_to_query( query, buffer, ";" ) ;
 	/* Perform the query. */
         rSet = st->executeQuery( query ) ;
@@ -436,22 +643,16 @@ bool get_gesture( Hand nextHand[NUM_HANDS], const char* fName, ScreenText &scrTe
     doc.parse<0>( xmlFile.data() ) ;
     /* Collect sensor values. Start with the gestures node. */   
     xml_node<>* gestures = doc.first_node("gestures") ;      
-    if( gestures == NULL ) {
-        cout << "No gestures" << endl;
+    if( gestures == NULL )
         return false ;
-    }
     /* Get the gesture node. */
     xml_node<>* gesture = gestures->first_node("gesture") ;  
-    if( gesture == NULL ) {
-        cout << "No gesture" << endl;
+    if( gesture == NULL )
         return false ;
-    }
     xml_node<>* hand = gesture->first_node("hand") ;
     for( i = 0 ; i < NUM_HANDS ; i++ ){
-        if( hand == NULL ) {
-            cout << "No hand" << endl;
+        if( hand == NULL )
             return false ;
-        }
         /* Initialize the hand, fingers, and inter-digital folds. */
         nextHand[i].LsmInit() ;
         Finger nextFinger[NUM_FINGERS] ;    /* The next set of fingers to be read in. */
@@ -818,9 +1019,7 @@ bool motion_gesture( string &text, const string partial_motion[], const string c
     }
     /* Determine if current gesture involves motion */
     for( i = 0 ; i < num_motion ; i++ ){
-	cout << "\nTest" << endl;
         start = text.find(partial_motion[i]) ;
-	cout << "Start: " << start << " " << std::string::npos << " " << text << endl;
         if( start != std::string::npos ){
             /* Check that itermediate motion falls in a valid position and thus was recently detected. */
             if( (text.length() - start) == ((2*(num_motion - 1 - i)) + 1) ){
@@ -837,4 +1036,3 @@ bool motion_gesture( string &text, const string partial_motion[], const string c
     return motion ;
 
 }
-

@@ -37,7 +37,7 @@ ExampleWindow::ExampleWindow() :
         exit( result ) ;
     }
     t1.tv_sec = 0 ;
-    t1.tv_nsec = 25000000L ;
+    t1.tv_nsec = 20000000L ;
     scrText.SetStatus( "Initialized\n" ) ;
     output_to_display( scrText, true ) ;
     /* Connect to the gesture database. */
@@ -128,6 +128,7 @@ if (m_WorkerThread)
     m_Worker.stop_work();
     usleep(10);
     m_Worker.set_data("");
+    motion = false;
   }
     system ("festival --tts speech.txt");
     // Start a new worker thread.
