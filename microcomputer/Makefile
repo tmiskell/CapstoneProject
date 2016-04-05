@@ -10,7 +10,7 @@ FESTLIBDIR=-L /usr/include/festival/src/lib/ -L /usr/include/speech_tools/lib/
 FESTLIB=-l Festival -l estools -l estbase -l eststring
 CPPFLAGS=$(OPTMETHOD) $(FESTINCLUDE) `pkg-config gtkmm-3.0 --cflags --libs` # Add -g for debugging
 OUTPUT=sign2speech
-SRCS=Finger.cpp Fold.cpp Hand.cpp Gesture.cpp Lsm303.cpp Lsm9dof.cpp main.cpp ScreenText.cpp parser.cpp worker.cpp window.cpp variables.cpp
+SRCS=Finger.cpp Fold.cpp Hand.cpp Gesture.cpp Lsm303.cpp Lsm9dof.cpp main.cpp ScreenText.cpp parser.cpp worker.cpp window.cpp battery_indicator.cpp variables.cpp
 #
 all: 
 	$(CXX) $(SRCS) $(CPPFLAGS) -o $(OUTPUT) $(MYSQLLIB) $(STDLIB)

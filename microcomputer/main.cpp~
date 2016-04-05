@@ -15,5 +15,5 @@ int main (int argc,
 
   ExampleWindow *window = new ExampleWindow();
 
-  return app->run(*window);
+  return 0;
 }
