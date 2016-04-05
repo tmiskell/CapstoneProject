@@ -2,8 +2,10 @@
 #define VARIABLES_H
 
 #include <gtkmm.h>
+#include <gdkmm.h>
 #include "parser.h"
 #include <iostream>
+#include "battery_indicator.h"
 
 extern Gesture nextGesture ;                                           /* The next gesture to be read in. */
 extern Hand nextHand[NUM_HANDS] ;                                      /* The next pair of hands to be read in. */
@@ -66,7 +68,6 @@ class ExampleWindow : public Gtk::Window
 {
 public:
   ExampleWindow();
-  Gtk::ApplicationWindow* getWindow();
 
   // Called from the worker thread.
   void notify();
@@ -78,6 +79,7 @@ private:
   void on_output_button_clicked();
   void on_reset_button_clicked();
   void on_quit_button_clicked();
+  bool update_battery();
 
   void update_widgets();
 
@@ -85,16 +87,20 @@ private:
   void on_notification_from_worker_thread();
 
   // Member data.
-  Gtk::Button *m_ButtonStart;
-  Gtk::Button *m_ButtonOutput;
-  Gtk::Button *m_ButtonReset;
-  Gtk::Button *m_ButtonQuit;
-  Gtk::Label  *m_Label;
-  Gtk::ApplicationWindow *m_Window;
+  Gtk::Button m_ButtonStart;
+  Gtk::Button m_ButtonOutput;
+  Gtk::Button m_ButtonReset;
+  Gtk::Button m_ButtonQuit;
+  Gtk::Label  m_Label, m_Label2;
+  Gtk::Box    m_box1;
+  Gtk::Box    m_box2;
+  Gtk::Box    m_box3;
+  Gtk::ProgressBar m_bar;
 
   Glib::Dispatcher m_Dispatcher;
   ExampleWorker m_Worker;
   Glib::Threads::Thread* m_WorkerThread;
+  sigc::connection m_connection_timeout;
 };
 
 
