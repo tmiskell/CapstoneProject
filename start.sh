@@ -1,4 +1,6 @@
+#/bin/sh
 # Setup directories.
+export BASE_DIR=/home/$USER/CapstoneProject_No_GUI/CapstoneProject
 export GESTURE_DIR=gesture_data
 export CONVERT_DIR=microcomputer
 export I2C_DIR=microcontroller
@@ -19,11 +21,15 @@ RD_DEL=100
 # Setup the IP address for the server.
 IP_ADDR=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
 #IP_ADDR=127.0.0.1
+# Allow time for desktop environment to setup.
+sleep 5
 # Configure the GPIO pins.
 echo "Configuring GPIO pins"
 gpio export 27 out
 echo 1 > /sys/class/gpio/gpio27/value
 sleep 1
+# Change to base directory
+cd $BASE_DIR
 # Start I2C transfers.
 echo "Starting I2C transfers from sensors"
 $I2C_DIR/i2c_transfer $IN_LB $IN_UB $MID_LB $MID_UB $RI_LB $RI_UB $PI_LB $PI_UB $TH_LB $TH_UB $UP_DEL $RD_DEL > $LOG_DIR/transfer.log 2> $LOG_DIR/transfer_error.log &
@@ -36,4 +42,44 @@ sleep 1
 cd $CONVERT_DIR
 echo "Starting sign to speech conversion"
 sleep 1
+#gnome-terminal --window-with-profile=Background -e ./sign2speech &
 ./sign2speech
+sleep 1
+# Open the web browser. Add -e Fullscreen to open browser in full screen.
+echo "Opening the web browser"
+#midori -e Fullscreen -a http://$IP_ADDR:8080
+sleep 1
+# Return to base directory and perform clean up.
+cd $BASE_DIR
+# Stop web server.
+PID=$(pgrep server.py)
+if ! [[ -z "$PID" ]] ; then
+  echo "Stopping web server"
+  kill $PID
+  sleep 1
+fi
+# Stop sign to speech conversion.
+PID=$(pgrep sign2speech)
+if ! [[ -z "$PID" ]] ; then
+  echo "Stopping sign to speech conversion."
+  kill $PID
+  sleep 1
+fi
+# Stop I2C transfers.
+PID=$(pgrep i2c_transfer)
+if ! [[ -z "$PID" ]] ; then
+  echo "Stopping I2C transfers from sensors"
+  kill $PID
+  sleep 1
+fi
+# Clean up GPIO pin configuration.
+echo "Cleaning up GPIO pin configuration"
+gpio unexportall
+# Clean up XML files.
+if [ -f $GESTURE_DIR/gesture_data_init.xml ] ; then
+  echo "Cleaning up XML files"
+  rm -v $GESTURE_DIR/gesture_data_init.xml
+fi
+# Request shutdown
+echo "Requesting shutdown"
+echo "shutdown" > /tmp/shutdown_request.txt

@@ -187,7 +187,7 @@ int main( int argc, char* argv[] ){
   memset( status, '\0', sizeof(char) * MAX_CHAR ) ;
   memset( cmd, '\0', sizeof(char) * MAX_CHAR ) ;
   /* Initialize output file name. */
-  sprintf( f_name, "/home/%s/CapstoneProject/gesture_data/gesture_data_init.xml", un ) ;
+  sprintf( f_name, "/home/%s/CapstoneProject_No_GUI/CapstoneProject/gesture_data/gesture_data_init.xml", un ) ;
   /* Initialize data. */
   data_init( hands, left_flex, right_flex, left_contact, right_contact, 
              left_303_accel, left_303_mag, right_303_accel, right_303_mag,
