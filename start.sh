@@ -20,7 +20,10 @@ UP_DEL=125
 RD_DEL=100
 # Setup the IP address for the server.
 IP_ADDR=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
-#IP_ADDR=127.0.0.1
+if ! [[ -z "$IP_ADDR" ]] ; then
+  # No internet connection
+  IP_ADDR=127.0.0.1
+fi
 # Allow time for desktop environment to setup.
 sleep 5
 # Configure the GPIO pins.
@@ -35,19 +38,21 @@ echo "Starting I2C transfers from sensors"
 $I2C_DIR/i2c_transfer $IN_LB $IN_UB $MID_LB $MID_UB $RI_LB $RI_UB $PI_LB $PI_UB $TH_LB $TH_UB $UP_DEL $RD_DEL > $LOG_DIR/transfer.log 2> $LOG_DIR/transfer_error.log &
 sleep 1
 # Start the web server.
-echo "Starting web server"
+echo "Starting web server at:" $IP_ADDR:8080
 $GESTURE_DIR/server.py $IP_ADDR > $LOG_DIR/server.log 2> $LOG_DIR/server_error.log &
 sleep 1
 # Start sign to speech conversion.
 cd $CONVERT_DIR
 echo "Starting sign to speech conversion"
 sleep 1
-#gnome-terminal --window-with-profile=Background -e ./sign2speech &
-./sign2speech
+#gnome-terminal -e ./sign2speech &
+./sign2speech &
 sleep 1
 # Open the web browser. Add -e Fullscreen to open browser in full screen.
 echo "Opening the web browser"
 #midori -e Fullscreen -a http://$IP_ADDR:8080
+#epiphany-browser -a --profile /home/$USER/.config http://$IP_ADDR:8080
+epiphany-browser http://$IP_ADDR:8080
 sleep 1
 # Return to base directory and perform clean up.
 cd $BASE_DIR

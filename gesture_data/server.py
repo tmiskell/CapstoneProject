@@ -12,7 +12,7 @@ import urlparse
 def get_file_names( ):
 
     # Return the XML and XSL file names.
-    baseDir = os.path.expanduser( "~/CapstoneProject/gesture_data/" )
+    baseDir = os.path.expanduser( "~/CapstoneProject_No_GUI/CapstoneProject/gesture_data/" )
     xmlFName = os.path.join( baseDir, "gesture_data.xml" )
     xslFName = os.path.join( baseDir, "gesture_data.xsl" )
     newxmlFName = os.path.join( baseDir, "gesture_data_init.xml" )

@@ -48,7 +48,7 @@
 #define NUM_HANDS        2  /* Number of hands. */
 #define NUM_FINGERS      5  /* The number of fingers on a hand. */
 #define NUM_FOLDS        4  /* The number of interdigital folds on a hand. */
-#define FLEX_TOL         5  /* The tolerance to use when matching flex sensor values. */
+#define FLEX_TOL        10  /* The tolerance to use when matching flex sensor values. */
 #define LSM303_TOL     100  /* The tolerance to use when matching LSM303 sensor values. */
 #define LSM9DOF_TOL    100  /* The tolerance to use when matching LSM9DOF sensor values. */
 #define NUM_J_MOTION     2  /* The number of intermediate gestures that involve the letter J. */
@@ -64,7 +64,7 @@ bool load_gesture_database( Driver* driver, Connection* &db, const char* dbURL, 
 bool get_gesture( Hand nextHand[NUM_HANDS], const char* fName, ScreenText &scrText, xml_document<> &doc,
                   string &sensorStatus, string &xmlVersion, string &convert ) ;
 bool output_xml( const char* outfName, string &text, Gesture &nextGesture, string &sensorStatus, string &xmlVersion ) ;
-bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ) ;
+bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion, bool &added_text ) ;
 bool text_to_speech( string text, string ttsScript, const char* tfName ) ;
 void add_to_query( string &query, ostringstream &buffer, string stmt ) ;
 bool motion_gesture( string &text, const string motion[], const string invalid_motion, 
@@ -99,6 +99,7 @@ int main( int argc, char* argv[] ) {
     const char* outfName = "../gesture_data/gesture_data.xml" ;      /* The XML file that was just read. */
     const char* dbName   = "gesture" ;                               /* The database name to use. */
     string text ;                                                    /* The current gesture converted to a text string. */
+    bool added_text = false ;                                        /* Used to detect when new text has been added to the text string. */
     int result = EXIT_SUCCESS ;                                      /* Indicates whether program terminated successfully. */ 
     Driver* driver = NULL ;                                          /* The SQL driver. */
     Connection* db = NULL ;                                          /* The connection to the database. */
@@ -114,6 +115,8 @@ int main( int argc, char* argv[] ) {
     string convert = "false" ;                                       /* Used to track whether gesture conversion should be performed. */
     struct timespec t1 ;                                             /* The amount of time to sleep in nanoseconds. */
     struct timespec t2 ;                                             /* The time residual. */
+    struct timespec t3 ;                                             /* The amount of time to sleep in nanoseconds. */
+    struct timespec t4 ;                                             /* The time residual. */
     bool motion = false ;                                            /* An indicator if the current gesture involves motion. */
     const string completed_j = "J1J2J3" ;                            /* A completed J gesture. */
     const string completed_z = "Z1Z2Z3Z4" ;                          /* A completed Z gesture. */
@@ -133,7 +136,9 @@ int main( int argc, char* argv[] ) {
         exit( result ) ;
     }
     t1.tv_sec = 0 ;
-    t1.tv_nsec = 20000000L ;
+    t1.tv_nsec = 10000000L ;
+    t3.tv_sec = 2 ;
+    t3.tv_nsec = 0 ;
     scrText.SetStatus( "Initialized\n" ) ;
     output_to_display( scrText, true ) ;
     /* Connect to the gesture database. */
@@ -176,7 +181,7 @@ int main( int argc, char* argv[] ) {
 		continue ;
 	    }
             /* Convert the gesture to text. */
-            if( gesture_to_text(nextGesture, db, text, scrText, motion) ){
+            if( gesture_to_text(nextGesture, db, text, scrText, motion, added_text) ){
   	        motion = false ;
   	        if( motion_gesture( text, j_motion, invalid_j, completed_j, NUM_J_MOTION, "J" ) || 
                     motion_gesture( text, z_motion, invalid_z, completed_z, NUM_Z_MOTION, "Z" ) ){
@@ -185,6 +190,9 @@ int main( int argc, char* argv[] ) {
                 /* Output the text to display */
   	        scrText.SetGestureConv( text + "\n" ) ;
                 output_to_display( scrText, true ) ;
+                if( added_text ){
+  	  	    nanosleep( &t3, &t4 ) ;
+		}
 	    }
 	    else{
 	        /* Gesture to text error. */
@@ -350,19 +358,22 @@ bool load_gesture_database( Driver* driver, Connection* &db, const char* dbURL, 
                     db          -- The connection to the database.
                     text        -- The gesture converted to text
                     scrText     -- The collection of text to display on the screen.
+                    motion      -- Used to indicate whether a gesture with motion has been detected.
+                    added_text  -- Used to track whether new text has been added to the text string.
 
   RETURN VALUE:  true if the gesture was successfully converted to text
                  false otherwise.
 
 -----------------------------------------------------------------------------------*/
 
-bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ){
+bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion, bool &added_text ){
 
-    ResultSet* r_set ;                       /* The result set returned by the SQL query. */
+    ResultSet* r_set ;                      /* The result set returned by the SQL query. */
     Statement* st   ;                       /* SQL statement. */
     string query ;                          /* SQL query. */
     ostringstream buffer ;                  /* Buffer used to convert numerical values to strings. */
 
+    added_text = false ;
     try{
         /* Query database for closest matching gesture */
         st = db->createStatement() ; 
@@ -459,6 +470,7 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
                if there are multiple matches until there is a single match. */
    	    r_set->next() ;
     	    text += r_set->getString( "gest" ) ;
+            added_text = true ;
 	}
     } catch( SQLException &e ){
         /* Database connection error. */

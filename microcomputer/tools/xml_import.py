@@ -202,6 +202,9 @@ def input_data( alpha_dir, num_dir ):
     for i in range( len(f_names) ):
         sys.stdout.write( "Reading data from: " + os.path.basename(f_names[i]) + "\n" )
         gesture = os.path.basename( f_names[i].split(".xml")[0] )
+        if gesture == "space":
+            # Change to the actual space character
+            gesture = " "
         flex = []
         contact = []
         lsm303 = []
@@ -210,24 +213,24 @@ def input_data( alpha_dir, num_dir ):
             lines = input_file.readlines()
         j = 0
         # Advance to right hand for right now.
-        while not "<hand side=\"right\">" in lines[j]:
+        while not "<hand side=\"right\">" in lines[j].strip():
             j += 1
-        while not "<lsm303 side=\"" in lines[j]:
+        while not "<lsm303 side=\"" in lines[j].strip():
             if "<flex>" in lines[j]:
                 flex.append( lines[j].split('>')[1].split('<')[0] )
             elif "<contact-" in lines[j]:
                 # Reads in contact sensors in the following order:
                 # th_con_t, in_con_t, in_con_m, mi_con_t, mi_con_m, ri_con_t, ri_con_m, pi_con_t, pi_con_m, ti_con_t, im_con_t, mr_con_t, rp_con_t
-                nextContact = 0 ;
+                nextContact = "0" ;
                 if lines[j].split('>')[1].split('<')[0] == "true":
-                    nextContact = 1 ;
+                    nextContact = "1" ;
                 contact.append( nextContact ) ;
             j += 1
-        while not "<lsm9dof side=\"" in lines[j]:
+        while not "<lsm9dof side=\"" in lines[j].strip():
             if ("<accel-" in lines[j]) or ("<mag-" in lines[j]):
                 lsm303.append( lines[j].split('>')[1].split('<')[0] )
             j += 1
-        while not "</hand>" in lines[j]:
+        while not "</hand>" in lines[j].strip():
             if ("<accel-" in lines[j]) or ("<mag-" in lines[j]) or ("<gyro-" in lines[j]):
                 lsm9dof.append( lines[j].split('>')[1].split('<')[0] )
             j += 1
@@ -261,8 +264,8 @@ def check_data( data ):
 def main( args ):
     """ Main program. """
 
-    alpha_dir = os.path.expanduser( "~/CapstoneProject/gesture_data/alphabet_xml" ) # Directory of the input files.
-    num_dir = os.path.expanduser( "~/CapstoneProject/gesture_data/numbers_xml" )    # Directory of the input files.
+    alpha_dir = os.path.expanduser( "~/CapstoneProject_No_GUI/CapstoneProject/gesture_data/alphabet_xml" ) # Directory of the input files.
+    num_dir = os.path.expanduser( "~/CapstoneProject_No_GUI/CapstoneProject/gesture_data/numbers_xml" )    # Directory of the input files.
     output_file = "gesture_db.sql"                                      # The output file.
     ret_val = os.EX_OK                                                  # Return status code
 
