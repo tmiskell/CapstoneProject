@@ -1,13 +1,25 @@
+export BASE_DIR=/home/$USER/CapstoneProject_No_GUI
 export GESTURE_DIR=gesture_data
-echo "Stopping web server"
+# Stop web server.
 PID=$(pgrep server.py)
-kill $PID
-sleep 1
-echo "Stopping I2C transfers from sensors"
+if ! [[ -z "$PID" ]] ; then
+  echo "Stopping web server"
+  kill $PID
+  sleep 1
+fi
+# Stop I2C transfers.
 PID=$(pgrep i2c_transfer)
-kill $PID
-sleep 1
+if ! [[ -z "$PID" ]] ; then
+  echo "Stopping I2C transfers from sensors"
+  kill $PID
+  sleep 1
+fi
+# Clean up GPIO pin configuration.
 echo "Cleaning up GPIO pin configuration"
 gpio unexportall
-echo "Cleaning up XML files"
-rm -v $GESTURE_DIR/gesture_data_init.xml
+# Clean up XML files.
+cd $BASE_DIR
+if [ -f $GESTURE_DIR/gesture_data_init.xml ] ; then
+  echo "Cleaning up XML files"
+  rm -v $GESTURE_DIR/gesture_data_init.xml
+fi

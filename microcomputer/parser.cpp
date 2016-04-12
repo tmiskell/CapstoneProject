@@ -149,13 +149,14 @@ bool load_gesture_database( Driver* driver, Connection* &db, const char* dbURL, 
 
 -----------------------------------------------------------------------------------*/
 
-bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ){
+bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion, bool &added_text ){
 
     ResultSet* rSet ;                       /* The result set returned by the SQL query. */
     Statement* st   ;                       /* SQL statement. */
     string query ;                          /* SQL query. */
     ostringstream buffer ;                  /* Buffer used to convert numerical values to strings. */
 
+    added_text = false ;
     try{
         /* Query database for closest matching gesture */
         st = db->createStatement() ; 
@@ -253,6 +254,7 @@ bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, Screen
                if there are multiple matches until there is a single match. */
    	    rSet->next() ;
     	    text += rSet->getString( "gest" ) ;
+            added_text = true ;
 	}
     } catch( SQLException &e ){
         /* Database connection error. */

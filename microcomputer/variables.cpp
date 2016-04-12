@@ -22,6 +22,8 @@ Gesture nextGesture ;                                            /* The next ges
     string convert ="false" ;                                        /*Used to track whether gesture conversion should be performed.*/
     struct timespec t1 ;                                             /* The amount of time to sleep in nanoseconds. */
     struct timespec t2 ;                                             /* The time residual. */
+    struct timespec t3 ; /* The amount of time to sleep in nanoseconds. */
+    struct timespec t4 ; /* The time residual. */
 bool motion = false ;                                            /* An indicator if the current gesture involves motion. */
 const string completed_j = "J1J2J3" ;                            /* A completed J gesture. */
 const string completed_z = "Z1Z2Z3Z4" ;                          /* A completed Z gesture. */
@@ -32,3 +34,4 @@ const string invalid_j = "J3" ;
     const string z_motion[NUM_Z_MOTION] = { "Z1Z2Z3",                /* Array of intermediate gestures that involve the letter Z. */
                                             "Z1Z2",
                                             "Z1" } ;
+bool added_text = false ;

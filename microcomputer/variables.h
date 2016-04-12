@@ -36,6 +36,9 @@ extern const string invalid_j;
 extern const string invalid_z;
 extern const string j_motion[NUM_J_MOTION];
 extern const string z_motion[NUM_Z_MOTION];
+extern bool added_text;
+extern struct timespec t3 ; /* The amount of time to sleep in nanoseconds. */
+extern struct timespec t4 ; /* The time residual. */
 
 class ExampleWindow;
 

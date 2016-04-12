@@ -46,7 +46,7 @@ cd $CONVERT_DIR
 echo "Starting sign to speech conversion"
 sleep 1
 #gnome-terminal -e ./sign2speech &
-./sign2speech
+./sign2speech &
 sleep 1
 # Open the web browser. Add -e Fullscreen to open browser in full screen.
 #echo "Opening the web browser"
