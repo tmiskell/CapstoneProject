@@ -34,7 +34,7 @@
 #define NUM_HANDS        2  /* Number of hands. */
 #define NUM_FINGERS      5  /* The number of fingers on a hand. */
 #define NUM_FOLDS        4  /* The number of interdigital folds on a hand. */
-#define FLEX_TOL         5  /* The tolerance to use when matching flex sensor values. */
+#define FLEX_TOL         10  /* The tolerance to use when matching flex sensor values. */
 #define LSM303_TOL     100  /* The tolerance to use when matching LSM303 sensor values. */
 #define LSM9DOF_TOL    100  /* The tolerance to use when matching LSM9DOF sensor values. */
 #define NUM_J_MOTION     2  /* The number of intermediate gestures that involve the letter J. */
@@ -50,7 +50,7 @@ bool load_gesture_database( Driver* driver, Connection* &db, const char* dbURL, 
 bool get_gesture( Hand nextHand[NUM_HANDS], const char* fName, ScreenText &scrText, xml_document<> &doc,
                   string &sensorStatus, string &xmlVersion, string &convert ) ;
 bool output_xml( const char* outfName, string &text, Gesture &nextGesture, string &sensorStatus, string &xmlVersion ) ;
-bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion ) ;
+bool gesture_to_text( Gesture &nextGesture, Connection* db, string &text, ScreenText &scrText, bool motion, bool &added_text ) ;
 bool text_to_speech( string text, string ttsScript, const char* tfName ) ;
 bool motion_gesture( string &text, const string motion[], const string invalid_motion, 
                      const string completed_motion, const unsigned int num_motion, const string motion_text ) ;

@@ -66,6 +66,8 @@ ExampleWindow::ExampleWindow() :
 
     m_box3.pack_end(m_bar, Gtk::PACK_SHRINK);
     m_box3.pack_end(m_Label2, Gtk::PACK_SHRINK);
+
+    m_bar.set_show_text(true);
     
 
     m_connection_timeout = Glib::signal_timeout().connect(sigc::mem_fun(*this,

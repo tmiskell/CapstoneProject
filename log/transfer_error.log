@@ -1,1 +1,1 @@
-./start.sh: line 29: microcontroller/i2c_transfer: cannot execute binary file: Exec format error
+./start.sh: line 38: microcontroller/i2c_transfer: cannot execute binary file: Exec format error

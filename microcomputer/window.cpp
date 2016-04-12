@@ -26,7 +26,9 @@ ExampleWindow::ExampleWindow() :
         exit( result ) ;
     }
     t1.tv_sec = 0 ;
-    t1.tv_nsec = 20000000L ;
+    t1.tv_nsec = 10000000L ;
+    t3.tv_sec = 2 ;
+    t3.tv_nsec = 0 ;
     scrText.SetStatus( "Initialized\n" ) ;
     output_to_display( scrText, true ) ;
     /* Connect to the gesture database. */

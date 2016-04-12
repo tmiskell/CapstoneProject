@@ -1,6 +1,10 @@
 #/bin/sh
 # Setup directories.
+<<<<<<< HEAD
 export BASE_DIR=/home/$USER/CapstoneProject_No_GUI/CapstoneProject
+=======
+export BASE_DIR=/home/$USER/CapstoneProject
+>>>>>>> upstream/master
 export GESTURE_DIR=gesture_data
 export CONVERT_DIR=microcomputer
 export I2C_DIR=microcontroller
@@ -37,13 +41,20 @@ cd $BASE_DIR
 echo "Starting I2C transfers from sensors"
 $I2C_DIR/i2c_transfer $IN_LB $IN_UB $MID_LB $MID_UB $RI_LB $RI_UB $PI_LB $PI_UB $TH_LB $TH_UB $UP_DEL $RD_DEL > $LOG_DIR/transfer.log 2> $LOG_DIR/transfer_error.log &
 sleep 1
+<<<<<<< HEAD
+# Start the web server.
 echo "Starting web server at:" $IP_ADDR:8080
+$GESTURE_DIR/server.py $IP_ADDR > $LOG_DIR/server.log 2> $LOG_DIR/server_error.log &
+sleep 1
+=======
+>>>>>>> upstream/master
 # Start sign to speech conversion.
 cd $CONVERT_DIR
 gnome-terminal -e ./sign2speech
 sleep 1
+<<<<<<< HEAD
 #gnome-terminal -e ./sign2speech &
-cd $BASE_DIR
+./sign2speech
 sleep 1
 # Open the web browser. Add -e Fullscreen to open browser in full screen.
 #echo "Opening the web browser"
@@ -60,6 +71,10 @@ if ! [[ -z "$PID" ]] ; then
   kill $PID
   sleep 1
 fi
+=======
+# Return to base directory and perform clean up.
+cd $BASE_DIR
+>>>>>>> upstream/master
 # Stop sign to speech conversion.
 PID=$(pgrep sign2speech)
 if ! [[ -z "$PID" ]] ; then
