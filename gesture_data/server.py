@@ -9,38 +9,36 @@ import BaseHTTPServer
 import lxml.etree as ET
 import urlparse
 
+def get_basedir( ):
+
+    return os.path.expanduser( "~/CapstoneProject_No_GUI/CapstoneProject/gesture_data/" )
+
 def get_file_names( ):
 
-    # Return the XML and XSL file names.
-    baseDir = os.path.expanduser( "~/CapstoneProject_No_GUI/CapstoneProject/gesture_data/" )
+    baseDir = get_basedir()
     xmlFName = os.path.join( baseDir, "gesture_data.xml" )
     xslFName = os.path.join( baseDir, "gesture_data.xsl" )
     newxmlFName = os.path.join( baseDir, "gesture_data_init.xml" )
 
     return xmlFName, xslFName, newxmlFName
 
-def update_xml( ):
+def update_cmd( cmd ):
 
-    # Get the file names.
-    xmlFName, xslFName, newxmlFName = get_file_names()
-    # Read in the XML file.
-    with open( xmlFName, 'r' ) as inputFile:
-        lines = inputFile.readlines()
-    # Adjust file to indicate a conversion for be performed.
-    for i in range( len(lines) ):
-        if "<convert>" in lines[i]:
-            lines[i] = "\t<convert>true</convert>\n"
-            break
+    baseDir = get_basedir()
+    cmdFName = os.path.join( baseDir, "cmd.txt" )
+
     # Write the updated XML file.
-    with open( newxmlFName, 'w' ) as outputFile:
-        outputFile.writelines( lines )
+    with open( cmdFName, 'w' ) as outputFile:
+        outputFile.writelines( cmd )
 
     return
 
 def convert_xml( ):
 
-    # Get the file names.
+    # Relevant files
+    baseDir = get_basedir()
     xmlFName, xslFName, newxmlFName = get_file_names()
+
     # Convert the XML file to HTML.
     dom = ET.parse( xmlFName )
     xlst = ET.parse( xslFName )
@@ -74,15 +72,24 @@ class GestureHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
         # Extract and print the contents of the POST
         length = int( server.headers['Content-Length'] )
         postData = urlparse.parse_qs( server.rfile.read(length).decode('utf-8') )
-        convert = False
+        cmd = ""
         for key, value in postData.iteritems():
             if key == "setting":
                 if value:
                     if value[0] == "convert":
-                        convert = True
+                        cmd = "convert"
                         break
-        if convert:
-            update_xml( )
+                    elif value[0] == "reset":
+                        cmd = "reset"
+                        break
+                    elif value[0] == "start":
+                        cmd = "start"
+                        break
+                    elif value[0] == "stop":
+                        cmd = "stop"
+                        break
+        if cmd:
+            update_cmd( cmd )
         server.send_response( 200 )
         server.send_header( "Content-type", "text/html" )
         server.end_headers( )

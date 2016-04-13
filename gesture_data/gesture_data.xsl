@@ -12,11 +12,19 @@
                     <p style="text-align: center; font-size: 14px; font-weight: bold;">
                         Converted Text:  <xsl:value-of select="gestures/converted-text" /><br />
                         <form style="text-align: center;" action="" method="post">
-                            Convert to Speech?
+                            Start Conversion
+                            <input type="checkbox" name="setting" value="start"></input>
+                            <br />
+                            Convert to Speech
                             <input type="checkbox" name="setting" value="convert"></input>
                             <br />
+                            Reset
+                            <input type="checkbox" name="setting" value="reset"></input>
+                            <br />
+                            Stop Conversion
+                            <input type="checkbox" name="setting" value="stop"></input>
+                            <br />
                             <input type="submit" value="Submit"></input>
-                            <input type="reset" value="Reset"></input>
                         </form>
                     </p>
                     <xsl:if test="gestures/convert = 'true'">
