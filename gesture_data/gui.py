@@ -20,7 +20,6 @@ import Tkinter as tk
 import datetime
 import string
 import time
-import math
 import sys
 import os
 import tkFont
@@ -33,13 +32,15 @@ class Window( tk.Frame ):
         self.master = master
         self.converted_text = tk.StringVar()
         self.version = tk.StringVar()
-        self.status = tk.StringVar()
+        self.sensor_status = tk.StringVar()
+        self.prog_status = tk.StringVar()
         self.converted_text_label = None
         self.version_label = None
-        self.status_label = None
-        self.convert_font = tkFont.Font( family="Helvetica", size=40 )
+        self.sensor_status_label = None
+        self.convert_font = tkFont.Font( family="Helvetica", size=35 )
         self.version_font = tkFont.Font( family="Helvetica", size=11 )
-        self.status_font = tkFont.Font( family="Helvetica", size=11 )
+        self.sensor_status_font = tkFont.Font( family="Helvetica", size=11 )
+        self.prog_status_font = tkFont.Font( family="Helvetica", size=11 )
         self.button_font = tkFont.Font( family="Helvetica", weight="bold", size=14 )
         self.stopped = True
         self.prev_time = None
@@ -56,19 +57,22 @@ class Window( tk.Frame ):
         # Allowing the widget to take the full space of the root window
         self.pack( fill=tk.BOTH, expand=1 )
         # Create label instances
-        self.converted_text.set( 'Ready' )
+        self.converted_text.set( 'Press Start' )
         self.version.set( 'XML Version: -' )
-        self.status.set( 'Sensor Status: -' )
+        self.sensor_status.set( 'Sensor Status: -' )
+        self.prog_status.set( 'Program Status: -' )
         self.converted_text_label = tk.Label( self.master, textvariable=self.converted_text, font=self.convert_font )
         self.version_label = tk.Label( self.master, textvariable=self.version, font=self.version_font )
-        self.status_label = tk.Label( self.master, textvariable=self.status, font=self.status_font )
+        self.sensor_status_label = tk.Label( self.master, textvariable=self.sensor_status, font=self.sensor_status_font )
+        self.prog_status_label = tk.Label( self.master, textvariable=self.prog_status, font=self.prog_status_font )
         # Placing labels on the window
-        self.converted_text_label.place( x=50, y=50 )
-        self.version_label.place( x=75, y=125 )
-        self.status_label.place( x=75, y=150 )
+        self.converted_text_label.place( x=25, y=100 )
+        self.prog_status_label.place( x=75, y=225 )
+        self.sensor_status_label.place( x=75, y=250 )
+        self.version_label.place( x=75, y=275 )
         # Creating a button instances
         start_button = tk.Button( self, text="Start", width=5, font=self.button_font, command=functools.partial(self.write_cmd, "start") )
-        convert_button = tk.Button( self, text="Convert", width=5, font=self.button_font, command=functools.partial(self.write_cmd, "convert") )
+        convert_button = tk.Button( self, text="Output", width=5, font=self.button_font, command=functools.partial(self.write_cmd, "convert") )
         reset_button = tk.Button( self, text="Reset", width=5, font=self.button_font, command=functools.partial(self.write_cmd, "reset") )
         stop_button = tk.Button( self, text="Stop", width=5, font=self.button_font, command=functools.partial(self.write_cmd, "stop") )
         exit_button = tk.Button( self, text="Exit", width=5, font=self.button_font, command=functools.partial(self.exit_cmd) )
@@ -81,11 +85,14 @@ class Window( tk.Frame ):
 
     # Write the command.
     def write_cmd( self, cmd_text ):
+        prev_status = self.prog_status.get() # Previous program status.
         self.cmd = cmd_text
         if self.cmd == "stop":
             self.stopped = True
+            self.prog_status.set( "Program Status: Conversion Stopped" )
         elif self.cmd == "start":
             if self.stopped:
+                self.prog_status.set( "Program Status: Conversion in Progress" )
                 self.stopped = False
                 with open( self.cmdfName, 'w' ) as outputFile:
                     outputFile.writelines( self.cmd )            
@@ -99,7 +106,7 @@ class Window( tk.Frame ):
 
     # Read gesture data.
     def read_xml( self ):
-        delay = 250
+        delay = 125 # Delay in ms.
 
         # Check if file has been updated.
         self.next_time = datetime.datetime.strptime(time.ctime(os.path.getmtime(self.xmlfName)), "%a %b %d %H:%M:%S %Y")
@@ -117,14 +124,17 @@ class Window( tk.Frame ):
             i = 0
             xml_text = ""
             while i < len(lines):
+                # Update the converted text on screen. Replace spaces with underscores for clarity.
                 if "<converted-text>" in lines[i]:
-                    self.converted_text.set( lines[i].split(">")[1].split("</")[0] )
+                    self.converted_text.set( lines[i].split(">")[1].split("</")[0].replace(" ", "_") )
+                # Update sensor status.
                 if "<status>" in lines[i]:
-                    self.status.set( "Sensor Status: " + lines[i].split(">")[1].split("</")[0] )
-                    if "disconnected" in lines[i].lower():
-                        self.status_label.config( fg="red" )
+                    self.sensor_status.set( "Sensor Status: " + lines[i].split(">")[1].split("</")[0] )
+                    if self.sensor_status.get().split(':')[1].strip() == "connected":
+                        self.sensor_status_label.config( fg="green" )
                     else:
-                        self.status_label.config( fg="green" )
+                        self.sensor_status_label.config( fg="red" )
+                # Get version  number of XML file.
                 if "<version>" in lines[i]: 
                     self.version.set( "XML Version: " + lines[i].split(">")[1].split("</")[0] )
                 i += 1
@@ -133,6 +143,7 @@ class Window( tk.Frame ):
 
     # Exit command.
     def exit_cmd( self ):
+        self.prog_status.set( "Program Status: Exiting" )
         sys.exit( os.EX_OK )
 
 def main( ):
@@ -168,18 +179,21 @@ def init( ):
     #title = "Sign to Speech"
     fg_color = "dark green"
     root = None
-    width = 480
-    height = 320
+    #width = 480
+    #height = 320
 
     if not root:
         # Initialize the window and its offset position on the screen. Allow time for window to draw.
         root = tk.Tk()
     # Size of the window
-    #sWidth  = root.winfo_screenwidth()
+    sWidth  = root.winfo_screenwidth()
+    sHeight = root.winfo_screenheight()
+    # Make sure to remove title bar and menus.
+    root.overrideredirect( 1 )
     #xOffset = (sWidth / 2) - (sWidth / 8)
     #yOffset = 0
-    #root.geometry( '+%d+%d' % (xOffset, yOffset) )
-    root.geometry( str(width) + "x" + str(height) )
+    root.geometry( '%dx%d+0+0' % (sWidth, sHeight) )
+    #root.geometry( str(width) + "x" + str(height) )
 
     return root
 

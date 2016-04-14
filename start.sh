@@ -55,12 +55,12 @@ while [ "$CONT_EXEC" = true ] ; do
   fi
   # Start sign to speech conversion.
   cp $GESTURE_DIR/gesture_data_start.xml $GESTURE_DIR/gesture_data.xml
-  echo "start" > $GESTURE_DIR/cmd.txt
+  echo "stop" > $GESTURE_DIR/cmd.txt
   cd $CONVERT_DIR
   echo "Starting sign to speech conversion"
   #CMD='"./'$S2S_PROG' '$FLEX_TOL' '$LSM303_TOL' '$LSM9DOF_TOL' '$GEST_DEL'"'
   #gnome-terminal --maximize --show-menubar --title=sign2speech --zoom=1.0 -e $CMD &
-  gnome-terminal --maximize --show-menubar --title=sign2speech --zoom=0.5 -e "./sign2speech 10 100 100 2500" &
+  gnome-terminal --maximize --show-menubar --title=sign2speech --zoom=0.5 -e "./sign2speech 10 100 100 3000" &
   sleep 3
   if [ $? -ne 0 ] ; then
      echo $S2S_PROG " exited prematurely"

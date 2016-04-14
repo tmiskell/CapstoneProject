@@ -157,6 +157,6 @@
 		</hand>
 	</gesture>
         <converted-text></converted-text>
-	<status>connected</status>
+	<status>disconnected</status>
 	<version>1.0</version>
 </gestures>

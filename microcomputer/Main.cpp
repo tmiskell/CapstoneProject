@@ -120,7 +120,8 @@ int main( int argc, char* argv[] ) {
     const char* tfName = "speech.txt" ;                              /* Name of the file to write to. */
     ScreenText scrText ;                                             /* The collection of text to display on the screen. */
     xml_document<> doc ;                                             /* The contents of the most recent XML document. */
-    string cmd = "stop" ;                                            /* Used to track commands sent to program. */
+    string cmd ;                                                     /* Used to track commands sent to program. */
+    bool stopped = true ;                                            /* Used to track whether gesture to text conversion is to be performed. */
     struct timespec read_t ;                                         /* The amount of time to sleep in nanoseconds. */
     struct timespec gest_t ;                                         /* The amount of time to sleep in nanoseconds. */
     struct timespec res_t ;                                          /* The time residual. */
@@ -241,49 +242,33 @@ int main( int argc, char* argv[] ) {
   	    /* Keyboard interrupt pressed. Perform clean up. */
 	    break ;
         }
-        if( cmd.compare("stop") == 0 ){
-  	    cmd.clear() ;
-            scrText.SetStatus( "Conversion stopped\n" ) ;
-            output_to_display( scrText, true ) ;
-  	    /* Wait for start signal. */
-            while( true ){
-                if( file_exists(cmdfName) ){
-		    std::ifstream inputFile( cmdfName ) ;
-                    inputFile >> cmd ;
- 	            cmd.erase( std::remove(cmd.begin(), cmd.end(), '\n'), cmd.end() ) ;
-                    if( cmd.compare("start") == 0 ){
-  	                /* User signaled to start conversion. */
-            	        cmd.clear() ;
-  	                break ;
-	            }
-                }
-            }
-            scrText.SetStatus( "Conversion started\n" ) ;
-            if( rename(cmdfName, newcmdfName) != 0 ){
-       	        scrText.SetStatus( "Unable to rename file:\t" + string(cmdfName) + "\n" ) ;
-            }
-            output_to_display( scrText, true) ;
-        }
         /* Check if new command is available. */
         if( file_exists(cmdfName) ){
             /* Add delay to make sure file has finished being written to before attempting to read. */
   	    nanosleep( &read_t, &res_t ) ;
   	    std::ifstream inputFile( cmdfName ) ;
+            /* Read next command and strip newline character. */
             inputFile >> cmd ;
+            /* Rename file to avoid reading the same file again. */
+            if( rename(cmdfName, newcmdfName) != 0 ){
+       	        scrText.SetStatus( "Unable to rename file:\t" + string(cmdfName) + "\n" ) ;
+	    }
 	    cmd.erase( std::remove(cmd.begin(), cmd.end(), '\n'), cmd.end() ) ;
             if( cmd.compare("stop") == 0 ){
                 /* Signal to stop conversion. */
-  	        continue ;
+                scrText.SetStatus( "Conversion stopped\n" ) ;
+                stopped = true ;
 	    }
             else if( cmd.compare("start") == 0 ){
                 /* Signal to start conversion. */
                 scrText.SetStatus( "Conversion started\n" ) ;
+                stopped = false ;
 	    }
             else if( cmd.compare("convert") == 0 ){
                 /* Assume gesture was successfully converted. */
                 scrText.SetStatus( "Successfully converted gesture\n" ) ;
                 scrText.SetGestureConv( "\n" ) ;
-                /* User signaled end of conversion. Convert the text to speech */ 
+                /* User signaled to convert the text to speech */ 
                 if( !text_to_speech( text, ttsScript, tfName ) ){
        	            /* Text to speech error. */
 	            scrText.SetStatus( "*** Unable to convert text to speech. Attempting to continue ***\n" ) ;
@@ -314,9 +299,6 @@ int main( int argc, char* argv[] ) {
 	    }
             cmd.clear() ;
             output_to_display( scrText, true ) ;
-            if( rename(cmdfName, newcmdfName) != 0 ){
-       	        scrText.SetStatus( "Unable to rename file:\t" + string(cmdfName) + "\n" ) ;
-	    }
 	}
         /* Check if sensor data is available. */
         if( file_exists(fName) ){
@@ -346,28 +328,30 @@ int main( int argc, char* argv[] ) {
         	output_to_display( scrText, true ) ;
 		continue ;
 	    }
-            /* Convert the gesture to text. */
-            if( gesture_to_text(nextGesture, db, text, scrText, motion, added_text, flex_tol, lsm303_tol, lsm9dof_tol) ){
-  	        motion = false ;
-  	        if( motion_gesture( text, j_motion, invalid_j, completed_j, NUM_J_MOTION, "J" ) || 
-                    motion_gesture( text, z_motion, invalid_z, completed_z, NUM_Z_MOTION, "Z" ) ){
-  	  	    motion = true ;
-  	        }
-                /* Output the text to display */
-                scrText.SetGestureConv( text + "\n" ) ;
-                output_to_display( scrText, true ) ;
+            if( !stopped ){
+                /* Convert the gesture to text. */
+                if( gesture_to_text(nextGesture, db, text, scrText, motion, added_text, flex_tol, lsm303_tol, lsm9dof_tol) ){
+      	            motion = false ;
+  	            if( motion_gesture( text, j_motion, invalid_j, completed_j, NUM_J_MOTION, "J" ) || 
+                        motion_gesture( text, z_motion, invalid_z, completed_z, NUM_Z_MOTION, "Z" ) ){
+  	  	        motion = true ;
+  	            }
+                    /* Output the text to display */
+                    scrText.SetGestureConv( text + "\n" ) ;
+                    output_to_display( scrText, true ) ;
+	        }
+	        else{
+	            /* Gesture to text error. */
+	            scrText.SetStatus( "*** Unable to convert gesture to text. Attempting to continue ***\n" ) ;
+                    output_to_display( scrText, true ) ;
+		    continue ;
+	        }
 	    }
-	    else{
-	        /* Gesture to text error. */
-	        scrText.SetStatus( "*** Unable to convert gesture to text. Attempting to continue ***\n" ) ;
-                output_to_display( scrText, true ) ;
-		continue ;
-	    }
-  	    scrText.SetStatus( "Wrote:\t" + string(outfName) + "\n" ) ;
             /* Update XML file. */
             if( !output_xml(outfName, text, nextGesture, sensorStatus, xmlVersion) ){
   	        scrText.SetStatus( "Error while writing:\t" + string(outfName) + "\n" ) ;
 	    }
+  	    scrText.SetStatus( "Wrote:\t" + string(outfName) + "\n" ) ;
    	    output_to_display( scrText, true ) ;
 	}
         if( added_text ){
