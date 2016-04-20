@@ -312,9 +312,9 @@ INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 5, 10, 95, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		-716, 356, 596, 524, -594, -301, -556, 336, 708, 498, -399, -83, 
-		-13903, 5322, 9267, 3296, 194, 1594, 104, 382, -236, -14902, -3324, 8883, 5087, 4997, 2921, 44, 237, -467, "K");
+	VALUES("right", 0, 5, 5, 95, 80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-384, 428, 824, 545, -317, -532, -372, 616, 652, 599, -97, -207, 
+		-12020, 7793, 10471, 4585, 3432, 2365, 140, 705, -309, -13532, -3228, 10360, 5695, 8882, 943, 149, 490, -320, "K");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, in_con_m, mi_con_t, mi_con_m, ri_con_t, ri_con_m, pi_con_t, pi_con_m, ti_con_t, im_con_t, mr_con_t, rp_con_t,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
@@ -375,9 +375,9 @@ INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		accel_303_1_x, accel_303_1_y, accel_303_1_z, mag_303_1_x, mag_303_1_y, mag_303_1_z,
 		accel_9dof_0_x, accel_9dof_0_y, accel_9dof_0_z, mag_9dof_0_x, mag_9dof_0_y, mag_9dof_0_z, gyro_9dof_0_x, gyro_9dof_0_y, gyro_9dof_0_z,
 		accel_9dof_1_x, accel_9dof_1_y, accel_9dof_1_z, mag_9dof_1_x, mag_9dof_1_y, mag_9dof_1_z, gyro_9dof_1_x, gyro_9dof_1_y, gyro_9dof_1_z,gest)
-	VALUES("right", 0, 0, 10, 95, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-		-320, 612, 740, 182, -685, -403, -64, 672, 692, 78, -510, -61, 
-		-9748, 9880, 10390, -285, -1198, 2131, -6, 552, -373, -9907, 2576, 13592, 1081, 2919, 4306, -43, 223, -443, "R");
+	VALUES("right", 0, 0, 15, 95, 95, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
+		-544, 396, 760, 617, -246, -447, -452, 348, 784, 605, 2, -165, 
+		-14737, 4087, 9275, 5187, 4085, 811, -90, 275, -197, -15059, -4972, 7826, 5769, 8682, -496, 24, 62, -314, "R");
 INSERT INTO gesture_tbl (hand, th_flex, in_flex, mi_flex, ri_flex, pi_flex,
 		th_con_t, in_con_t, in_con_m, mi_con_t, mi_con_m, ri_con_t, ri_con_m, pi_con_t, pi_con_m, ti_con_t, im_con_t, mr_con_t, rp_con_t,
 		accel_303_0_x, accel_303_0_y, accel_303_0_z, mag_303_0_x, mag_303_0_y, mag_303_0_z,
