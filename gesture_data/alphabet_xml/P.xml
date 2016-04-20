@@ -85,22 +85,22 @@
 				<contact-tip>true</contact-tip>
 			</thumb>
 			<index>
-				<flex>0</flex>
+				<flex>5</flex>
 				<contact-tip>false</contact-tip>
 				<contact-mid>false</contact-mid>
 			</index>
 			<middle>
-				<flex>45</flex>
+				<flex>30</flex>
 				<contact-tip>false</contact-tip>
 				<contact-mid>false</contact-mid>
 			</middle>
 			<ring>
-				<flex>45</flex>
+				<flex>25</flex>
 				<contact-tip>false</contact-tip>
 				<contact-mid>false</contact-mid>
 			</ring>
 			<pinky>
-				<flex>25</flex>
+				<flex>45</flex>
 				<contact-tip>false</contact-tip>
 				<contact-mid>false</contact-mid>
 			</pinky>
@@ -117,42 +117,42 @@
 				<contact-tip>true</contact-tip>
 			</ring-pinky>
 			<lsm303 side="top">
-				<accel-x>-268</accel-x>
-				<accel-y>128</accel-y>
-				<accel-z>980</accel-z>
-				<mag-x>373</mag-x>
-				<mag-y>-86</mag-y>
-				<mag-z>-471</mag-z>
+				<accel-x>-192</accel-x>
+				<accel-y>-80</accel-y>
+				<accel-z>984</accel-z>
+				<mag-x>14</mag-x>
+				<mag-y>-131</mag-y>
+				<mag-z>-588</mag-z>
 			</lsm303>
 			<lsm303 side="bottom">
-				<accel-x>144</accel-x>
-				<accel-y>-40</accel-y>
-				<accel-z>964</accel-z>
-				<mag-x>270</mag-x>
-				<mag-y>128</mag-y>
-				<mag-z>-356</mag-z>
+				<accel-x>116</accel-x>
+				<accel-y>224</accel-y>
+				<accel-z>944</accel-z>
+				<mag-x>-172</mag-x>
+				<mag-y>-285</mag-y>
+				<mag-z>-259</mag-z>
 			</lsm303>
 			<lsm9dof side="top">
-				<accel-x>-3630</accel-x>
-				<accel-y>-1687</accel-y>
-				<accel-z>16664</accel-z>
-				<mag-x>1558</mag-x>
-				<mag-y>6964</mag-y>
-				<mag-z>5167</mag-z>
-				<gyro-x>18</gyro-x>
-				<gyro-y>399</gyro-y>
-				<gyro-z>-240</gyro-z>
+				<accel-x>-6894</accel-x>
+				<accel-y>-4084</accel-y>
+				<accel-z>15322</accel-z>
+				<mag-x>-2405</mag-x>
+				<mag-y>7953</mag-y>
+				<mag-z>3457</mag-z>
+				<gyro-x>185</gyro-x>
+				<gyro-y>438</gyro-y>
+				<gyro-z>-224</gyro-z>
 			</lsm9dof>
 			<lsm9dof side="bottom">
-				<accel-x>-584</accel-x>
-				<accel-y>-6471</accel-y>
-				<accel-z>14291</accel-z>
-				<mag-x>2000</mag-x>
-				<mag-y>10142</mag-y>
-				<mag-z>4451</mag-z>
-				<gyro-x>98</gyro-x>
-				<gyro-y>72</gyro-y>
-				<gyro-z>-442</gyro-z>
+				<accel-x>-6332</accel-x>
+				<accel-y>-3840</accel-y>
+				<accel-z>14703</accel-z>
+				<mag-x>-1401</mag-x>
+				<mag-y>5684</mag-y>
+				<mag-z>5952</mag-z>
+				<gyro-x>145</gyro-x>
+				<gyro-y>184</gyro-y>
+				<gyro-z>-411</gyro-z>
 			</lsm9dof>
 		</hand>
 	</gesture>

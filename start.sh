@@ -26,7 +26,7 @@ RD_DEL=100
 FLEX_TOL=10
 LSM303_TOL=100
 LSM9DOF_TOL=100
-GEST_DEL=2500
+GEST_DEL=3000
 # Loop control variables used to check program flow.
 CONT_EXEC=true
 # Setup the IP address for the server.
@@ -60,7 +60,8 @@ while [ "$CONT_EXEC" = true ] ; do
   echo "Starting sign to speech conversion"
   #CMD='"./'$S2S_PROG' '$FLEX_TOL' '$LSM303_TOL' '$LSM9DOF_TOL' '$GEST_DEL'"'
   #gnome-terminal --maximize --show-menubar --title=sign2speech --zoom=1.0 -e $CMD &
-  gnome-terminal --maximize --show-menubar --title=sign2speech --zoom=0.5 -e "./sign2speech 10 100 100 3000" &
+  #gnome-terminal --maximize --show-menubar --title=sign2speech --zoom=0.5 -e "./sign2speech 10 100 100 3000" &
+  ./$S2S_PROG $FLEX_TOL $LSM303_TOL $LSM9DOF_TOL $GEST_DEL &
   sleep 3
   if [ $? -ne 0 ] ; then
      echo $S2S_PROG " exited prematurely"

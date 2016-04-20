@@ -129,6 +129,7 @@ int main( int argc, char* argv[] ) {
     unsigned int lsm303_tol ;                                        /* The tolerance to use when matching LSM303 sensor values. */
     unsigned int lsm9dof_tol ;                                       /* The tolerance to use when matching LSM9DOF sensor values. */
     bool motion = false ;                                            /* An indicator if the current gesture involves motion. */
+    bool completed_j_gesture = false ;                               /* An indicator if a completed J gesture was detected. */
     const string completed_j = "J1J2J3" ;                            /* A completed J gesture. */
     const string completed_z = "Z1Z2Z3Z4" ;                          /* A completed Z gesture. */
     const string invalid_j = "J3" ;
@@ -331,11 +332,19 @@ int main( int argc, char* argv[] ) {
             if( !stopped ){
                 /* Convert the gesture to text. */
                 if( gesture_to_text(nextGesture, db, text, scrText, motion, added_text, flex_tol, lsm303_tol, lsm9dof_tol) ){
-      	            motion = false ;
-  	            if( motion_gesture( text, j_motion, invalid_j, completed_j, NUM_J_MOTION, "J" ) || 
-                        motion_gesture( text, z_motion, invalid_z, completed_z, NUM_Z_MOTION, "Z" ) ){
-  	  	        motion = true ;
-  	            }
+		    /* Check for J motion. */
+  	  	    motion = motion_gesture( text, j_motion, invalid_j, completed_j, NUM_J_MOTION, "J" ) ;
+                    completed_j_gesture = false ;
+                    if( !text.empty() ){
+  	  	        /* Check for a completed J gesture. */
+ 	 	        if( *(text.rbegin()) == 'J' ){
+  	  	  	    completed_j_gesture = true ;
+		        }
+		    }
+                    if( (!motion) && (!completed_j_gesture) ){
+		        /* No J motion detected, check for Z motion */
+                        motion = motion_gesture( text, z_motion, invalid_z, completed_z, NUM_Z_MOTION, "Z" ) ;
+		    }
                     /* Output the text to display */
                     scrText.SetGestureConv( text + "\n" ) ;
                     output_to_display( scrText, true ) ;
@@ -1202,6 +1211,12 @@ bool motion_gesture( string &text, const string partial_motion[], const string i
                                 "Z1Z2",
                                 "Z1Z2Z3" } ;
         for( i = 0 ; i < NUM_CASES ; i++ ){
+  	    if( i == 0 ){
+	        if( text.find(replace_z[i]) != std::string::npos ){
+		    /* Note that 1Z2 is a substring of Z1Z2. Check that Z1Z2 is not already part of the string. */
+	    	    continue ;
+	        }
+	    }
             start = text.find( partial_z[i] ) ;
             if( start != -1 ){
                 text.replace( start, partial_z[i].length(), replace_z[i] ) ;
@@ -1223,10 +1238,17 @@ bool motion_gesture( string &text, const string partial_motion[], const string i
 	    }
         }
         if( !motion ) {
+            /* Check for other possible invalid motions. */
 	    start = text.find( motion_text ) ;
             while( start != -1 ){
-                /* Invalid motion. Clear out the incomplete motion. Note each instance is stored as a letter followed by the sequence number. */
-                text.erase( start, 2 ) ;       
+	      if( start + 1 < (signed int)text.length() ){
+                    if( !isdigit(text.at(start+1)) ){
+		        /* Valid gesture that includes a previously completd J or Z gesture. */
+		        break ;
+		    }
+		}
+                /* Clear out invalid motion. Note each instance is stored as a letter followed by a sequence number. */
+                text.erase( start, 2 ) ;      
      	        start = text.find( motion_text ) ;         
 	    }
         }
